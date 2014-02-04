@@ -1,0 +1,17 @@
+create table(primary key)
+drop table
+
+insert into
+update
+delete from
+
+selection projection
+renaming
+set union
+setdifference
+crss product
+
+--------------
+
+no file IO
+No parser (all through function calls)
