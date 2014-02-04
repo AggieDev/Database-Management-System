@@ -1,15 +1,18 @@
+
 create table(primary key)
-drop table
+drop (delete) table
 
 insert into
 update
 delete from
 
-selection projection
+selection
+projection
 renaming
+
 set union
 setdifference
-crss product
+cross product
 
 --------------
 

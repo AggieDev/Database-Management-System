@@ -1,0 +1,12 @@
+Database
+	table (pets)
+		columns (name, type, age)
+		rows (pet objs)
+	table (customers)
+		columns (cust name, pet id)
+		rows (person objs)
+	table (employees)
+		columns (customers, hourly pay, hours)
+		rows (employee objs)
+
+
