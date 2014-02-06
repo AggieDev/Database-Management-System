@@ -17,6 +17,11 @@ Waylon:
 setdifference
 cross product
 
+
+***NEW REQUIREMENT
+join
+
+
 --------------
 
 no file IO
