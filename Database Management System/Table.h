@@ -13,7 +13,7 @@ class Table
 {
 private:
 	string _name;
-	int _numFields;
+	int _numCols;
 
 	vector<Entry> _vecEntries;	// vector of vectors is an easier implementation...
 	string* _arrEntries[2];		// array of arrays uses contiguous memory, good when searching columns
@@ -25,7 +25,7 @@ private:
 public:
 
 // CONSTRUCTOR
-	Table(string name, int numFields=2);// create table
+	Table(string name, int numCols=2);// create table
 
 // ACCESSORS
 	
@@ -33,19 +33,19 @@ public:
 	Entry getEntry(string name, int col=0);
 	
 	string getName() { return _name; }
-	int getNumFields() { return _numFields; }
+	int getNumCols() { return _numCols; }
 
 // MUTATORS
 			// the following return true on success
 	bool addEntry(Entry e);				// insert into
-	bool addEntry(string field1, string field2);
-	bool addEntry(string field1, string field2, string field3);
 	bool addEntry(vector<string> fields);
 
 	void dropTable();
 	bool update(string key, string newVal, int col=0);
 	bool deleteEntry(int row);
 	bool deleteEntry(string key, int col=0);
+
+
 	
 };
 struct Entry{
