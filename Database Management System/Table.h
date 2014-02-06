@@ -52,5 +52,8 @@ struct Entry{
 	vector<string> fields;
 };
 
+struct Unicorn{
+	vector<string> babyUnicorns;
+};
 
 #endif
