@@ -7,3 +7,6 @@ Table::Table(string name, int numCols=2)
 	_numCols = numCols;
 	_vecEntries.clear();
 }
+struct deezNuts{
+	int waylon_sucks;
+};
