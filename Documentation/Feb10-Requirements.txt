@@ -1,0 +1,25 @@
+Patrick:
+create table(primary key)
+drop (delete) table
+insert into
+update
+delete from
+
+Eliutt:
+selection
+projection
+
+Garrett:
+renaming
+set union
+
+Waylon:
+setdifference
+cross product
+
+--------------
+
+no file IO
+No parser (all through function calls)
+
+--------------------------------------------------

@@ -1,0 +1,59 @@
+Database
+	table (pets)
+		columns (name, type, age)
+		rows (pet objs)
+	table (customers)
+		columns (cust name, pet id)
+		rows (person objs)
+	table (employees)
+		columns (customers, hourly pay, hours)
+		rows (employee objs)
+
+
+
+RELATION 1
+person,pet
+3,4
+2,19
+8,23
+8,1
+9,2
+
+RELATION 2
+employee,person
+343,3
+465,2
+87,8
+8467,8
+967,9
+
+
+PET-TABLE
+pid,name,age
+3,"waylon",45
+2,"harley",0.45
+
+
+PERSON-TABLE
+pid,name, fds, fdsklsd, 
+9,"patrick"
+
+Employee table
+"    "
+
+-------------------
+Classes:
+
+Database 
+	Tables
+Pet
+	id, name, age
+Person
+	" "
+Employee
+	" "
+Relation 1
+	Person, pet
+Relation 2
+	Employee, person
+Parser
