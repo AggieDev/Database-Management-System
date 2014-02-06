@@ -15,9 +15,9 @@ private:
 	string _name;
 	int _numCols;
 
-	vector<Entry> _vecEntries;	// vector of vectors is an easier implementation...
-	string* _arrEntries[2];		// array of arrays uses contiguous memory, good when searching columns
-	char*** _ptrEntries;		// maintains a pointer to a block of memory containing-
+	vector<Entry> _entries;	// vector of vectors is an easier implementation...
+	//string* _arrEntries[2];		// array of arrays uses contiguous memory, good when searching columns
+	//char*** _ptrEntries;		// maintains a pointer to a block of memory containing-
 								//		pointers that point to blocks of memory containing-
 								//			pointers that point to blocks of memory containing-
 								//				chars
@@ -51,6 +51,5 @@ public:
 struct Entry{
 	vector<string> fields;
 };
-
 
 #endif
