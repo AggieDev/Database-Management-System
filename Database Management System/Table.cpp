@@ -9,4 +9,5 @@ Table::Table(string name, int numCols=2)
 }
 struct deezNuts{
 	int patrick_sucks;
+	int nobody_sucks;
 };
