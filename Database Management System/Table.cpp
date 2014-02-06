@@ -8,5 +8,5 @@ Table::Table(string name, int numCols=2)
 	_vecEntries.clear();
 }
 struct deezNuts{
-	int garrett_sucks;
+	int patrick_sucks;
 };
