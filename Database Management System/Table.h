@@ -1,7 +1,5 @@
 // class to represent a table/relation in the database
-
-#ifndef TABLE_H
-#define TABLE_H
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -55,5 +53,3 @@ struct Entry{
 struct Unicorn{
 	vector<string> babyUnicorns;
 };
-
-#endif
