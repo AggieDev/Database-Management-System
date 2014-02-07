@@ -7,6 +7,3 @@ Table::Table(string name, int numCols=2)
 	_numCols = numCols;
 	_entries.clear();
 }
-struct deezNuts{
-	int waylon_sucks;
-};
