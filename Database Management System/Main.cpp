@@ -11,7 +11,9 @@ int main(int argc, const char* argv[])
 	cout << "DBMS started.\n";
 
 	Database database = Database();
-
+	vector<string> this_vector;
+	this_vector.push_back("Suck");
+	this_vector.push_back("it");
 	vector<string> columnNames;
 	columnNames.push_back("Names");
 	columnNames.push_back("Ages");
@@ -22,6 +24,7 @@ int main(int argc, const char* argv[])
 	firstEntVec.push_back("1");
 	
 	first.addEntry(Entry(firstEntVec));
+	first.rename(this_vector);
 	first.printTable();
 
 	//to be added later -WB

@@ -106,5 +106,8 @@ bool Table::deleteEntry(string key, int keyCol)
 }
 
 void Table::rename(vector<string> new_attributes){
-
+	if (new_attributes.size() == colNames.size()){
+		colNames = new_attributes;
+	}
+	else std::cout << "ERROR: Please match the number of attributes.";
 }
