@@ -12,6 +12,14 @@ Table::~Table()
 { // table destructor
 	_entries.clear();  // NOTE: is this needed?
 }
+
+void Table::printTable()
+{
+	cout << "Table: " << _name << "\n" << "----------------\n";
+	for (int i = 0; i < _entries.size(); i++)
+		_entries.at(i).printEntry();
+}
+
 Entry Table::getEntry(unsigned int entryID)
 { // return the entry at the provided row
 	Entry entry;

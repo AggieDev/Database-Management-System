@@ -26,6 +26,7 @@ public:
 
 	Table(string name, int numCols=2);
 	~Table();
+	void printTable();
 
 // ACCESSORS
 	

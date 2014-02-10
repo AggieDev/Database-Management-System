@@ -13,9 +13,13 @@ int main(int argc, const char* argv[])
 	Database database = Database();
 
 	//MAKE THIS WORK
-	//Table first = Table("DiffTest1", 2);
+	Table first = Table("DiffTest1", 2);
 	//Table second = Table("DiffTest2", 2);
-	//first.addEntry(new Entry
+	vector<string> firstEntVec;
+	firstEntVec.push_back("first col");
+	firstEntVec.push_back("second col");
+	first.addEntry(Entry(firstEntVec));
+	first.printTable();
 	//database.addTable(first);
 	//database.addTable(second);
 

@@ -13,6 +13,9 @@ public:
 	vector<string> fields;
 
 	Entry();
+	Entry(vector<string> vec){ fields = vec; };
 	~Entry();
+
+	void printEntry();
 
 };

@@ -8,3 +8,11 @@ Entry::Entry()
 Entry::~Entry()
 {
 }
+
+void Entry::printEntry()
+{
+	for (int i = 0; i < fields.size(); i++)
+	{
+		cout << fields.at(i) + ", ";
+	}
+}
