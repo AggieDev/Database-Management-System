@@ -20,7 +20,7 @@ void Table::printTable()
 	{
 		for (int i = 0; i < colNames.size(); i++)
 			cout << colNames.at(i) << "\t";
-		cout << "\n";
+		cout << "\n----------------\n";
 	}
 	//print entries
 	for (int i = 0; i < _entries.size(); i++)

@@ -32,6 +32,6 @@ int main(int argc, const char* argv[])
 	//difference (will uncomment once Table has fixed compile errors)
 	//Table diff = database.differences(first, second);
 
-
+	cout << "\n\n";
 	system("PAUSE");
 }
