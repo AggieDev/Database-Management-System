@@ -15,16 +15,12 @@ private:
 	string _name;
 	int _numCols;
 
-<<<<<<< HEAD
 	vector<Entry> _entries;	// vector of vectors is an easier implementation...
 	//string* _arrEntries[2];		// array of arrays uses contiguous memory, good when searching columns
 	//char*** _ptrEntries;		// maintains a pointer to a block of memory containing-
 								//		pointers that point to blocks of memory containing-
 								//			pointers that point to blocks of memory containing-
 								//				chars
-=======
-	vector<Entry> _entries;
->>>>>>> origin/patrick-branch
 
 public:
 
@@ -53,13 +49,3 @@ public:
 	bool importDB(string fileName); 
 	
 };
-<<<<<<< HEAD
-struct Entry{
-	vector<string> fields;
-};
-
-struct Unicorn{
-	vector<string> babyUnicorns;
-};
-=======
->>>>>>> origin/patrick-branch
