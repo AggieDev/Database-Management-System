@@ -104,3 +104,7 @@ bool Table::deleteEntry(string key, int keyCol)
 	}
 	return false;
 }
+
+void Table::rename(vector<string> new_attributes){
+
+}

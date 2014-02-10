@@ -51,4 +51,5 @@ public:
 
 	bool importDB(string fileName); 
 	
+	void rename(vector<string> new_attributes);
 };
