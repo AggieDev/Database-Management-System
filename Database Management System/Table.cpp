@@ -12,7 +12,6 @@ Table::~Table()
 { // table destructor
 	_entries.clear();  // NOTE: is this needed?
 }
-
 Entry Table::getEntry(unsigned int entryID)
 { // return the entry at the provided row
 	Entry entry;
@@ -31,7 +30,6 @@ Entry Table::getEntry(unsigned int entryID)
 void Table::addEntry(Entry e)
 {  // add new entry (row) to the database 
 	_entries.push_back(e);
-
 }
 void Table::addEntry(vector<string> fields)
 { // add new entry (row) to database with the fields provided 
