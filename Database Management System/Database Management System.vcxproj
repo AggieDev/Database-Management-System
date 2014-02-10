@@ -79,23 +79,17 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <ClInclude Include="Database.h" />
-=======
     <ClInclude Include="Entry.h" />
->>>>>>> origin/patrick-branch
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="Main.cpp" />
-=======
     <ClCompile Include="Database Management System.cpp" />
     <ClCompile Include="Entry.cpp" />
->>>>>>> origin/patrick-branch
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
