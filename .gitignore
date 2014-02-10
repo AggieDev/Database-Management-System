@@ -83,8 +83,6 @@ build/
 *.log
 *.scc
 
-*.filters
-
 # Visual C++ cache files
 ipch/
 *.aps
