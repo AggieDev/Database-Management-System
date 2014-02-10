@@ -15,6 +15,7 @@ private:
 	string _name;
 	int _numCols;
 
+	vector<string> colNames;
 	vector<Entry> _entries;	// vector of vectors is an easier implementation...
 	//string* _arrEntries[2];		// array of arrays uses contiguous memory, good when searching columns
 	//char*** _ptrEntries;		// maintains a pointer to a block of memory containing-
@@ -24,7 +25,8 @@ private:
 
 public:
 
-	Table(string name, int numCols=2);
+	Table(string name, int numCols = 2);
+	Table(string name, vector<string> cols, int numCols = 2){ colNames = cols; };
 	~Table();
 	void printTable();
 

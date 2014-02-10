@@ -15,7 +15,14 @@ Table::~Table()
 
 void Table::printTable()
 {
-	cout << "Table: " << _name << "\n" << "----------------\n";
+	cout << "Table: " << _name << "\n" << "----------------\n"; 
+	if (!colNames.empty())	//print column names
+	{
+		for (int i = 0; i < colNames.size(); i++)
+			cout << colNames.at(i) << "\t";
+		cout << "\n";
+	}
+	//print entries
 	for (int i = 0; i < _entries.size(); i++)
 		_entries.at(i).printEntry();
 }

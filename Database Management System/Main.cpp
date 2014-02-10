@@ -12,14 +12,19 @@ int main(int argc, const char* argv[])
 
 	Database database = Database();
 
-	//MAKE THIS WORK
-	Table first = Table("DiffTest1", 2);
+	vector<string> columnNames;
+	columnNames.push_back("Names");
+	columnNames.push_back("Ages");
+	Table first = Table("DiffTest1", columnNames, 2);
 	//Table second = Table("DiffTest2", 2);
 	vector<string> firstEntVec;
-	firstEntVec.push_back("first col");
-	firstEntVec.push_back("second col");
+	firstEntVec.push_back("Bob");
+	firstEntVec.push_back("1");
+	
 	first.addEntry(Entry(firstEntVec));
 	first.printTable();
+
+	//to be added later -WB
 	//database.addTable(first);
 	//database.addTable(second);
 
