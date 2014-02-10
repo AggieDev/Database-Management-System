@@ -7,8 +7,6 @@ Table::Table(string name, int numCols)
 	_name = name;
 	_numCols = numCols;
 	_entries.clear();
-<<<<<<< HEAD
-=======
 }
 Table::~Table()
 { // table destructor
@@ -90,5 +88,4 @@ bool Table::deleteEntry(string key, int keyCol)
 		}
 	}
 	return false;
->>>>>>> origin/patrick-branch
 }

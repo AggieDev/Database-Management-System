@@ -15,6 +15,7 @@ int main(int argc, const char* argv[])
 	//MAKE THIS WORK
 	//Table first = Table("DiffTest1", 2);
 	//Table second = Table("DiffTest2", 2);
+	//first.addEntry(new Entry
 	//database.addTable(first);
 	//database.addTable(second);
 
