@@ -17,5 +17,5 @@ public:
 	~Entry();
 
 	void printEntry();
-
+	vector<string> getFields(){ return fields; }
 };

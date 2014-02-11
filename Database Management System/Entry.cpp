@@ -15,4 +15,5 @@ void Entry::printEntry()
 	{
 		cout << fields.at(i) + "\t";
 	}
+	cout << "\n";
 }
