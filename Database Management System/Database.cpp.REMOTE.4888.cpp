@@ -16,8 +16,7 @@ Table Database::differenceTable(Table t1, Table t2)
 	columnNames.push_back("Names");
 	columnNames.push_back("Ages");
 	Table diffTable = Table(t1.getName() + " difference " + t2.getName(), columnNames, 2);
-	diffTable = t1;														//copy first table
-	diffTable.setName(t1.getName() + " difference " + t2.getName());	//set name back 
+	diffTable = t1;	//copy first table
 
 	//delete entries that are in t1 and t2
 	for (int i = 0; i < t2.getEntries().size(); i++)
@@ -32,40 +31,6 @@ Table Database::differenceTable(Table t1, Table t2)
 	return diffTable;
 }
 
-<<<<<<< HEAD
-Table Database::productTable(Table t1, Table t2)
-{
-	//4 columns due to multiplication
-	vector<string> colNames;
-	colNames.push_back("Name");
-	colNames.push_back("Age");
-	colNames.push_back("Name");
-	colNames.push_back("Age");
-	Table productTable = Table(t1.getName() + " cross " + t2.getName(), colNames, 4);
-	//for each entry in t1
-	for (int i = 0; i < t1.getEntries().size(); i++)
-	{
-		//for each entry in t2
-		for (int j = 0; j < t2.getEntries().size(); j++)
-		{
-			vector<string> entryVec;
-			entryVec.push_back(t1.getEntries().at(i).getFields().at(0));
-			entryVec.push_back(t1.getEntries().at(i).getFields().at(1));
-			entryVec.push_back(t2.getEntries().at(j).getFields().at(0));
-			entryVec.push_back(t2.getEntries().at(j).getFields().at(1));
-			productTable.addEntry(Entry(entryVec));
-		}
-	}
-
-	return productTable;
-}
-
-void Database::printTables()
-{
-	for (int i = 0; i < _tables.size(); i++)
-		_tables.at(i).printTable();
-}
-=======
 
 Table Database::select(vector<string> attributes, string fromTable, vector<string> _where)
 {
@@ -180,4 +145,3 @@ Table Database::setunion(Table t1, Table t2)
 	}
 	return union_table;
 }
->>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a

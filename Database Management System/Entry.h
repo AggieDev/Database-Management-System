@@ -17,5 +17,8 @@ public:
 	~Entry();
 
 	void printEntry();
-	vector<string> getFields(){ return fields; }
+	vector<string> getFields() const { return fields; }
+	string operator[](int i) { return fields[i]; }
 };
+
+ostream& operator<<(ostream& out, const Entry& e);
