@@ -14,39 +14,37 @@ void testOccupyTables(Table &first, Table &second)
 	entryVec.push_back("Bob");
 	entryVec.push_back("1");
 	first.addEntry(Entry(entryVec));
-
 	entryVec.clear();
 
 	entryVec.push_back("Anne");
 	entryVec.push_back("3");
 	first.addEntry(Entry(entryVec));
-
 	entryVec.clear();
 
 	entryVec.push_back("Dog");
 	entryVec.push_back("2");
 	first.addEntry(Entry(entryVec));
-
 	entryVec.clear();
+
 	first.printTable();
 
 	entryVec.push_back("Bob");
 	entryVec.push_back("3");
 	second.addEntry(Entry(entryVec));
-
 	entryVec.clear();
 
 	entryVec.push_back("Anne");
 	entryVec.push_back("3");
 	second.addEntry(Entry(entryVec));
-
 	entryVec.clear();
+
 	second.printTable();
 }
 
 //using this to test difference table
 void testDifferenceTable(Database &database)
 {
+	cout << "\n=======Testing Difference Table=======\n\n";
 	//create and occupy 2 tables with data
 	vector<string> columnNames;
 	columnNames.push_back("Names");
@@ -64,6 +62,14 @@ void testDifferenceTable(Database &database)
 	diff.printTable();
 }
 
+void testProductTable(Database &database)
+{
+	cout << "\n=======Testing Product Table=======\n\n";
+	database.printTables();
+	Table product = database.productTable(database.getTables().at(0), database.getTables().at(1));
+	product.printTable();
+}
+
 int main(int argc, const char* argv[])
 {
 	cout << "DBMS started.\n";
@@ -71,6 +77,7 @@ int main(int argc, const char* argv[])
 	Database database = Database();
 
 	testDifferenceTable(database);
+	testProductTable(database);
 
 	cout << "\n\n";
 	system("PAUSE");

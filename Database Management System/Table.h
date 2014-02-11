@@ -45,6 +45,7 @@ public:
 
 	void addEntry(Entry e);				// insert into
 	void addEntry(vector<string> fields);
+	void setName(string name){ _name = name; }
 
 	void dropTable();
 	bool update(string key, string newVal, int keyCol = 0, int valCol = 1);
