@@ -62,6 +62,7 @@ void testDifferenceTable(Database &database)
 	diff.printTable();
 }
 
+<<<<<<< HEAD
 void testProductTable(Database &database)
 {
 	cout << "\n=======Testing Product Table=======\n\n";
@@ -71,6 +72,8 @@ void testProductTable(Database &database)
 
 }
 
+=======
+>>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 void testSelection()
 try {
 	
@@ -135,8 +138,13 @@ void testSetUnion(Database &database)
 	database.addTable(first);
 	database.addTable(second);
 
+<<<<<<< HEAD
 	//Table union_table = database.setunion(first, second);
 	//union_table.printTable();
+=======
+	Table union_table = database.setunion(first, second);
+	union_table.printTable();
+>>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 }
 
 int main(int argc, const char* argv[])
@@ -146,8 +154,11 @@ int main(int argc, const char* argv[])
 	Database database = Database();
 
 	testDifferenceTable(database);
+<<<<<<< HEAD
 	testProductTable(database);
 
+=======
+>>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 	try
 	{
 		testSelection();
@@ -156,8 +167,12 @@ int main(int argc, const char* argv[])
 	{
 		cout << error << endl;
 	}
+<<<<<<< HEAD
 	testSetUnion(database);
 
+=======
+	testSetUnion(databse);
+>>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 	cout << "\n\n";
 	system("PAUSE");
 }

@@ -33,6 +33,7 @@ Table Database::differenceTable(Table t1, Table t2)
 }
 
 
+<<<<<<< HEAD
 Table Database::productTable(Table t1, Table t2)
 {
 	//4 columns due to multiplication
@@ -66,6 +67,8 @@ void Database::printTables()
 		_tables.at(i).printTable();
 }
 
+=======
+>>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 Table Database::select(vector<string> attributes, string fromTable, vector<string> _where)
 {
 	Table* result;
@@ -136,6 +139,7 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 	return *result;
 }
 
+<<<<<<< HEAD
 //Table Database::setunion(Table t1, Table t2)
 //{
 //	bool match = true;
@@ -180,3 +184,48 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 //	return union_table;
 //}
 
+=======
+Table Database::setunion(Table t1, Table t2)
+{
+	bool match = true;
+	Table union_table("Union Table", t1.getNumCols());
+	vector<Entry> entry_vec;
+	for (int i = 0; i < t1.getEntries().size(); i++)
+	{
+		entry_vec.push_back(t1.getEntries().at(i));
+	}
+
+	for (int i = 0; i < entry_vec.size(); i++){
+		union_table.addEntry(entry_vec.at(i));
+	}
+
+	for (int i = 0; i < t2.getEntries().size(); i++)
+	{
+		//match = false;
+		match = true;
+		//union_table.addEntry(entry_vec.at(i));
+		for (int j = 0; j < t1.getEntries().size(); j++)
+		{
+			match = true;
+			for (int k = 0; k < t1.getEntries().at(j).getFields().size(); k++)
+			{
+				if (t2.getEntries().at(i).getFields().at(k).compare(t1.getEntries().at(j).getFields().at(k)) == 0)
+				{
+					match = false;
+					break;
+				}
+			}
+			if (match == false && union_table.hasEntry(t2.getEntries().at(i)) == 0)
+			{
+				union_table.addEntry(t2.getEntries().at(i));
+				std::cout << "something added \n";
+				std::cout << i << "\n";
+				break;
+			}
+		}
+		
+
+	}
+	return union_table;
+}
+>>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
