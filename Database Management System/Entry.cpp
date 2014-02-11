@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include "stdafx.h"
+=======
+
+>>>>>>> origin/master
 #include "Entry.h"
 
 Entry::Entry()
@@ -17,3 +21,16 @@ void Entry::printEntry()
 	}
 	cout << "\n";
 }
+<<<<<<< HEAD
+=======
+
+ostream& operator<<(ostream& out, const Entry& e)
+{
+	for (int i = 0; i < e.getFields().size(); i++)
+	{
+		out << e.getFields().at(i) + "\t";
+	}
+	return out;
+}
+
+>>>>>>> origin/master

@@ -11,7 +11,14 @@ public:
 	~Database();
 
 	void addTable(Table t){ _tables.push_back(t); }
+<<<<<<< HEAD
 	Table differenceTable(Table t1, Table t2);
 	Table setunion(Table t1, Table t2);
+=======
+	Table select(vector<string> attributes, string fromTable, vector<string> _where);
+		//atributes = {"id","name","age"} or {"*"}
+		//_where = {"age","<","10"} parse the where operations
+	Table differenceTable(Table t1, Table t2);
+>>>>>>> origin/master
 };
 
