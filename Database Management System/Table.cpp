@@ -1,4 +1,6 @@
-#include "stdafx.h"
+#include <stdio.h>
+#include <exception>
+#include <stdexcept>
 #include "Table.h"
 
 
@@ -53,7 +55,7 @@ Entry Table::getEntry(unsigned int entryID)
 	Entry entry;
 	if (_entries.size() < entryID)
 	{
-		throw new exception("entryID out of range in getEntry");
+		throw string("entryID out of range in getEntry");
 	}
 	else
 	{
@@ -71,7 +73,7 @@ void Table::addEntry(vector<string> fields)
 { // add new entry (row) to database with the fields provided 
 	if (fields.size() != _numCols)
 	{
-		throw new exception("in addEntry, incorrect number of fields provided for this table");
+		throw string("in addEntry, incorrect number of fields provided for this table");
 		return;
 	}
 
@@ -87,6 +89,14 @@ void Table::dropTable()
 { // clear entries vector
 	_entries.clear();
 }
+
+
+void Table::addColumn(string colName, char colType)
+{
+	colNames.push_back(colName);
+	colTypes.push_back(colType);
+}
+
 bool Table::update(string key, string newVal, int keyCol, int valCol)
 { // update an existing entry with a new value, return true on success
 	for (unsigned int i = 0; i < _entries.size(); i++)
@@ -126,6 +136,7 @@ bool Table::deleteEntry(string key, int keyCol)
 	return false;
 }
 
+<<<<<<< HEAD
 void Table::rename(vector<string> new_attributes){
 	if (new_attributes.size() == colNames.size()){
 		colNames = new_attributes;
@@ -135,3 +146,96 @@ void Table::rename(vector<string> new_attributes){
 	
 }
 
+=======
+vector<int> Table::findCondition(vector<string> whereOps)
+{
+	vector<int> results;
+	string left = whereOps[0];
+	string center = whereOps[1];
+	string right = whereOps[2];
+
+	// whereOps = {"Age",  "<" , "10"}
+	//            {left ,center,right}
+
+	//find the column that corresponds to the 
+	int columnToCheck = -1;
+	for(int i = 0; i < colNames.size(); i++)
+	{
+		if(colNames[i] == left)
+		{
+			columnToCheck = i;
+			break;
+		}
+	}
+	if(columnToCheck == -1)
+	{
+		string error = "Error: " + left + " is not an Attribute in " + _name;
+		throw error;
+	}
+	if(colNames.size() != colTypes.size())
+	{
+		string error = "We don't have the type for Attribute: " + left;
+		throw error;
+	}
+	
+
+	int intVal;
+	double doubleVal;
+	char type = colTypes[columnToCheck];
+	bool isInt = false;
+	switch(type)
+	{
+	case 'i':
+		intVal = atoi(right.c_str());
+		isInt = true;
+	case 'f':
+		doubleVal = atof(right.c_str());
+		break;
+	default: //probably string
+		break;
+	}
+
+	for(int i = 0; i < _entries.size(); i++)
+	{
+		string valueToCheck = _entries[i][columnToCheck];
+		if(center == "=")
+		{
+			if(isInt && atoi(valueToCheck.c_str()) == intVal)
+				results.push_back(i);
+			else if(!isInt && atof(valueToCheck.c_str()) == doubleVal)
+				results.push_back(i);
+		}
+		else if(center == "<")
+		{
+			if(isInt && atoi(valueToCheck.c_str()) < intVal)
+				results.push_back(i);
+			else if(!isInt && atof(valueToCheck.c_str()) < doubleVal)
+				results.push_back(i);
+		}
+		else if(center == ">")
+		{
+			if(isInt && atoi(valueToCheck.c_str()) > intVal)
+				results.push_back(i);
+			else if(!isInt && atof(valueToCheck.c_str()) > doubleVal)
+				results.push_back(i);
+		}
+		else if(center == "<=")
+		{
+			if(isInt && atoi(valueToCheck.c_str()) <= intVal)
+				results.push_back(i);
+			else if(!isInt && atof(valueToCheck.c_str()) <= doubleVal)
+				results.push_back(i);
+		}
+		else if(center == ">=")
+		{
+			if(isInt && atoi(valueToCheck.c_str()) >= intVal)
+				results.push_back(i);
+			else if(!isInt && atof(valueToCheck.c_str()) >= doubleVal)
+				results.push_back(i);
+		}
+	}
+
+	return results;
+
+}
+>>>>>>> eliutt-branch

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include <stdio.h>
 #include <iostream>
 #include "Database.h"
@@ -65,6 +65,58 @@ void testDifferenceTable(Database &database)
 }
 
 
+<<<<<<< HEAD
+=======
+void testSelection()
+try {
+	
+	Database database;
+	vector<string> attributes;
+	vector<char> attTypes;
+	attributes.push_back("FirstName");
+	attTypes.push_back('s');
+	attributes.push_back("LastName");
+	attTypes.push_back('s');
+	attributes.push_back("Age");
+	attTypes.push_back('i');
+	attributes.push_back("Price");
+	attTypes.push_back('f');
+
+	Table table("Testing",attributes,attTypes);
+	vector<string> entry1;
+	entry1.push_back("Eliutt");
+	entry1.push_back("Rivera");
+	entry1.push_back("10");
+	entry1.push_back("20.50");
+	vector<string> entry2;
+	entry2.push_back("Bob");
+	entry2.push_back("Sagget");
+	entry2.push_back("40");
+	entry2.push_back("50.25");
+	table.addEntry(entry1);
+	table.addEntry(entry2);
+
+	vector<string> selectAttr;
+	selectAttr.push_back("FirstName");
+	
+	vector<string> selectWhere;
+	selectWhere.push_back("Age"); //left
+	selectWhere.push_back(">"); //center
+	selectWhere.push_back("20"); //right
+	database.addTable(table);
+
+	table.printTable();
+
+	Table results = database.select(selectAttr,"Testing",selectWhere);
+
+	results.printTable();
+	
+}catch(string error)
+{
+	throw error;
+}
+
+>>>>>>> eliutt-branch
 int main(int argc, const char* argv[])
 {
 	cout << "DBMS started.\n";
@@ -72,7 +124,14 @@ int main(int argc, const char* argv[])
 	Database database = Database();
 
 	testDifferenceTable(database);
-
+	try
+	{
+		testSelection();
+	}
+	catch(string error)
+	{
+		cout << error << endl;
+	}
 	cout << "\n\n";
 	system("PAUSE");
 }

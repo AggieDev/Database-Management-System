@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "Entry.h"
 
 Entry::Entry()
@@ -17,3 +17,13 @@ void Entry::printEntry()
 	}
 	cout << "\n";
 }
+
+ostream& operator<<(ostream& out, const Entry& e)
+{
+	for (int i = 0; i < e.getFields().size(); i++)
+	{
+		out << e.getFields().at(i) + "\t";
+	}
+	return out;
+}
+
