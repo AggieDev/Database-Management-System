@@ -1,0 +1,20 @@
+High Level Entities - Description (from bottom to top)
+
+
+Database: Represents a collection of files (.txt, .csv, .xml,…) that each identify a relation table. A table can identify attributes for a specific entity and/or relationships between many entities.
+
+
+Data Manipulation Language (DML): Language to respond to database queries. These consist of: open, close, write, exit, show, create table, insert into, update, delete, select, project, +, -, and *. More generally, the implemented functions   (for which a CLI will be provided) will allow us to update the database for long-term usage.
+
+ - As mentioned above, a command line interface (CLI) will be provided to make the DML function calls to the database
+
+ - A parser will be implemented for our domain-specific DML for our queries
+
+ - The domain for our database will also be defined 
+
+
+DB Application: written in c++ to interact with the DML and provide the user with a way to use the database. This application can provide the user with direct access to the stored data and/or integrate the data to the back-end for a more complex application
+
+ - a CLI will be an easy implementation to use the functionality of the DB 
+
+ - a GUI will be a more difficult implementation that will result in a more user-friendly experience
