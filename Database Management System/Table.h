@@ -53,5 +53,6 @@ public:
 	bool deleteEntry(string key, int keyCol = 0);
 
 	bool importDB(string fileName);
+	void rename(vector<string> new_attributes);
 
 };

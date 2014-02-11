@@ -64,6 +64,7 @@ void testDifferenceTable(Database &database)
 	diff.printTable();
 }
 
+
 int main(int argc, const char* argv[])
 {
 	cout << "DBMS started.\n";
