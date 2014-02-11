@@ -136,7 +136,7 @@ bool Table::deleteEntry(string key, int keyCol)
 	return false;
 }
 
-<<<<<<< HEAD
+
 void Table::rename(vector<string> new_attributes){
 	if (new_attributes.size() == colNames.size()){
 		colNames = new_attributes;
@@ -146,7 +146,6 @@ void Table::rename(vector<string> new_attributes){
 	
 }
 
-=======
 vector<int> Table::findCondition(vector<string> whereOps)
 {
 	vector<int> results;
@@ -238,4 +237,4 @@ vector<int> Table::findCondition(vector<string> whereOps)
 	return results;
 
 }
->>>>>>> eliutt-branch
+

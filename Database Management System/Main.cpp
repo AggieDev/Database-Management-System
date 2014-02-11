@@ -64,9 +64,6 @@ void testDifferenceTable(Database &database)
 	diff.printTable();
 }
 
-
-<<<<<<< HEAD
-=======
 void testSelection()
 try {
 	
@@ -116,7 +113,25 @@ try {
 	throw error;
 }
 
->>>>>>> eliutt-branch
+void testSetUnion(Database &database)
+{
+	//create and occupy 2 tables with data
+	vector<string> columnNames;
+	columnNames.push_back("Names");
+	columnNames.push_back("Ages");
+	Table first = Table("DiffTest1", columnNames, 2);
+	Table second = Table("DiffTest2", columnNames, 2);
+
+	testOccupyTables(first, second);
+
+	//test union relation
+	database.addTable(first);
+	database.addTable(second);
+
+	Table union_table = database.setunion(first, second);
+	union_table.printTable();
+}
+
 int main(int argc, const char* argv[])
 {
 	cout << "DBMS started.\n";
@@ -132,6 +147,7 @@ int main(int argc, const char* argv[])
 	{
 		cout << error << endl;
 	}
+	testSetUnion(databse);
 	cout << "\n\n";
 	system("PAUSE");
 }
