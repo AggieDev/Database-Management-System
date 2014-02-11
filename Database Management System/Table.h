@@ -15,9 +15,9 @@ private:
 	string _name;
 	int _numCols;
 	vector<char> colTypes; //should always be the same size as colNames. colNames[0] = "FirstName", colType[0] = 's'
-		//'s' - string
-		//'f' - float (double)
-		//'i' - int
+	//'s' - string
+	//'f' - float (double)
+	//'i' - int
 	vector<string> colNames;
 	vector<Entry> _entries;	// vector of vectors is an easier implementation...
 	//string* _arrEntries[2];		// array of arrays uses contiguous memory, good when searching columns
@@ -30,13 +30,13 @@ public:
 	Table() {}
 	Table(string name, int numCols = 2);
 	Table(string name, vector<string> cols, int numCols = 2){ _name = name; colNames = cols; }
-	Table(string name, vector<string> cols, vector<char> types){ _name = name; colNames = cols; colTypes = types; _numCols = cols.size();}
+	Table(string name, vector<string> cols, vector<char> types){ _name = name; colNames = cols; colTypes = types; _numCols = cols.size(); }
 	~Table();
 	void printTable();
 
 	// ACCESSORS
 	vector<string> getColNames() const { return colNames; }
-	vector<char> getColTypes() const {return colTypes; }
+	vector<char> getColTypes() const { return colTypes; }
 	Entry getEntry(unsigned int entryID);
 	//Entry getEntry(string name, int col=0);
 	vector<Entry> getEntries(){ return _entries; }
@@ -47,7 +47,7 @@ public:
 	// MUTATORS
 
 	int hasEntry(Entry e);	//returns index of matched entry, unless it doesn't exist then it returns 0
-    
+
 
 	void addColumn(string colName, char colType); //USE THIS FUNCTION TO ADD MORE COLUMNS
 

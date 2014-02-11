@@ -62,7 +62,6 @@ void testDifferenceTable(Database &database)
 	diff.printTable();
 }
 
-<<<<<<< HEAD
 void testProductTable(Database &database)
 {
 	cout << "\n=======Testing Product Table=======\n\n";
@@ -72,11 +71,9 @@ void testProductTable(Database &database)
 
 }
 
-=======
->>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 void testSelection()
 try {
-	
+
 	Database database;
 	vector<string> attributes;
 	vector<char> attTypes;
@@ -89,7 +86,7 @@ try {
 	attributes.push_back("Price");
 	attTypes.push_back('f');
 
-	Table table("Testing",attributes,attTypes);
+	Table table("Testing", attributes, attTypes);
 	vector<string> entry1;
 	entry1.push_back("Eliutt");
 	entry1.push_back("Rivera");
@@ -105,7 +102,7 @@ try {
 
 	vector<string> selectAttr;
 	selectAttr.push_back("FirstName");
-	
+
 	vector<string> selectWhere;
 	selectWhere.push_back("Age"); //left
 	selectWhere.push_back(">"); //center
@@ -114,11 +111,12 @@ try {
 
 	table.printTable();
 
-	Table results = database.select(selectAttr,"Testing",selectWhere);
+	Table results = database.select(selectAttr, "Testing", selectWhere);
 
 	results.printTable();
-	
-}catch(string error)
+
+}
+catch (string error)
 {
 	throw error;
 }
@@ -138,13 +136,8 @@ void testSetUnion(Database &database)
 	database.addTable(first);
 	database.addTable(second);
 
-<<<<<<< HEAD
 	//Table union_table = database.setunion(first, second);
 	//union_table.printTable();
-=======
-	Table union_table = database.setunion(first, second);
-	union_table.printTable();
->>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 }
 
 int main(int argc, const char* argv[])
@@ -154,25 +147,18 @@ int main(int argc, const char* argv[])
 	Database database = Database();
 
 	testDifferenceTable(database);
-<<<<<<< HEAD
 	testProductTable(database);
 
-=======
->>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 	try
 	{
 		testSelection();
 	}
-	catch(string error)
+	catch (string error)
 	{
 		cout << error << endl;
 	}
-<<<<<<< HEAD
 	testSetUnion(database);
 
-=======
-	testSetUnion(databse);
->>>>>>> b7b9a20e0a20216dba3bfa0407626846ca3a1b1a
 	cout << "\n\n";
 	system("PAUSE");
 }
