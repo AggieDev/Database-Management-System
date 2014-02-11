@@ -120,6 +120,7 @@ catch (string error)
 {
 	throw error;
 }
+
 void testProjection()
 try {
 	
@@ -134,18 +135,20 @@ try {
 	attTypes.push_back('i');
 	attributes.push_back("Price");
 	attTypes.push_back('f');
+    Table table("Testing2",attributes,attTypes);
     
-	Table table("Testing",attributes,attTypes);
 	vector<string> entry1;
 	entry1.push_back("Eliutt");
 	entry1.push_back("Rivera");
 	entry1.push_back("10");
 	entry1.push_back("20.50");
+    
 	vector<string> entry2;
 	entry2.push_back("Bob");
 	entry2.push_back("Sagget");
 	entry2.push_back("40");
 	entry2.push_back("50.25");
+    
 	table.addEntry(entry1);
 	table.addEntry(entry2);
     
@@ -156,9 +159,13 @@ try {
     
 	table.printTable();
     
+<<<<<<< HEAD
 	Table results = database.Project(projectAttr,"Testing");
+=======
+	Table results = database.Project(projectAttr,"Testing2");
+>>>>>>> eliutt-branch
     
-	results.printTable();
+    results.printTable();
 	
 }catch(string error)
 {
@@ -197,6 +204,7 @@ int main(int argc, const char* argv[])
 	try
 	{
 		testSelection();
+        testProjection();
 	}
 	catch (string error)
 	{
