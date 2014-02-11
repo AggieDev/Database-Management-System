@@ -3,6 +3,10 @@
 *.sdf
 *.vcxproj
 *.sln
+<<<<<<< HEAD
+=======
+*.zip
+>>>>>>> origin/master
 
 #################
 ## Eclipse

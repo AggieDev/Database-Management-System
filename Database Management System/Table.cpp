@@ -136,17 +136,16 @@ bool Table::deleteEntry(string key, int keyCol)
 	return false;
 }
 
-<<<<<<< HEAD
+
 void Table::rename(vector<string> new_attributes){
 	if (new_attributes.size() == colNames.size()){
 		colNames = new_attributes;
-		
+
 	}
 	else std::cout << "ERROR: Please match the number of attributes.";
-	
+
 }
 
-=======
 vector<int> Table::findCondition(vector<string> whereOps)
 {
 	vector<int> results;
@@ -159,31 +158,31 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 	//find the column that corresponds to the 
 	int columnToCheck = -1;
-	for(int i = 0; i < colNames.size(); i++)
+	for (int i = 0; i < colNames.size(); i++)
 	{
-		if(colNames[i] == left)
+		if (colNames[i] == left)
 		{
 			columnToCheck = i;
 			break;
 		}
 	}
-	if(columnToCheck == -1)
+	if (columnToCheck == -1)
 	{
 		string error = "Error: " + left + " is not an Attribute in " + _name;
 		throw error;
 	}
-	if(colNames.size() != colTypes.size())
+	if (colNames.size() != colTypes.size())
 	{
 		string error = "We don't have the type for Attribute: " + left;
 		throw error;
 	}
-	
+
 
 	int intVal;
 	double doubleVal;
 	char type = colTypes[columnToCheck];
 	bool isInt = false;
-	switch(type)
+	switch (type)
 	{
 	case 'i':
 		intVal = atoi(right.c_str());
@@ -195,42 +194,42 @@ vector<int> Table::findCondition(vector<string> whereOps)
 		break;
 	}
 
-	for(int i = 0; i < _entries.size(); i++)
+	for (int i = 0; i < _entries.size(); i++)
 	{
 		string valueToCheck = _entries[i][columnToCheck];
-		if(center == "=")
+		if (center == "=")
 		{
-			if(isInt && atoi(valueToCheck.c_str()) == intVal)
+			if (isInt && atoi(valueToCheck.c_str()) == intVal)
 				results.push_back(i);
-			else if(!isInt && atof(valueToCheck.c_str()) == doubleVal)
+			else if (!isInt && atof(valueToCheck.c_str()) == doubleVal)
 				results.push_back(i);
 		}
-		else if(center == "<")
+		else if (center == "<")
 		{
-			if(isInt && atoi(valueToCheck.c_str()) < intVal)
+			if (isInt && atoi(valueToCheck.c_str()) < intVal)
 				results.push_back(i);
-			else if(!isInt && atof(valueToCheck.c_str()) < doubleVal)
+			else if (!isInt && atof(valueToCheck.c_str()) < doubleVal)
 				results.push_back(i);
 		}
-		else if(center == ">")
+		else if (center == ">")
 		{
-			if(isInt && atoi(valueToCheck.c_str()) > intVal)
+			if (isInt && atoi(valueToCheck.c_str()) > intVal)
 				results.push_back(i);
-			else if(!isInt && atof(valueToCheck.c_str()) > doubleVal)
+			else if (!isInt && atof(valueToCheck.c_str()) > doubleVal)
 				results.push_back(i);
 		}
-		else if(center == "<=")
+		else if (center == "<=")
 		{
-			if(isInt && atoi(valueToCheck.c_str()) <= intVal)
+			if (isInt && atoi(valueToCheck.c_str()) <= intVal)
 				results.push_back(i);
-			else if(!isInt && atof(valueToCheck.c_str()) <= doubleVal)
+			else if (!isInt && atof(valueToCheck.c_str()) <= doubleVal)
 				results.push_back(i);
 		}
-		else if(center == ">=")
+		else if (center == ">=")
 		{
-			if(isInt && atoi(valueToCheck.c_str()) >= intVal)
+			if (isInt && atoi(valueToCheck.c_str()) >= intVal)
 				results.push_back(i);
-			else if(!isInt && atof(valueToCheck.c_str()) >= doubleVal)
+			else if (!isInt && atof(valueToCheck.c_str()) >= doubleVal)
 				results.push_back(i);
 		}
 	}
@@ -238,4 +237,4 @@ vector<int> Table::findCondition(vector<string> whereOps)
 	return results;
 
 }
->>>>>>> eliutt-branch
+
