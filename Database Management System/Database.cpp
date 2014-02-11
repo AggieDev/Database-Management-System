@@ -167,13 +167,8 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 					columnsToSelect.push_back(j);
 			}
 		}
-<<<<<<< HEAD
 		result = new Table("QueryResult", attributes, colTypes);
 		for (int i = 0; i < validEntries.size(); i++) //error here
-=======
-		result = new Table("Select",attributes,colTypes);
-		for(int i = 0; i < validEntries.size(); i++) //error here
->>>>>>> eliutt-branch
 		{
 			vector<string> fields;
 			for (int j = 0; j < columnsToSelect.size(); j++)
@@ -187,7 +182,6 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 	return *result;
 }
 
-<<<<<<< HEAD
 Table Database::setunion(Table t1, Table t2)
 {
 	bool match = true;
@@ -230,64 +224,58 @@ Table Database::setunion(Table t1, Table t2)
 	return union_table;
 }
 
-=======
->>>>>>> eliutt-branch
 Table Database::Project(vector<string> attributes, string fromTable)
 {
 	Table* result;
-	Table* selectedTable = NULL;
+	Table* projectedTable = NULL;
 	for(int i = 0; i < _tables.size(); i++)
 	{
 		if (_tables[i].getName() == fromTable)
-			selectedTable = &_tables[i];
+			projectedTable = &_tables[i];
 	}
-    
-    
-	if(selectedTable == NULL)
+	if(projectedTable == NULL)
 	{
 		string error = "Error: Table " + fromTable + " does not exist.";
 		throw error;
 	}
-    
-    
 	int count = 0;
 	vector<char> colTypes;
 	for(int i = 0; i < attributes.size(); i++)
 	{
-		for(int j = 0; j < selectedTable->getColNames().size(); j++)
+		for(int j = 0; j < projectedTable->getColNames().size(); j++)
 		{
-			if(attributes[i] == selectedTable->getColNames()[j])
+			if(attributes[i] == projectedTable->getColNames()[j])
 			{
-				colTypes.push_back(selectedTable->getColTypes()[j]);
+				colTypes.push_back(projectedTable->getColTypes()[j]);
 				count++;
 				break;
 			}
 		}
 	}
-    
 	if(count < attributes.size()) //check if all attributes were found
 	{
-		string error = "Not all attributes were found in table " + selectedTable->getName();
+		string error = "Not all attributes were found in table " + projectedTable->getName();
 		throw error;
 	}
+	
     
     
 	if(attributes[0] == "*")
 	{
-		result = new Table("Query",selectedTable->getColNames(),selectedTable->getColTypes());
+		result = new Table("QueryResult",projectedTable->getColNames());
+		
 	}
 	else
 	{
 		vector<int> columnsToSelect;
 		for(int i =0; i < attributes.size(); i++)
 		{
-			for(int j = 0; j < selectedTable->getColNames().size(); j++)
+			for(int j = 0; j < projectedTable->getColNames().size(); j++)
 			{
-				if(attributes[i] == selectedTable->getColNames()[j])
+				if(attributes[i] == projectedTable->getColNames()[j])
 					columnsToSelect.push_back(j);
 			}
 		}
-<<<<<<< HEAD
 		result = new Table("QueryResult",attributes);
 		for (int i = 0; i < attributes.size(); i++) //error here
 		{
@@ -299,20 +287,6 @@ Table Database::Project(vector<string> attributes, string fromTable)
 			result->addEntry(fields);
 		}
 	}
-=======
-
-		result = new Table("Project",attributes,colTypes);
-        
-        /*vector<string> fields;
-		for(int i = 0; i < columnsToSelect.size(); i++) //error here
-		{
-			fields.push_back(selectedTable->getEntries()[i]);
-        }
-        result->addEntry(fields);
-		*/
-    }
-	
->>>>>>> eliutt-branch
     
 	return *result;
 }
