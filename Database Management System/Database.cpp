@@ -9,6 +9,7 @@ Database::Database()
 Database::~Database()
 {
 }
+
 Table Database::naturalJoinTable(Table t1, Table t2)
 {	// return naturally joint table of t1 and t2
 	Table jointTable = Table(t1.getName() + " & " + t2.getName());
@@ -180,7 +181,6 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 
 	return *result;
 }
-<<<<<<< HEAD
 
 //Table Database::setunion(Table t1, Table t2)
 //{
@@ -226,7 +226,6 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 //	return union_table;
 //}
 
-=======
 Table Database::Project(vector<string> attributes, string fromTable)
 {
 	Table* result;
@@ -280,17 +279,16 @@ Table Database::Project(vector<string> attributes, string fromTable)
 			}
 		}
 		result = new Table("QueryResult",attributes);
-		for(int i = 0; i < attributes.size(); i++) //error here
+		for (int i = 0; i < attributes.size(); i++) //error here
 		{
 			vector<string> fields;
-			for(int j = 0; j < columnsToSelect.size(); j++)
+			for (int j = 0; j < columnsToSelect.size(); j++)
 			{
 				fields.push_back(projectedTable->getEntries()[i][j]);
 			}
 			result->addEntry(fields);
-		
+		}
 	}
     
 	return *result;
 }
->>>>>>> eliutt-branch

@@ -156,7 +156,7 @@ try {
     
 	table.printTable();
     
-	Table results = database.Project(selectAttr,"Testing");
+	Table results = database.Project(projectAttr,"Testing");
     
 	results.printTable();
 	
