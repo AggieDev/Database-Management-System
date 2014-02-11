@@ -20,6 +20,7 @@ public:
 
 	Table differenceTable(Table t1, Table t2);
 	Table productTable(Table t1, Table t2);
+	Table naturalJoinTable(Table t1, Table t2);
 
 	//accessors
 	vector<Table> getTables(){ return _tables; }

@@ -9,6 +9,51 @@ Database::Database()
 Database::~Database()
 {
 }
+Table Database::naturalJoinTable(Table t1, Table t2)
+{	// return naturally joint table of t1 and t2
+	Table jointTable = Table(t1.getName() + " & " + t2.getName());
+	
+	vector<string> t1cols = t1.getColNames();
+	vector<string> t2cols = t2.getColNames();
+
+	vector<string> jointCols = t1cols;
+
+	int count = 0;
+
+	for (unsigned int j = 0; j < t1.getEntries().size(); j++)
+	{
+		jointTable.addEntry(t1.getEntries().at(j));
+	}
+
+	for (int i = 0; i < t2cols.size(); i++)
+	{
+		string curr = t2cols.at(i);
+		if (find(jointCols.begin(), jointCols.end(), curr) != jointCols.end())
+		{	// count how many similar columns there are
+			count++;
+		}
+		else if (count > 0)
+		{	// if the tables have one in common, and a new column is found
+			jointCols.push_back(curr);
+			for (unsigned int j = 0; j < t2.getEntries().size(); j++)
+			{
+				Entry currT2Entry = t2.getEntry(j);
+				string key = currT2Entry.fields.at(0);
+				string newVal = currT2Entry.fields.at(i);
+				jointTable.update(key, newVal);
+			}
+		}
+	}
+
+	if (count > 0)
+	{
+		return jointTable;
+	}
+	else
+	{
+		return Table();
+	}
+}
 
 Table Database::differenceTable(Table t1, Table t2)
 {
