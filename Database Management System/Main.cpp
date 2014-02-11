@@ -14,39 +14,37 @@ void testOccupyTables(Table &first, Table &second)
 	entryVec.push_back("Bob");
 	entryVec.push_back("1");
 	first.addEntry(Entry(entryVec));
-
 	entryVec.clear();
 
 	entryVec.push_back("Anne");
 	entryVec.push_back("3");
 	first.addEntry(Entry(entryVec));
-
 	entryVec.clear();
 
 	entryVec.push_back("Dog");
 	entryVec.push_back("2");
 	first.addEntry(Entry(entryVec));
-
 	entryVec.clear();
+
 	first.printTable();
 
 	entryVec.push_back("Bob");
 	entryVec.push_back("3");
 	second.addEntry(Entry(entryVec));
-
 	entryVec.clear();
 
 	entryVec.push_back("Anne");
 	entryVec.push_back("3");
 	second.addEntry(Entry(entryVec));
-
 	entryVec.clear();
+
 	second.printTable();
 }
 
 //using this to test difference table
 void testDifferenceTable(Database &database)
 {
+	cout << "\n=======Testing Difference Table=======\n\n";
 	//create and occupy 2 tables with data
 	vector<string> columnNames;
 	columnNames.push_back("Names");
@@ -64,10 +62,18 @@ void testDifferenceTable(Database &database)
 	diff.printTable();
 }
 
+void testProductTable(Database &database)
+{
+	cout << "\n=======Testing Product Table=======\n\n";
+	database.printTables();
+	Table product = database.productTable(database.getTables().at(0), database.getTables().at(1));
+	product.printTable();
+
+}
 
 void testSelection()
 try {
-	
+
 	Database database;
 	vector<string> attributes;
 	vector<char> attTypes;
@@ -80,7 +86,7 @@ try {
 	attributes.push_back("Price");
 	attTypes.push_back('f');
 
-	Table table("Testing",attributes,attTypes);
+	Table table("Testing", attributes, attTypes);
 	vector<string> entry1;
 	entry1.push_back("Eliutt");
 	entry1.push_back("Rivera");
@@ -96,7 +102,7 @@ try {
 
 	vector<string> selectAttr;
 	selectAttr.push_back("FirstName");
-	
+
 	vector<string> selectWhere;
 	selectWhere.push_back("Age"); //left
 	selectWhere.push_back(">"); //center
@@ -105,11 +111,12 @@ try {
 
 	table.printTable();
 
-	Table results = database.select(selectAttr,"Testing",selectWhere);
+	Table results = database.select(selectAttr, "Testing", selectWhere);
 
 	results.printTable();
-	
-}catch(string error)
+
+}
+catch (string error)
 {
 	throw error;
 }
@@ -152,7 +159,15 @@ try {
     
 	table.printTable();
     
+<<<<<<< HEAD
 	Table results = database.Project(projectAttr,"Testing2");
+=======
+<<<<<<< HEAD
+	Table results = database.Project(projectAttr,"Testing");
+=======
+	Table results = database.Project(projectAttr,"Testing2");
+>>>>>>> eliutt-branch
+>>>>>>> master
     
     results.printTable();
 	
@@ -162,6 +177,25 @@ try {
 }
 
 
+void testSetUnion(Database &database)
+{
+	//create and occupy 2 tables with data
+	vector<string> columnNames;
+	columnNames.push_back("Names");
+	columnNames.push_back("Ages");
+	Table first = Table("DiffTest1", columnNames, 2);
+	Table second = Table("DiffTest2", columnNames, 2);
+
+	testOccupyTables(first, second);
+
+	//test union relation
+	database.addTable(first);
+	database.addTable(second);
+
+	Table union_table = database.setunion(first, second);
+	union_table.printTable();
+}
+
 int main(int argc, const char* argv[])
 {
 	cout << "DBMS started.\n";
@@ -169,15 +203,19 @@ int main(int argc, const char* argv[])
 	Database database = Database();
 
 	testDifferenceTable(database);
+	testProductTable(database);
+
 	try
 	{
 		testSelection();
         testProjection();
 	}
-	catch(string error)
+	catch (string error)
 	{
 		cout << error << endl;
 	}
+	testSetUnion(database);
+
 	cout << "\n\n";
 	system("PAUSE");
 }

@@ -1,0 +1,131 @@
+<html>
+<div style="margin-top:20px;">
+
+<h1>This section taken from the 
+<a href="http://ecologylab.net/courses/programmingStudio/assignments/team1.html">class website</a>
+</h1> 
+<h4>Grammar </h4>
+<div>
+
+
+<p>
+The communication with the DBMS takes place using a domain-specific language.
+The grammar of <i>queries</i> in this language is as follows.
+</p>
+
+<p class="verse">
+<i>query</i> ::= <i>relation-name</i> <code>&lt;-</code> <i>expr</i> <code>;</code><br>
+<br>
+<i>relation-name</i>  ::= <i>identifier</i><br>
+<br>
+<i>identifier</i> ::= <i>alpha</i> { ( <i>alpha</i> <code>|</code> <i>digit</i> ) }<br>
+<br>
+<i>alpha</i> ::= <code>a</code> <code>|</code> … <code>|</code> <code>z</code> <code>|</code> <code>A</code> <code>|</code> … <code>|</code> <code>Z</code> <code>|</code> <code>_</code><br>
+<br>
+<i>digit</i> ::= <code>0</code> <code>|</code> … <code>|</code> <code>9</code><br>
+<br>
+<i>expr</i> ::= <i>atomic-expr</i> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>selection</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>projection</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>renaming</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>union</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>difference</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>product</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>natural-join</i><br>
+<br>
+<i>atomic-expr</i> ::= <i>relation-name</i> <code>|</code> <code>(</code> <i>expr</i> <code>)</code><br>
+<br>
+<i>selection</i> ::= <code>select</code> <code>(</code> <i>condition</i> <code>)</code> <i>atomic-expr</i><br>
+<br>
+<i>condition</i> ::= <i>conjunction</i> { <code>||</code> <i>conjunction</i> }<br> 
+<br>
+<i>conjunction</i> ::= <i>comparison</i> { <code>&amp;&amp;</code> <i>comparison</i> }<br>
+<br>
+<i>comparison</i> ::= <i>operand</i> <i>op</i> <i>operand</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | <code>(</code> <i>condition</i> <code>)</code><br>
+<br>
+<i>op</i> ::= <code>==</code> <code>|</code> <code>!=</code> <code>|</code> <code>&lt;</code> <code>|</code> <code>&gt;</code> <code>|</code> <code>&lt;=</code> <code>|</code> <code>&gt;=</code><br>
+<br>
+<i>operand</i> ::= <i>attribute-name</i> <code>|</code> <i>literal</i><br>
+<br>
+<i>attribute-name</i> ::= <i>identifier</i><br>
+<i>literal</i> ::= intentionally left unspecified<br>
+<br>
+<i>projection</i> ::= <code>project</code> <code>(</code> <i>attribute-list</i> <code>)</code> <i>atomic-expr</i><br>
+<br>
+<i>attribute-list</i> ::= <i>attribute-name</i> { ,  <i>attribute-name</i> } <br>
+<br>
+<i>renaming</i> ::= <code>rename</code> <code>(</code> <i>attribute-list</i> <code>)</code> <i>atomic-expr</i><br>
+<br>
+<i>union</i> ::= <i>atomic-expr</i> <code>+</code> <i>atomic-expr</i><br>
+<br>
+<i>difference</i> ::= <i>atomic-expr</i> <code>-</code> <i>atomic-expr</i><br>
+<br>
+<i>product</i> ::= <i>atomic-expr</i> <code>*</code> <i>atomic-expr</i> <br>
+<br>
+<i>natural-join</i> ::= <i>atomic-expr</i> <code>JOIN</code> <i>atomic-expr</i> <br>
+</p>
+
+<p>
+Queries generated from the above grammar compute new relations based on existing
+relations. Queries can also name those new relations. 
+We need, however, some ways to create some initial relations (constituting a database), 
+update the relations within the database, store the results of queries back to 
+the database, and delete tuples from relations.
+We use the following commands for these purposes:
+</p>
+
+<p class="verse">
+<i>command</i> ::= ( <i>open-cmd</i> <code>|</code>
+	<i>close-cmd</i> <code>|</code>
+	<i>write-cmd</i> <code>|</code>
+	<i>exit-cmd</i> <code>|</code>
+	<i>show-cmd</i> <code>|</code>
+<i>create-cmd</i> <code>|</code> <i>update-cmd</i> <code>|</code> <i>insert-cmd</i> <code>|</code> <i>delete-cmd</i> ) <code>;</code><br>
+<br>
+
+<i>open-cmd</i> ::== <code>OPEN</code> <i>relation-name</i>
+<br>
+
+<i>close-cmd</i> ::== <code>CLOSE</code> <i>relation-name</i>
+<br>
+
+<i>write-cmd</i> ::== <code>WRITE</code> <i>relation-name</i>
+<br>
+
+<i>exit-cmd</i> ::== <code>EXIT</code> 
+<br>
+
+<i>show-cmd</i> ::== <code>SHOW</code> <i>atomic-expr</i>
+<br>
+
+<i>create-cmd</i> ::= <code>CREATE TABLE</code> <i>relation-name</i> <code>(</code> <i>typed-attribute-list</i> <code>)</code> <code>PRIMARY KEY</code> <code>(</code> <i>attribute-list</i> <code>)</code><br>
+<br>
+<i>update-cmd</i> ::= <code>UPDATE</code> <i>relation-name</i> <code>SET</code> <i>attribute-name</i> <code>=</code> <i>literal</i> { , <i>attribute-name</i> <code>=</code> <i>literal</i> } <code>WHERE</code> <i>condition</i> <br>
+<br>
+<i>insert-cmd</i> ::= <code>INSERT INTO</code> <i>relation-name</i> <code>VALUES FROM</code> <code>(</code> <i>literal</i> { , <i>literal</i> } <code>)</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <code>INSERT INTO</code> <i>relation-name</i> <code>VALUES FROM RELATION</code> <i>expr</i><br>
+<br>
+<i>delete-cmd</i> ::= <code>DELETE FROM</code> <i>relation-name</i> <code>WHERE</code> <i>condition</i><br>
+<br>
+<i>typed-attribute-list</i> ::= <i>attribute-name</i> <i>type</i> { , <i>attribute-name</i> <i>type</i> }<br>
+<i>type</i> ::= <code>VARCHAR (</code> <i>integer</i> <code>)</code> <code>|</code> <code>INTEGER</code><br>
+<i>integer</i> ::= <i>digit</i> { <i>digit</i> }<br>
+<br>
+</p>
+
+
+<p>
+A program in our data manipulation language (DML) is then defined as:
+</p>
+
+<p class="verse">
+<i>program</i> ::= { ( <i>query</i> <code>|</code> <i>command</i> ) }<br>
+</p>
+
+
+</div>
+
+</div>
+
+</html>

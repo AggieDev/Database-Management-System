@@ -2,7 +2,8 @@
 *.suo
 *.sdf
 *.vcxproj
-
+*.sln
+*.zip
 
 #################
 ## Eclipse

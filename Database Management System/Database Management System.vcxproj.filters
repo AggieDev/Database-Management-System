@@ -4,13 +4,11 @@
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Entry.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Database.h" />
     <ClInclude Include="Entry.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
