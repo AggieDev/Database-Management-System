@@ -28,5 +28,6 @@ public:
 
 	//accessors
 	vector<Table> getTables(){ return _tables; }
+	Table setunion(Table t1, Table t2);
 };
 

@@ -181,8 +181,8 @@ void testSetUnion(Database &database)
 	database.addTable(first);
 	database.addTable(second);
 
-	//Table union_table = database.setunion(first, second);
-	//union_table.printTable();
+	Table union_table = database.setunion(first, second);
+	union_table.printTable();
 }
 
 int main(int argc, const char* argv[])
