@@ -1,11 +1,10 @@
-#include "stdafx.h"
-#include "Database.h"
 
+#include "Database.h"
+#include <stdlib.h> //atoi, atof
 
 Database::Database()
 {
 }
-
 
 Database::~Database()
 {
@@ -30,4 +29,75 @@ Table Database::differenceTable(Table t1, Table t2)
 	}
 
 	return diffTable;
+}
+
+
+Table Database::select(vector<string> attributes, string fromTable, vector<string> _where)
+{
+	Table* result;
+	Table* selectedTable = NULL;
+	for(int i = 0; i < _tables.size(); i++)
+	{
+		if (_tables[i].getName() == fromTable)
+			selectedTable = &_tables[i];
+	}
+	if(selectedTable == NULL)
+	{
+		string error = "Error: Table " + fromTable + " does not exist.";
+		throw error;
+	}
+	int count = 0;
+	vector<char> colTypes;
+	for(int i = 0; i < attributes.size(); i++)
+	{
+		for(int j = 0; j < selectedTable->getColNames().size(); j++)
+		{
+			if(attributes[i] == selectedTable->getColNames()[j])
+			{
+				colTypes.push_back(selectedTable->getColTypes()[j]);
+				count++;
+				break;
+			}
+		}
+	}
+	if(count < attributes.size()) //check if all attributes were found
+	{
+		string error = "Not all attributes were found in table " + selectedTable->getName();
+		throw error;
+	}
+	vector<int> validEntries = selectedTable->findCondition(_where);
+
+
+	if(attributes[0] == "*")
+	{
+		result = new Table("QueryResult",selectedTable->getColNames(),selectedTable->getColTypes());
+		for(int i = 0; i < validEntries.size(); i++)
+		{
+			result->addEntry(selectedTable->getEntries()[i]);
+		}
+	}
+	else
+	{
+		vector<int> columnsToSelect;
+		for(int i =0; i < attributes.size(); i++)
+		{
+			for(int j = 0; j < selectedTable->getColNames().size(); j++)
+			{
+				if(attributes[i] == selectedTable->getColNames()[j])
+					columnsToSelect.push_back(j);
+			}
+		}
+		result = new Table("QueryResult",attributes,colTypes);
+		for(int i = 0; i < validEntries.size(); i++) //error here
+		{
+			vector<string> fields;
+			for(int j = 0; j < columnsToSelect.size(); j++)
+			{
+				fields.push_back(selectedTable->getEntries()[i][j]);
+			}
+			result->addEntry(fields);
+		}
+	}
+
+	return *result;
 }
