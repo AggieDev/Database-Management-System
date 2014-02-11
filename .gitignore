@@ -2,7 +2,7 @@
 *.suo
 *.sdf
 *.vcxproj
-
+*.sln
 
 #################
 ## Eclipse
