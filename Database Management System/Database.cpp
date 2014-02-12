@@ -198,7 +198,7 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 		result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
 		for(int i = 0; i < validEntries.size(); i++)
 		{
-			result->addEntry(selectedTable->getEntries()[i]);
+			result->addEntry(selectedTable->getEntries()[validEntries[i]]);
 		}
 	}
 	else
@@ -218,7 +218,7 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 			vector<string> fields;
 			for(int j = 0; j < columnsToSelect.size(); j++)
 			{
-				fields.push_back(selectedTable->getEntries()[i][columnsToSelect[j]]);
+				fields.push_back(selectedTable->getEntries()[validEntries[i]][columnsToSelect[j]]);
 			}
 			result->addEntry(fields);
 		}
