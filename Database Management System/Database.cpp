@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 //testing
+=======
+//test
+>>>>>>> master
 #include "Database.h"
 #include <stdlib.h> //atoi, atof
 
