@@ -102,15 +102,15 @@ try {
 	table.addEntry(entry2);
     
 	vector<string> selectAttr;
-	selectAttr.push_back("*");
+	 selectAttr.push_back("*");
     //selectAttr.push_back("LastName");
     //selectAttr.push_back("Age");
     //selectAttr.push_back("Price");
 	
 	vector<string> selectWhere;
 	selectWhere.push_back("Price"); //left
-	selectWhere.push_back("<"); //center
-	selectWhere.push_back("100"); //right
+	selectWhere.push_back("!="); //center
+	selectWhere.push_back("20.5"); //right
 	database.addTable(table);
     
 	table.printTable();

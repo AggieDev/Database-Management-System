@@ -197,7 +197,7 @@ vector<int> Table::findCondition(vector<string> whereOps)
 	for (int i = 0; i < _entries.size(); i++)
 	{
 		string valueToCheck = _entries[i][columnToCheck];
-		if (center == "=")
+		if (center == "==")
 		{
 			if (isInt && atoi(valueToCheck.c_str()) == intVal)
 				results.push_back(i);
@@ -209,6 +209,13 @@ vector<int> Table::findCondition(vector<string> whereOps)
 			if (isInt && atoi(valueToCheck.c_str()) < intVal)
 				results.push_back(i);
 			else if (!isInt && atof(valueToCheck.c_str()) < doubleVal)
+				results.push_back(i);
+		}
+        else if (center == "!=")
+		{
+			if (isInt && atoi(valueToCheck.c_str()) != intVal)
+				results.push_back(i);
+			else if (!isInt && atof(valueToCheck.c_str()) != doubleVal)
 				results.push_back(i);
 		}
 		else if (center == ">")
