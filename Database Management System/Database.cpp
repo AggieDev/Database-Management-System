@@ -150,7 +150,7 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
     
 	if(attributes[0] == "*")
 	{
-		result = new Table("QueryResult",selectedTable->getColNames(),selectedTable->getColTypes());
+		result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
 		for(int i = 0; i < validEntries.size(); i++)
 		{
 			result->addEntry(selectedTable->getEntries()[i]);
@@ -167,7 +167,7 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 					columnsToSelect.push_back(j);
 			}
 		}
-		result = new Table("Select",attributes,colTypes);
+		result = new Table("Result",attributes,colTypes);
 		for(int i = 0; i < validEntries.size(); i++) //error here
 		{
 			vector<string> fields;
@@ -263,11 +263,15 @@ Table Database::Project(vector<string> attributes, string fromTable)
 		string error = "Not all attributes were found in table " + selectedTable->getName();
 		throw error;
 	}
-    
-    
+
+        
 	if(attributes[0] == "*")
 	{
-		result = new Table("Query",selectedTable->getColNames(),selectedTable->getColTypes());
+		result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
+        for(int i = 0; i < selectedTable->getEntries().size(); i++)
+		{
+			result->addEntry(selectedTable->getEntries()[i]);
+		}
 	}
 	else
 	{
