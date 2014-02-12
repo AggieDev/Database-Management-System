@@ -112,6 +112,49 @@ void Database::printTables()
 		_tables.at(i).printTable();
 }
 
+
+Table Database::setunion(Table t1, Table t2)
+{
+	bool match = true;
+	Table union_table("Union Table", t1.getNumCols());
+	vector<Entry> entry_vec;
+	for (int i = 0; i < t1.getEntries().size(); i++)
+	{
+		entry_vec.push_back(t1.getEntries().at(i));
+	}
+    
+	for (int i = 0; i < entry_vec.size(); i++){
+		union_table.addEntry(entry_vec.at(i));
+	}
+    
+	for (int i = 0; i < t2.getEntries().size(); i++)
+	{
+		//match = false;
+		match = true;
+		//union_table.addEntry(entry_vec.at(i));
+		for (int j = 0; j < t1.getEntries().size(); j++)
+		{
+			match = true;
+			for (int k = 0; k < t1.getEntries().at(j).getFields().size(); k++)
+			{
+				if (t2.getEntries().at(i).getFields().at(k).compare(t1.getEntries().at(j).getFields().at(k)) == 0)
+				{
+					match = false;
+					break;
+				}
+			}
+			if (match == false && union_table.hasEntry(t2.getEntries().at(i)) == 0)
+			{
+				union_table.addEntry(t2.getEntries().at(i));
+				break;
+			}
+		}
+		
+        
+	}
+	return union_table;
+}
+
 Table Database::select(vector<string> attributes, string fromTable, vector<string> _where)
 {
 	Table* result;
@@ -140,12 +183,14 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 			}
 		}
 	}
+    if(attributes[0]=="*")count++;
 	if(count < attributes.size()) //check if all attributes were found
 	{
 		string error = "Not all attributes were found in table " + selectedTable->getName();
 		throw error;
 	}
 	vector<int> validEntries = selectedTable->findCondition(_where);
+    
     
     
 	if(attributes[0] == "*")
@@ -173,56 +218,13 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 			vector<string> fields;
 			for(int j = 0; j < columnsToSelect.size(); j++)
 			{
-				fields.push_back(selectedTable->getEntries()[i][j]);
+				fields.push_back(selectedTable->getEntries()[i][columnsToSelect[j]]);
 			}
 			result->addEntry(fields);
 		}
 	}
     
 	return *result;
-}
-
-
-Table Database::setunion(Table t1, Table t2)
-{
-	bool match = true;
-	Table union_table("Union Table", t1.getNumCols());
-	vector<Entry> entry_vec;
-	for (int i = 0; i < t1.getEntries().size(); i++)
-	{
-		entry_vec.push_back(t1.getEntries().at(i));
-	}
-
-	for (int i = 0; i < entry_vec.size(); i++){
-		union_table.addEntry(entry_vec.at(i));
-	}
-
-	for (int i = 0; i < t2.getEntries().size(); i++)
-	{
-		//match = false;
-		match = true;
-		//union_table.addEntry(entry_vec.at(i));
-		for (int j = 0; j < t1.getEntries().size(); j++)
-		{
-			match = true;
-			for (int k = 0; k < t1.getEntries().at(j).getFields().size(); k++)
-			{
-				if (t2.getEntries().at(i).getFields().at(k).compare(t1.getEntries().at(j).getFields().at(k)) == 0)
-				{
-					match = false;
-					break;
-				}
-			}
-			if (match == false && union_table.hasEntry(t2.getEntries().at(i)) == 0)
-			{
-				union_table.addEntry(t2.getEntries().at(i));
-				break;
-			}
-		}
-		
-
-	}
-	return union_table;
 }
 
 Table Database::Project(vector<string> attributes, string fromTable)
@@ -258,12 +260,13 @@ Table Database::Project(vector<string> attributes, string fromTable)
 		}
 	}
     
+    if(attributes[0]=="*")count++;
+    
 	if(count < attributes.size()) //check if all attributes were found
 	{
 		string error = "Not all attributes were found in table " + selectedTable->getName();
 		throw error;
 	}
-
         
 	if(attributes[0] == "*")
 	{
@@ -287,14 +290,18 @@ Table Database::Project(vector<string> attributes, string fromTable)
         
 		result = new Table("Project",attributes,colTypes);
         
-        /*vector<string> fields;
-         for(int i = 0; i < columnsToSelect.size(); i++) //error here
-         {
-         fields.push_back(selectedTable->getEntries()[i]);
-         }
-         result->addEntry(fields);
-         */
-    }
+        for(int i = 0; i < selectedTable->getEntries().size(); i++) //error here
+		{
+			vector<string> fields;
+			for(int j = 0; j < columnsToSelect.size(); j++)
+			{
+				fields.push_back(selectedTable->getEntries()[i][columnsToSelect[j]]);
+			}
+			result->addEntry(fields);
+		}
+	}
+        
+    
 	
     
 	return *result;
