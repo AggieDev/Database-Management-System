@@ -182,9 +182,7 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 	return *result;
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
+
 Table Database::setunion(Table t1, Table t2)
 {
 	bool match = true;
