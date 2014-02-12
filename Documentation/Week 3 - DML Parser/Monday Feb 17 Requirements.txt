@@ -50,4 +50,13 @@ section on the assignment page.
 
 
 I assigned them to people in groups, trying to be fair. I did this quickly so 
-please say if you disagree or have a different suggestion.
+please say if you disagree or have a different suggestion (and modify the html):
+	
+	
+All four of us have a couple small sections labeled in the html file in this folder, 
+and Waylon will make a function that takes a full string of input and lexes it into
+a vector<string>, to be passed to another function.
+	
+	
+I think we all should try to meet up more often this week to get everything sorted out
+
