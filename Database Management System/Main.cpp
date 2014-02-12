@@ -73,7 +73,7 @@ void testProductTable(Database &database)
 
 void testSelection()
 try {
-
+	
 	Database database;
 	vector<string> attributes;
 	vector<char> attTypes;
@@ -85,8 +85,8 @@ try {
 	attTypes.push_back('i');
 	attributes.push_back("Price");
 	attTypes.push_back('f');
-
-	Table table("Testing", attributes, attTypes);
+    
+	Table table("Testing",attributes,attTypes);
 	vector<string> entry1;
 	entry1.push_back("Eliutt");
 	entry1.push_back("Rivera");
@@ -99,24 +99,23 @@ try {
 	entry2.push_back("50.25");
 	table.addEntry(entry1);
 	table.addEntry(entry2);
-
+    
 	vector<string> selectAttr;
 	selectAttr.push_back("FirstName");
-
+	
 	vector<string> selectWhere;
 	selectWhere.push_back("Age"); //left
 	selectWhere.push_back(">"); //center
 	selectWhere.push_back("20"); //right
 	database.addTable(table);
-
+    
 	table.printTable();
-
-	Table results = database.select(selectAttr, "Testing", selectWhere);
-
+    
+	Table results = database.select(selectAttr,"Testing",selectWhere);
+    
 	results.printTable();
-
-}
-catch (string error)
+	
+}catch(string error)
 {
 	throw error;
 }
@@ -159,15 +158,7 @@ try {
     
 	table.printTable();
     
-<<<<<<< HEAD
 	Table results = database.Project(projectAttr,"Testing2");
-=======
-<<<<<<< HEAD
-	Table results = database.Project(projectAttr,"Testing");
-=======
-	Table results = database.Project(projectAttr,"Testing2");
->>>>>>> eliutt-branch
->>>>>>> master
     
     results.printTable();
 	
