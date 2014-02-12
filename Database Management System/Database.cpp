@@ -235,9 +235,6 @@ Table Database::setunion(Table t1, Table t2)
 	return union_table;
 }
 
-=======
->>>>>>> eliutt-branch
->>>>>>> master
 Table Database::Project(vector<string> attributes, string fromTable)
 {
 	Table* result;
@@ -293,44 +290,18 @@ Table Database::Project(vector<string> attributes, string fromTable)
 					columnsToSelect.push_back(j);
 			}
 		}
-<<<<<<< HEAD
-
+        
 		result = new Table("Project",attributes,colTypes);
         
         /*vector<string> fields;
-		for(int i = 0; i < columnsToSelect.size(); i++) //error here
-		{
-=======
-<<<<<<< HEAD
-		result = new Table("QueryResult",attributes);
-		for (int i = 0; i < attributes.size(); i++) //error here
-		{
-			vector<string> fields;
-			for (int j = 0; j < columnsToSelect.size(); j++)
-			{
-				fields.push_back(projectedTable->getEntries()[i][j]);
-			}
-			result->addEntry(fields);
-		}
-	}
-=======
-
-		result = new Table("Project",attributes,colTypes);
-        
-        /*vector<string> fields;
-		for(int i = 0; i < columnsToSelect.size(); i++) //error here
-		{
->>>>>>> master
-			fields.push_back(selectedTable->getEntries()[i]);
-        }
-        result->addEntry(fields);
-		*/
+         for(int i = 0; i < columnsToSelect.size(); i++) //error here
+         {
+         fields.push_back(selectedTable->getEntries()[i]);
+         }
+         result->addEntry(fields);
+         */
     }
 	
-<<<<<<< HEAD
-=======
->>>>>>> eliutt-branch
->>>>>>> master
     
 	return *result;
 }
