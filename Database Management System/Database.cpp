@@ -116,23 +116,23 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 {
 	Table* result;
 	Table* selectedTable = NULL;
-	for (int i = 0; i < _tables.size(); i++)
+	for(int i = 0; i < _tables.size(); i++)
 	{
 		if (_tables[i].getName() == fromTable)
 			selectedTable = &_tables[i];
 	}
-	if (selectedTable == NULL)
+	if(selectedTable == NULL)
 	{
 		string error = "Error: Table " + fromTable + " does not exist.";
 		throw error;
 	}
 	int count = 0;
 	vector<char> colTypes;
-	for (int i = 0; i < attributes.size(); i++)
+	for(int i = 0; i < attributes.size(); i++)
 	{
-		for (int j = 0; j < selectedTable->getColNames().size(); j++)
+		for(int j = 0; j < selectedTable->getColNames().size(); j++)
 		{
-			if (attributes[i] == selectedTable->getColNames()[j])
+			if(attributes[i] == selectedTable->getColNames()[j])
 			{
 				colTypes.push_back(selectedTable->getColTypes()[j]);
 				count++;
@@ -140,18 +140,18 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 			}
 		}
 	}
-	if (count < attributes.size()) //check if all attributes were found
+	if(count < attributes.size()) //check if all attributes were found
 	{
 		string error = "Not all attributes were found in table " + selectedTable->getName();
 		throw error;
 	}
 	vector<int> validEntries = selectedTable->findCondition(_where);
-
-
-	if (attributes[0] == "*")
+    
+    
+	if(attributes[0] == "*")
 	{
-		result = new Table("QueryResult", selectedTable->getColNames(), selectedTable->getColTypes());
-		for (int i = 0; i < validEntries.size(); i++)
+		result = new Table("QueryResult",selectedTable->getColNames(),selectedTable->getColTypes());
+		for(int i = 0; i < validEntries.size(); i++)
 		{
 			result->addEntry(selectedTable->getEntries()[i]);
 		}
@@ -159,34 +159,26 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 	else
 	{
 		vector<int> columnsToSelect;
-		for (int i = 0; i < attributes.size(); i++)
+		for(int i =0; i < attributes.size(); i++)
 		{
-			for (int j = 0; j < selectedTable->getColNames().size(); j++)
+			for(int j = 0; j < selectedTable->getColNames().size(); j++)
 			{
-				if (attributes[i] == selectedTable->getColNames()[j])
+				if(attributes[i] == selectedTable->getColNames()[j])
 					columnsToSelect.push_back(j);
 			}
 		}
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-		result = new Table("QueryResult", attributes, colTypes);
-		for (int i = 0; i < validEntries.size(); i++) //error here
-=======
->>>>>>> master
 		result = new Table("Select",attributes,colTypes);
 		for(int i = 0; i < validEntries.size(); i++) //error here
->>>>>>> eliutt-branch
 		{
 			vector<string> fields;
-			for (int j = 0; j < columnsToSelect.size(); j++)
+			for(int j = 0; j < columnsToSelect.size(); j++)
 			{
 				fields.push_back(selectedTable->getEntries()[i][j]);
 			}
 			result->addEntry(fields);
 		}
 	}
-
+    
 	return *result;
 }
 
