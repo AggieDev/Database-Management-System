@@ -12,8 +12,9 @@
 The communication with the DBMS takes place using a domain-specific language.
 The grammar of <i>queries</i> in this language is as follows.
 </p>
-
 <p class="verse">
+<b>Garrett</b>
+<br>
 <i>query</i> ::= <i>relation-name</i> <code>&lt;-</code> <i>expr</i> <code>;</code><br>
 <br>
 <i>relation-name</i>  ::= <i>identifier</i><br>
@@ -24,6 +25,7 @@ The grammar of <i>queries</i> in this language is as follows.
 <br>
 <i>digit</i> ::= <code>0</code> <code>|</code> … <code>|</code> <code>9</code><br>
 <br>
+<b>Patrick</b><br>
 <i>expr</i> ::= <i>atomic-expr</i> <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>selection</i><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <i>projection</i><br>
@@ -37,6 +39,7 @@ The grammar of <i>queries</i> in this language is as follows.
 <br>
 <i>selection</i> ::= <code>select</code> <code>(</code> <i>condition</i> <code>)</code> <i>atomic-expr</i><br>
 <br>
+
 <i>condition</i> ::= <i>conjunction</i> { <code>||</code> <i>conjunction</i> }<br> 
 <br>
 <i>conjunction</i> ::= <i>comparison</i> { <code>&amp;&amp;</code> <i>comparison</i> }<br>
@@ -44,12 +47,14 @@ The grammar of <i>queries</i> in this language is as follows.
 <i>comparison</i> ::= <i>operand</i> <i>op</i> <i>operand</i><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | <code>(</code> <i>condition</i> <code>)</code><br>
 <br>
+<b>Elliutt</b><br>
 <i>op</i> ::= <code>==</code> <code>|</code> <code>!=</code> <code>|</code> <code>&lt;</code> <code>|</code> <code>&gt;</code> <code>|</code> <code>&lt;=</code> <code>|</code> <code>&gt;=</code><br>
 <br>
 <i>operand</i> ::= <i>attribute-name</i> <code>|</code> <i>literal</i><br>
 <br>
 <i>attribute-name</i> ::= <i>identifier</i><br>
 <i>literal</i> ::= intentionally left unspecified<br>
+
 <br>
 <i>projection</i> ::= <code>project</code> <code>(</code> <i>attribute-list</i> <code>)</code> <i>atomic-expr</i><br>
 <br>
@@ -57,6 +62,7 @@ The grammar of <i>queries</i> in this language is as follows.
 <br>
 <i>renaming</i> ::= <code>rename</code> <code>(</code> <i>attribute-list</i> <code>)</code> <i>atomic-expr</i><br>
 <br>
+<b>Waylon</b><br>
 <i>union</i> ::= <i>atomic-expr</i> <code>+</code> <i>atomic-expr</i><br>
 <br>
 <i>difference</i> ::= <i>atomic-expr</i> <code>-</code> <i>atomic-expr</i><br>
@@ -76,6 +82,7 @@ We use the following commands for these purposes:
 </p>
 
 <p class="verse">
+<b>Garrett</b><br>
 <i>command</i> ::= ( <i>open-cmd</i> <code>|</code>
 	<i>close-cmd</i> <code>|</code>
 	<i>write-cmd</i> <code>|</code>
@@ -93,6 +100,7 @@ We use the following commands for these purposes:
 <i>write-cmd</i> ::== <code>WRITE</code> <i>relation-name</i>
 <br>
 
+<b>Elliutt</b><br>
 <i>exit-cmd</i> ::== <code>EXIT</code> 
 <br>
 
@@ -103,6 +111,7 @@ We use the following commands for these purposes:
 <br>
 <i>update-cmd</i> ::= <code>UPDATE</code> <i>relation-name</i> <code>SET</code> <i>attribute-name</i> <code>=</code> <i>literal</i> { , <i>attribute-name</i> <code>=</code> <i>literal</i> } <code>WHERE</code> <i>condition</i> <br>
 <br>
+<b>Patrick</b><br>
 <i>insert-cmd</i> ::= <code>INSERT INTO</code> <i>relation-name</i> <code>VALUES FROM</code> <code>(</code> <i>literal</i> { , <i>literal</i> } <code>)</code><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>|</code> <code>INSERT INTO</code> <i>relation-name</i> <code>VALUES FROM RELATION</code> <i>expr</i><br>
 <br>
