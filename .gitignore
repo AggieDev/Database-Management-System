@@ -1,8 +1,6 @@
 *.opensdf
 *.suo
 *.sdf
-*.vcxproj
-*.sln
 *.zip
 
 #################
