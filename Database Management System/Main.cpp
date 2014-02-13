@@ -101,56 +101,7 @@ void testProductTable(Database &database)
 
 void testSelection()
 try {
-
-	Database database;
-	vector<string> attributes;
-	vector<char> attTypes;
-	attributes.push_back("FirstName");
-	attTypes.push_back('s');
-	attributes.push_back("LastName");
-	attTypes.push_back('s');
-	attributes.push_back("Age");
-	attTypes.push_back('i');
-	attributes.push_back("Price");
-	attTypes.push_back('f');
-
-	Table table("Testing", attributes, attTypes);
-	vector<string> entry1;
-	entry1.push_back("Eliutt");
-	entry1.push_back("Rivera");
-	entry1.push_back("10");
-	entry1.push_back("20.50");
-	vector<string> entry2;
-	entry2.push_back("Bob");
-	entry2.push_back("Sagget");
-	entry2.push_back("40");
-	entry2.push_back("50.25");
-	table.addEntry(entry1);
-	table.addEntry(entry2);
-
-	vector<string> selectAttr;
-	selectAttr.push_back("FirstName");
-
-	vector<string> selectWhere;
-	selectWhere.push_back("Age"); //left
-	selectWhere.push_back(">"); //center
-	selectWhere.push_back("20"); //right
-	database.addTable(table);
-
-	table.printTable();
-
-	Table results = database.select(selectAttr, "Testing", selectWhere);
-
-	results.printTable();
-
-}
-catch (string error)
-{
-	throw error;
-}
-void testProjection()
-try {
-	
+    cout << "\n=======Testing Select Table=======\n\n";
 	Database database;
 	vector<string> attributes;
 	vector<char> attTypes;
@@ -164,10 +115,11 @@ try {
 	attTypes.push_back('f');
     
 	Table table("Testing",attributes,attTypes);
+    
 	vector<string> entry1;
 	entry1.push_back("Eliutt");
 	entry1.push_back("Rivera");
-	entry1.push_back("10");
+	entry1.push_back("20");
 	entry1.push_back("20.50");
 	vector<string> entry2;
 	entry2.push_back("Bob");
@@ -177,16 +129,73 @@ try {
 	table.addEntry(entry1);
 	table.addEntry(entry2);
     
-	vector<string> projectAttr;
-	projectAttr.push_back("FirstName");
+	vector<string> selectAttr;
+	 selectAttr.push_back("*");
+    //selectAttr.push_back("LastName");
+    //selectAttr.push_back("Age");
+    //selectAttr.push_back("Price");
 	
+	vector<string> selectWhere;
+	selectWhere.push_back("Price"); //left
+	selectWhere.push_back("!="); //center
+	selectWhere.push_back("20.5"); //right
 	database.addTable(table);
     
 	table.printTable();
     
-	Table results = database.Project(projectAttr,"Testing");
+Table results = database.select(selectAttr,"Testing",selectWhere);
     
 	results.printTable();
+	
+}catch(string error)
+{
+	throw error;
+}
+
+void testProjection()
+try {
+    cout << "\n=======Testing Project Table=======\n\n";
+	
+	Database database;
+	vector<string> attributes;
+	vector<char> attTypes;
+	attributes.push_back("FirstName");
+	attTypes.push_back('s');
+	attributes.push_back("LastName");
+	attTypes.push_back('s');
+	attributes.push_back("Age");
+	attTypes.push_back('i');
+	attributes.push_back("Price");
+	attTypes.push_back('f');
+    Table table("Test",attributes,attTypes);
+    
+	vector<string> entry1;
+	entry1.push_back("Eli");
+	entry1.push_back("Riv");
+	entry1.push_back("1");
+	entry1.push_back("45");
+    
+	vector<string> entry2;
+	entry2.push_back("pat");
+	entry2.push_back("green");
+	entry2.push_back("32");
+	entry2.push_back("50.25");
+    
+	table.addEntry(entry1);
+	table.addEntry(entry2);
+    
+	vector<string> projectAttr;
+	projectAttr.push_back("*");
+    //projectAttr.push_back("LastName");
+  
+    
+	database.addTable(table);
+    
+	table.printTable();
+    
+	Table results = database.Project(projectAttr,"Test");
+    
+    results.printTable();
 	
 }catch(string error)
 {
@@ -231,10 +240,19 @@ int main(int argc, const char* argv[])
 =======
 	testDifferenceTable(database);
 	testProductTable(database);
-
 	try
 	{
-		testSelection();
+		
+        testSelection();
+	}
+	catch (string error)
+	{
+		cout << error << endl;
+	}
+	try
+	{
+		
+        testProjection();
 	}
 	catch (string error)
 	{

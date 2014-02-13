@@ -26,9 +26,9 @@ public:
 	//_where = {"age","<","10"} parse the where operations
 
    
-		//atributes = {"id","name","age"} or {"*"}
-		//_where = {"age","<","10"} parse the where operations
     Table Project(vector<string> attributes, string fromTable);
+    //atributes = {"id","name","age"} or {"*"}
+    
 	Table differenceTable(Table t1, Table t2);
 <<<<<<< HEAD
 >>>>>>> origin/master

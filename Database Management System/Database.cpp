@@ -166,78 +166,6 @@ void Database::printTables()
 		_tables.at(i).printTable();
 }
 
-Table Database::select(vector<string> attributes, string fromTable, vector<string> _where)
-{
-	Table* result;
-	Table* selectedTable = NULL;
-	for (int i = 0; i < _tables.size(); i++)
-	{
-		if (_tables[i].getName() == fromTable)
-			selectedTable = &_tables[i];
-	}
-	if (selectedTable == NULL)
-	{
-		string error = "Error: Table " + fromTable + " does not exist.";
-		throw error;
-	}
-	int count = 0;
-	vector<char> colTypes;
-	for (int i = 0; i < attributes.size(); i++)
-	{
-		for (int j = 0; j < selectedTable->getColNames().size(); j++)
-		{
-			if (attributes[i] == selectedTable->getColNames()[j])
-			{
-				colTypes.push_back(selectedTable->getColTypes()[j]);
-				count++;
-				break;
-			}
-		}
-	}
-	if (count < attributes.size()) //check if all attributes were found
-	{
-		string error = "Not all attributes were found in table " + selectedTable->getName();
-		throw error;
-	}
-	vector<int> validEntries = selectedTable->findCondition(_where);
-
-
-	if (attributes[0] == "*")
-	{
-		result = new Table("QueryResult", selectedTable->getColNames(), selectedTable->getColTypes());
-		for (int i = 0; i < validEntries.size(); i++)
-		{
-			result->addEntry(selectedTable->getEntries()[i]);
-		}
-	}
-	else
-	{
-		vector<int> columnsToSelect;
-		for (int i = 0; i < attributes.size(); i++)
-		{
-			for (int j = 0; j < selectedTable->getColNames().size(); j++)
-			{
-				if (attributes[i] == selectedTable->getColNames()[j])
-					columnsToSelect.push_back(j);
-			}
-		}
-		result = new Table("QueryResult", attributes, colTypes);
-		for (int i = 0; i < validEntries.size(); i++) //error here
-		{
-			vector<string> fields;
-			for (int j = 0; j < columnsToSelect.size(); j++)
-			{
-				fields.push_back(selectedTable->getEntries()[i][j]);
-			}
-			result->addEntry(fields);
-		}
-	}
-
-	return *result;
-<<<<<<< HEAD
->>>>>>> origin/master
-=======
-}
 
 Table Database::setunion(Table t1, Table t2)
 {
@@ -248,11 +176,11 @@ Table Database::setunion(Table t1, Table t2)
 	{
 		entry_vec.push_back(t1.getEntries().at(i));
 	}
-
+    
 	for (int i = 0; i < entry_vec.size(); i++){
 		union_table.addEntry(entry_vec.at(i));
 	}
-
+    
 	for (int i = 0; i < t2.getEntries().size(); i++)
 	{
 		//match = false;
@@ -276,21 +204,21 @@ Table Database::setunion(Table t1, Table t2)
 			}
 		}
 		
-
+        
 	}
 	return union_table;
 }
 
-Table Database::Project(vector<string> attributes, string fromTable)
+Table Database::select(vector<string> attributes, string fromTable, vector<string> _where)
 {
 	Table* result;
-	Table* projectedTable = NULL;
+	Table* selectedTable = NULL;
 	for(int i = 0; i < _tables.size(); i++)
 	{
 		if (_tables[i].getName() == fromTable)
-			projectedTable = &_tables[i];
+			selectedTable = &_tables[i];
 	}
-	if(projectedTable == NULL)
+	if(selectedTable == NULL)
 	{
 		string error = "Error: Table " + fromTable + " does not exist.";
 		throw error;
@@ -299,51 +227,139 @@ Table Database::Project(vector<string> attributes, string fromTable)
 	vector<char> colTypes;
 	for(int i = 0; i < attributes.size(); i++)
 	{
-		for(int j = 0; j < projectedTable->getColNames().size(); j++)
+		for(int j = 0; j < selectedTable->getColNames().size(); j++)
 		{
-			if(attributes[i] == projectedTable->getColNames()[j])
+			if(attributes[i] == selectedTable->getColNames()[j])
 			{
-				colTypes.push_back(projectedTable->getColTypes()[j]);
+				colTypes.push_back(selectedTable->getColTypes()[j]);
 				count++;
 				break;
 			}
 		}
 	}
+    if(attributes[0]=="*")count++;
 	if(count < attributes.size()) //check if all attributes were found
 	{
-		string error = "Not all attributes were found in table " + projectedTable->getName();
+		string error = "Not all attributes were found in table " + selectedTable->getName();
 		throw error;
 	}
-	
+	vector<int> validEntries = selectedTable->findCondition(_where);
+    
     
     
 	if(attributes[0] == "*")
 	{
-		result = new Table("QueryResult",projectedTable->getColNames());
-		
+		result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
+		for(int i = 0; i < validEntries.size(); i++)
+		{
+			result->addEntry(selectedTable->getEntries()[validEntries[i]]);
+		}
 	}
 	else
 	{
 		vector<int> columnsToSelect;
 		for(int i =0; i < attributes.size(); i++)
 		{
-			for(int j = 0; j < projectedTable->getColNames().size(); j++)
+			for(int j = 0; j < selectedTable->getColNames().size(); j++)
 			{
-				if(attributes[i] == projectedTable->getColNames()[j])
+				if(attributes[i] == selectedTable->getColNames()[j])
 					columnsToSelect.push_back(j);
 			}
 		}
-		result = new Table("QueryResult",attributes);
-		for (int i = 0; i < attributes.size(); i++) //error here
+		result = new Table("Result",attributes,colTypes);
+		for(int i = 0; i < validEntries.size(); i++) //error here
 		{
 			vector<string> fields;
-			for (int j = 0; j < columnsToSelect.size(); j++)
+			for(int j = 0; j < columnsToSelect.size(); j++)
 			{
-				fields.push_back(projectedTable->getEntries()[i][j]);
+				fields.push_back(selectedTable->getEntries()[validEntries[i]][columnsToSelect[j]]);
 			}
 			result->addEntry(fields);
 		}
 	}
+    
+	return *result;
+<<<<<<< HEAD
+>>>>>>> origin/master
+=======
+}
+
+Table Database::Project(vector<string> attributes, string fromTable)
+{
+	Table* result;
+	Table* selectedTable = NULL;
+	for(int i = 0; i < _tables.size(); i++)
+	{
+		if (_tables[i].getName() == fromTable)
+			selectedTable = &_tables[i];
+	}
+    
+    
+	if(selectedTable == NULL)
+	{
+		string error = "Error: Table " + fromTable + " does not exist.";
+		throw error;
+	}
+    
+    
+	int count = 0;
+	vector<char> colTypes;
+	for(int i = 0; i < attributes.size(); i++)
+	{
+		for(int j = 0; j < selectedTable->getColNames().size(); j++)
+		{
+			if(attributes[i] == selectedTable->getColNames()[j])
+			{
+				colTypes.push_back(selectedTable->getColTypes()[j]);
+				count++;
+				break;
+			}
+		}
+	}
+    
+    if(attributes[0]=="*")count++;
+    
+	if(count < attributes.size()) //check if all attributes were found
+	{
+		string error = "Not all attributes were found in table " + selectedTable->getName();
+		throw error;
+	}
+        
+	if(attributes[0] == "*")
+	{
+		result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
+        for(int i = 0; i < selectedTable->getEntries().size(); i++)
+		{
+			result->addEntry(selectedTable->getEntries()[i]);
+		}
+	}
+	else
+	{
+		vector<int> columnsToSelect;
+		for(int i =0; i < attributes.size(); i++)
+		{
+			for(int j = 0; j < selectedTable->getColNames().size(); j++)
+			{
+				if(attributes[i] == selectedTable->getColNames()[j])
+					columnsToSelect.push_back(j);
+			}
+		}
+        
+		result = new Table("Project",attributes,colTypes);
+        
+        for(int i = 0; i < selectedTable->getEntries().size(); i++) //error here
+		{
+			vector<string> fields;
+			for(int j = 0; j < columnsToSelect.size(); j++)
+			{
+				fields.push_back(selectedTable->getEntries()[i][columnsToSelect[j]]);
+			}
+			result->addEntry(fields);
+		}
+	}
+        
+    
+	
     
 	return *result;
 >>>>>>> origin/master
