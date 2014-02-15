@@ -28,9 +28,12 @@ vector<string> Parser::readInputLine(string line)
 
 void Parser::callFunction(std::vector<std::string> input)
 {
+<<<<<<< HEAD
 	// input is a full line
 	// ex: INSERT INTO animals VALUES FROM ("Joe", "bird", 2);
 	if (input.at(0) == string("INSERT") && input.at(1) == string("INTO"))
 	{
 	}
+=======
+>>>>>>> cc7aba8f880a86e599099ed18df19261ec2e7fc2
 }
