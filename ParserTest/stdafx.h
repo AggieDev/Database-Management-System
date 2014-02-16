@@ -7,7 +7,7 @@
 
 #include "targetver.h"
 #include <iostream>
-
+#include <vector>
 // Headers for CppUnitTest
 #include "CppUnitTest.h"
 

@@ -300,9 +300,18 @@ Table Database::Project(vector<string> attributes, string fromTable)
 			result->addEntry(fields);
 		}
 	}
-        
-    
-	
     
 	return *result;
+}
+
+Table* Database::getTable(string relationName)
+{ // return pointer to the correct table, so it can be modified
+	for (int i = 0; i < _tables.size(); i++)
+	{
+		if (_tables.at(i).getName() == relationName)
+		{
+			return &_tables.at(i);
+		}
+	}
+	return NULL;
 }
