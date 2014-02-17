@@ -1,15 +1,10 @@
-***NEW REQUIREMENT***
-join
-
-
-
-
 Patrick:
 create table(primary key)
 drop (delete) table
 insert into
 update
 delete from
+join
 
 Eliutt:
 selection
