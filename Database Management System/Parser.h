@@ -27,18 +27,18 @@ public:
 	// call appropriate function based on user input, return true on success
 	bool InsertCmd(std::vector<std::string> inputLine);
 	Table selection(std::vector<std::string> input);
+	Table deletion(std::vector<std::string> input);
 
 	// parse the given input and set the Table t appropriately
 	Table interpretAtomicExpression(std::vector<std::string> input);
 
+	// Below is not needed because of selection function in Database
 	// return a table as a subset of t that satisfies the conditions
-	Table modifyTableForCondition(std::vector<std::string> conditions, Table t);
-
+	//Table modifyTableForCondition(std::vector<std::string> conditions, Table t);
 	// return true if the comparison is satisfied
-	bool satisfiesComparison(Entry entry, std::string columnName, std::string op, std::string operand2);
-
+	//bool satisfiesComparison(Table t, Entry entry, std::string columnName, std::string op, std::string operand2);
 	// return true if entry satisfies the one or more conditions represented in tokensForCondition
-	bool condition(std::vector<std::string> tokensForCondition, Entry entry);
+	//bool checkConditions(std::vector<std::string> tokensForCondition, Table t, Entry entry);
 
 	Table getTableFromExpression(std::vector<std::string> expr);
 	// read an integer from input, starting at inputIndex, assign it to word, and return the number of characters read
