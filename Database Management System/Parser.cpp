@@ -44,6 +44,38 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 		selection(inputVector);
 	}
+	else if (inputVector.at(0) == "OPEN")
+	{
+
+	}
+	else if (inputVector.at(0) == "CLOSE")
+	{
+
+	}
+	else if (inputVector.at(0) == "WRITE")
+	{
+
+	}
+	else if (inputVector.at(0) == "EXIT")
+	{
+
+	}
+	else if (inputVector.at(0) == "SHOW")
+	{
+
+	}
+	else if (inputVector.at(0) == "CREATE" && inputVector.at(1) == "TABLE")
+	{
+
+	}
+	else if (inputVector.at(0) == "UPDATE")
+	{
+
+	}
+	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
+	{
+
+	}
 }
 vector<string> Parser::readInputLine(string inputLine)
 { // expect an identifier to be a word, integer, or operand
@@ -115,6 +147,7 @@ bool Parser::isDelimiter(char c)
 { // ignored characters in the input line
 	return (c == ' ') || (c == ',') || (c == ';');
 }
+
 Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr
