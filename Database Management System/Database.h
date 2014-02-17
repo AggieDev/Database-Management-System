@@ -31,11 +31,6 @@ public:
 	//accessors
 	vector<Table> getTables(){ return _tables; }
 	Table getTable(string relationName);
-<<<<<<< HEAD
 	Table* getTableByReference(string relationName);
-
-	Table setunion(Table t1, Table t2);
-=======
->>>>>>> origin/garrett-branch
 };
 

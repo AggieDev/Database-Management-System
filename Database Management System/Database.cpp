@@ -381,7 +381,6 @@ Table Database::getTable(string relationName)
 		}
 	}
 	return NULL;
-<<<<<<< HEAD
 }
 
 Table* Database::getTableByReference(string relationName)
@@ -394,7 +393,4 @@ Table* Database::getTableByReference(string relationName)
 		}
 	}
 	return NULL;
-=======
-
->>>>>>> origin/garrett-branch
 }

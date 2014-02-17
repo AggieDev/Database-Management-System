@@ -63,11 +63,10 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 		selection(inputVector);
 	}
-<<<<<<< HEAD
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
 	{
 		deletion(inputVector);
-=======
+	}
 	else if (inputVector.at(0) == "OPEN")
 	{
 
@@ -95,11 +94,6 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	else if (inputVector.at(0) == "UPDATE")
 	{
 
-	}
-	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
-	{
-
->>>>>>> origin/garrett-branch
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -172,7 +166,7 @@ bool Parser::isDelimiter(char c)
 { // ignored characters in the input line
 	return (c == ' ') || (c == ',') || (c == ';');
 }
-<<<<<<< HEAD
+
 Table Parser::deletion(std::vector<std::string> input)
 {
 	bool deleteKeyword = (input.at(0) == "DELETE") && (input.at(1) == "FROM");
@@ -203,9 +197,7 @@ Table Parser::deletion(std::vector<std::string> input)
 	// and return the same one stored as a temp
 	return temp;
 }
-=======
 
->>>>>>> origin/garrett-branch
 Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr
