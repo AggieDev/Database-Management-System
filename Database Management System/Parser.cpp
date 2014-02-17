@@ -44,7 +44,6 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 		selection(inputVector);
 	}
-
 }
 vector<string> Parser::readInputLine(string inputLine)
 { // expect an identifier to be a word, integer, or operand
@@ -118,7 +117,7 @@ Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr
 
-	bool selectKeyword = input.at(0) == "select";
+	bool selectKeyword = (input.at(0) == "select");
 	bool properOpenParenthesis = input.at(1) == "(";
 	bool properCloseParenthesis = false;
 	vector<string> valuesForCondition;
@@ -211,7 +210,61 @@ Table Parser::getTableFromExpression(vector<string> expr)
 }
 Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
 { // parse the given conditions and modify the Table t appropriately
-	return Table();
+
+	Table newTable = Table();
+
+	vector<Entry> entries = t.getEntries();
+
+	for (int i = 0; i < entries.size(); i++)
+	{ // place every valid entry into the new table
+
+	}
+
+	return newTable;
+}
+bool Parser::condition(vector<string> tokensForCondition, Entry entry)
+{
+	if (tokensForCondition.size() >= 3)
+	{ // if theres enough tokens to represent a condition
+		// call the individual satisfiesComparison method
+	}
+
+	return true;
+}
+bool Parser::satisfiesComparison(Entry entry, string columnName, string op, string operand2)
+{ 	// return true if this individual comparison is satisfied
+
+	// operand1 needs to be a value from the table for the given entry,
+	// at the column identified by columnName
+	string operand1 = columnName; 
+
+	if (op == "==")
+	{
+		return operand1 == operand2;
+	}
+	else if (op == "!=")
+	{
+		return operand1 != operand2;
+	}
+	else if (op == "<")
+	{
+		return operand1 < operand2;
+	}
+	else if (op == "<=")
+	{
+		return operand1 <= operand2;
+	}
+	else if (op == ">")
+	{
+		return operand1 > operand2;
+	}
+	else if (op == ">=")
+	{
+		return operand1 >= operand2;
+	}
+
+
+	return false;
 }
 bool Parser::InsertCmd(vector<string> input)
 { // insert into a table from explicit values or one obtained from another table

@@ -31,7 +31,14 @@ public:
 	// parse the given input and set the Table t appropriately
 	Table interpretAtomicExpression(std::vector<std::string> input);
 
+	// return a table as a subset of t that satisfies the conditions
 	Table modifyTableForCondition(std::vector<std::string> conditions, Table t);
+
+	// return true if the comparison is satisfied
+	bool satisfiesComparison(Entry entry, std::string columnName, std::string op, std::string operand2);
+
+	// return true if entry satisfies the one or more conditions represented in tokensForCondition
+	bool condition(std::vector<std::string> tokensForCondition, Entry entry);
 
 	Table getTableFromExpression(std::vector<std::string> expr);
 	// read an integer from input, starting at inputIndex, assign it to word, and return the number of characters read
@@ -43,12 +50,8 @@ public:
 
 	bool isOp(char c);
 	bool isType(std::string s);
-
-// TODO: implement following functions
 	bool isDelimiter(char c); // can be space, quote, parenthesis, semi-colon, ...
 	
 
-
-	
 };
 
