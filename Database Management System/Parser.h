@@ -55,7 +55,8 @@ public:
 	bool isOp(char c);
 	bool isType(std::string s);
 	bool isDelimiter(char c); // can be space, quote, parenthesis, semi-colon, ...
-	
+	bool is_identifier (char c);
 
+	int readIdentifier(std::string& word, std::string , int inputIndex);
 };
 

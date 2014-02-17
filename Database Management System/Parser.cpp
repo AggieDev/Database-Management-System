@@ -63,9 +63,43 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 		selection(inputVector);
 	}
+<<<<<<< HEAD
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
 	{
 		deletion(inputVector);
+=======
+	else if (inputVector.at(0) == "OPEN")
+	{
+
+	}
+	else if (inputVector.at(0) == "CLOSE")
+	{
+
+	}
+	else if (inputVector.at(0) == "WRITE")
+	{
+
+	}
+	else if (inputVector.at(0) == "EXIT")
+	{
+
+	}
+	else if (inputVector.at(0) == "SHOW")
+	{
+
+	}
+	else if (inputVector.at(0) == "CREATE" && inputVector.at(1) == "TABLE")
+	{
+
+	}
+	else if (inputVector.at(0) == "UPDATE")
+	{
+
+	}
+	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
+	{
+
+>>>>>>> origin/garrett-branch
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -113,6 +147,8 @@ vector<string> Parser::readInputLine(string inputLine)
 			}
 			else if (isIdentifier)		// Garrett
 			{
+				charactersRead = readIdentifier(word, inputLine, i);
+				inputVector.push_back(word);
 			}
 			else if (isOperator)		// Elliut
 			{ // this will also include the '<-' needed for a query, and +,-,* for set manipulation
@@ -136,6 +172,7 @@ bool Parser::isDelimiter(char c)
 { // ignored characters in the input line
 	return (c == ' ') || (c == ',') || (c == ';');
 }
+<<<<<<< HEAD
 Table Parser::deletion(std::vector<std::string> input)
 {
 	bool deleteKeyword = (input.at(0) == "DELETE") && (input.at(1) == "FROM");
@@ -166,6 +203,9 @@ Table Parser::deletion(std::vector<std::string> input)
 	// and return the same one stored as a temp
 	return temp;
 }
+=======
+
+>>>>>>> origin/garrett-branch
 Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr
@@ -395,4 +435,18 @@ int Parser::readType(std::string& word, std::string input, int inputIndex)
 		word = tempWord;
 	}
 	return (myIndex - inputIndex); // return how many characters were read
+}
+
+int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
+{
+	int myIndex = inputIndex;
+	string myWord = "";
+	char character = input.at(myIndex);
+	while (isalpha(character) || isdigit(character))
+	{
+		myWord.push_back(character);
+		character = input.at(++myIndex);
+	}
+	word = myWord;
+	return (myIndex - inputIndex);
 }
