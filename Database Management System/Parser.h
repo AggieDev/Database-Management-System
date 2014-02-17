@@ -52,6 +52,7 @@ public:
 	bool isType(std::string s);
 	bool isDelimiter(char c); // can be space, quote, parenthesis, semi-colon, ...
 	
+	int readLiteral(std::string& word, std::string input, int inputIndex);
 
 };
 
