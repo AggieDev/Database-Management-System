@@ -32,10 +32,14 @@ public:
 	vector<Table> getTables(){ return _tables; }
 	Table getTable(string relationName);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	Table* getTableByReference(string relationName);
 
 	Table setunion(Table t1, Table t2);
 >>>>>>> selection, deletion
+=======
+	Table* getTableByReference(string relationName);
+>>>>>>> Removed Arrows and Github stuff
 };
 

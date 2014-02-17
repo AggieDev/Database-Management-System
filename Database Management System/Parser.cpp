@@ -64,6 +64,13 @@ void Parser::interpretInputVector(vector<string> inputVector)
 		selection(inputVector);
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
+	{
+		deletion(inputVector);
+	}
+>>>>>>> Removed Arrows and Github stuff
 	else if (inputVector.at(0) == "OPEN")
 	{
 
@@ -92,6 +99,7 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 
 	}
+<<<<<<< HEAD
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
 	{
 
@@ -101,6 +109,8 @@ void Parser::interpretInputVector(vector<string> inputVector)
 		deletion(inputVector);
 >>>>>>> selection, deletion
 	}
+=======
+>>>>>>> Removed Arrows and Github stuff
 }
 vector<string> Parser::readInputLine(string inputLine)
 { // expect an identifier to be a word, integer, or operand
@@ -173,8 +183,12 @@ bool Parser::isDelimiter(char c)
 	return (c == ' ') || (c == ',') || (c == ';');
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
+=======
+
+>>>>>>> Removed Arrows and Github stuff
 Table Parser::deletion(std::vector<std::string> input)
 {
 	bool deleteKeyword = (input.at(0) == "DELETE") && (input.at(1) == "FROM");
@@ -205,7 +219,11 @@ Table Parser::deletion(std::vector<std::string> input)
 	// and return the same one stored as a temp
 	return temp;
 }
+<<<<<<< HEAD
 >>>>>>> selection, deletion
+=======
+
+>>>>>>> Removed Arrows and Github stuff
 Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr

@@ -382,8 +382,11 @@ Table Database::getTable(string relationName)
 	}
 	return NULL;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
+=======
+>>>>>>> Removed Arrows and Github stuff
 }
 
 Table* Database::getTableByReference(string relationName)
@@ -396,5 +399,8 @@ Table* Database::getTableByReference(string relationName)
 		}
 	}
 	return NULL;
+<<<<<<< HEAD
 >>>>>>> selection, deletion
+=======
+>>>>>>> Removed Arrows and Github stuff
 }
