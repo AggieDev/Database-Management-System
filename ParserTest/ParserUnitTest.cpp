@@ -34,7 +34,7 @@ namespace ParserTest
 			//string sampleInput = "CREATE TABLE baseball_players (fname VARCHAR(20), lname VARCHAR(30), team VARCHAR(20), homeruns INTEGER, salary INTEGER) PRIMARY KEY (fname, lname);";
 			string sampleInput = "123, 789;";
 			vector<string> inputVector = p.readInputLine(sampleInput);
-			Assert::AreEqual(3, (int)inputVector.size()); // should have these contents [ 123 , 789 , ; ]
+			Assert::AreEqual(2, (int)inputVector.size()); // should have these contents [ 123 , 789 , ; ]
 		}
 		TEST_METHOD(TestInsertCmdWithLiterals)
 		{
