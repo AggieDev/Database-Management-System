@@ -18,6 +18,8 @@ public:
 	//atributes = {"id","name","age"} or {"*"}
 	//_where = {"age","<","10"} parse the where operations
 
+// TODO: a select function where the 'fromTable' is an actual table, might not be in DB
+	Table select(vector<string> attributes, Table* fromTable, vector<string> _where);
    
     Table Project(vector<string> attributes, string fromTable);
     //atributes = {"id","name","age"} or {"*"}
@@ -29,6 +31,8 @@ public:
 	//accessors
 	vector<Table> getTables(){ return _tables; }
 	Table getTable(string relationName);
+	Table* getTableByReference(string relationName);
+
 	Table setunion(Table t1, Table t2);
 };
 

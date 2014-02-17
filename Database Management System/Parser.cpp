@@ -44,6 +44,10 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 		selection(inputVector);
 	}
+	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
+	{
+		deletion(inputVector);
+	}
 }
 vector<string> Parser::readInputLine(string inputLine)
 { // expect an identifier to be a word, integer, or operand
@@ -113,11 +117,46 @@ bool Parser::isDelimiter(char c)
 { // ignored characters in the input line
 	return (c == ' ') || (c == ',') || (c == ';');
 }
+Table Parser::deletion(std::vector<std::string> input)
+{
+	bool deleteKeyword = (input.at(0) == "DELETE") && (input.at(1) == "FROM");
+	if (!deleteKeyword)
+	{
+		throw new exception("Invalid deletion call");
+		return NULL;
+	}
+	string relationName = input.at(1);
+	
+	// badEntries are every entry in the table that meets the condition,
+	// the resulting table will have its original minus the badEntries.
+	// This is done using Database::differenceTable()
+	Table badEntries = Table();
+	Table* t = _db->getTableByReference(relationName);
+	vector<Entry> entries = t->getEntries();
+
+	// run selection() to get the table of entries that satisfy 
+	// the condition and will be eliminated
+	input.erase(input.begin());
+	input.at(0) = "select";
+	badEntries = selection(input);
+
+	// update the appropriate table by reference
+	Table temp = _db->differenceTable(badEntries, *t);
+	t = &temp; 
+	
+	// and return the same one stored as a temp
+	return temp;
+}
 Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr
 
 	bool selectKeyword = (input.at(0) == "select");
+	if (!selectKeyword)
+	{
+		throw new exception("Invalid selection call");
+		return NULL;
+	}
 	bool properOpenParenthesis = input.at(1) == "(";
 	bool properCloseParenthesis = false;
 	vector<string> valuesForCondition;
@@ -140,19 +179,10 @@ Table Parser::selection(vector<string> input)
 		}
 	}
 	
-	Table t = Table();
-	// this should generate a table (existing one, or combination of two, etc)
-	t = interpretAtomicExpression(valuesForAtomicExpression);
-
-	// this should narrow down that^ table according to conditions
-	t = modifyTableForCondition(valuesForCondition, t);
-
-	if (selectKeyword && properOpenParenthesis && properCloseParenthesis)
-	{
-		return t;
-	}
-	throw new exception("An error occurred while parsing a selection phrase");
-	return t;
+	// this will generate a table (existing one, or combination of two, etc)
+	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+	Table selectionTable = _db->select(fromTable.getColNames(), &fromTable, valuesForCondition);
+	return selectionTable;
 }
 Table Parser::interpretAtomicExpression(vector<string> input)
 { // parse the given input and set the Table t appropriately
@@ -206,80 +236,94 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	{ // natural-join ::= atomic-expr JOIN atomic-expr
 // Waylon
 	}
+	else
+	{ // atomic-expr, just the relation-name
+		return _db->getTable(first);
+	}
+
 	return NULL;
 }
-Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
-{ // parse the given conditions and modify the Table t appropriately
-
-	Table newTable = Table();
-
-	vector<Entry> entries = t.getEntries();
-
-	for (int i = 0; i < entries.size(); i++)
-	{ // place every valid entry into the new table
-
-	}
-
-	return newTable;
-}
-bool Parser::condition(vector<string> tokensForCondition, Entry entry)
-{
-	if (tokensForCondition.size() >= 3)
-	{ // if theres enough tokens to represent a condition
-		// call the individual satisfiesComparison method
-	}
-
-	return true;
-}
-bool Parser::satisfiesComparison(Entry entry, string columnName, string op, string operand2)
-{ 	// return true if this individual comparison is satisfied
-
-	// operand1 needs to be a value from the table for the given entry,
-	// at the column identified by columnName
-	string operand1 = columnName; 
-
-	if (op == "==")
-	{
-		return operand1 == operand2;
-	}
-	else if (op == "!=")
-	{
-		return operand1 != operand2;
-	}
-	else if (op == "<")
-	{
-		return operand1 < operand2;
-	}
-	else if (op == "<=")
-	{
-		return operand1 <= operand2;
-	}
-	else if (op == ">")
-	{
-		return operand1 > operand2;
-	}
-	else if (op == ">=")
-	{
-		return operand1 >= operand2;
-	}
-
-
-	return false;
-}
+//Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
+//{ // parse the given conditions and modify the Table t appropriately
+//
+//	Table newTable = Table();
+//
+//	vector<Entry> entries = t.getEntries();
+//
+//	for (int i = 0; i < entries.size(); i++)
+//	{ // place every valid entry into the new table
+//		if (checkConditions(conditions, t, entries.at(i)))
+//		{ // check the conditions on each entry
+//			Entry validEntry = entries.at(i);
+//			newTable.addEntry(validEntry);
+//		}
+//	}
+//
+//	return newTable;
+//}
+//bool Parser::checkConditions(vector<string> tokensForCondition, Table t, Entry entry)
+//{
+//	for (int i = 0; i < tokensForCondition.size() - 2; )
+//	{ // for every group of three (columnName, operator, operand)
+//		// call the individual satisfiesComparison method
+//
+//	}
+//
+//	return true;
+//}
+//bool Parser::satisfiesComparison(Table t, Entry entry, string columnName, string op, string operand2)
+//{ 	// return true if this individual comparison is satisfied
+//
+//	// operand1 needs to be a value from the table for the given entry,
+//	// at the column identified by columnName
+//
+//
+//	if (op == "==")
+//	{
+//		return operand1 == operand2;
+//	}
+//	else if (op == "!=")
+//	{
+//		return operand1 != operand2;
+//	}
+//	else if (op == "<")
+//	{
+//		return operand1 < operand2;
+//	}
+//	else if (op == "<=")
+//	{
+//		return operand1 <= operand2;
+//	}
+//	else if (op == ">")
+//	{
+//		return operand1 > operand2;
+//	}
+//	else if (op == ">=")
+//	{
+//		return operand1 >= operand2;
+//	}
+//
+//	return false;
+//}
 bool Parser::InsertCmd(vector<string> input)
 { // insert into a table from explicit values or one obtained from another table
 
 	string relationName = input.at(2);	// name of Table in the Database
+	Table* t = _db->getTableByReference(relationName);
+
 	if (input.at(5) == "RELATION")
 	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
 		vector<string> expression;
 		for (unsigned int i = 6; i < input.size(); i++)
 		{ // fill expression vector with the values following the word, 'RELATION'
 			expression.push_back(input.at(i));
-
-// TODO: hand off the expression vector to the appropriate sub parser
-
 		}
+		Table newValues = getTableFromExpression(expression);
+		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
+		{ // add every entry of the table of new values to the table referenced by relationName
+			t->addEntry(newValues.getEntries().at(i));
+		}
+		return true;
 	}
 	else
 	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
