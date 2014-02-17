@@ -7,7 +7,7 @@ Parser::Parser(Database* db)
 	_db = db;
 }
 Parser::Parser()
-{ // default constructor if no database reference is provided, make an empty one
+{ // default constructor, if no database reference is provided, make an empty one
 	_db = new Database();
 }
 
@@ -27,6 +27,7 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	//			 list for, say, CREATE TABLE with arbitrarily many columns possible
 	//		  -> set manipulation (union, difference, product)
 
+
 	if (inputVector.at(1) == "<-") // Query
 	{ // the phrase structure:		query ::= relation-name <- expr ;
 		// this is one where our work collaborates. The query function will 
@@ -39,6 +40,11 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 		InsertCmd(inputVector);
 	}
+	else if (inputVector.at(0) == "select")
+	{
+		selection(inputVector);
+	}
+
 }
 vector<string> Parser::readInputLine(string inputLine)
 { // expect an identifier to be a word, integer, or operand
@@ -108,6 +114,105 @@ bool Parser::isDelimiter(char c)
 { // ignored characters in the input line
 	return (c == ' ') || (c == ',') || (c == ';');
 }
+Table Parser::selection(vector<string> input)
+{ // select from a table according to a specific condition
+	// selection ::= select ( condition ) atomic-expr
+
+	bool selectKeyword = input.at(0) == "select";
+	bool properOpenParenthesis = input.at(1) == "(";
+	bool properCloseParenthesis = false;
+	vector<string> valuesForCondition;
+	vector<string> valuesForAtomicExpression;
+	unsigned int i;
+	for (i = 2; i < input.size(); i++)
+	{		
+		string temp = input.at(i);
+		if (temp == ")")
+		{ // done adding to condition phrase if parenthesis are closed
+			properCloseParenthesis = true;
+		}
+		else if (!properCloseParenthesis)
+		{ // continue appending to condition phrase
+			valuesForCondition.push_back(input.at(i));
+		}
+		else
+		{ // add to third part of selection phrase; the atomic-expr
+			valuesForAtomicExpression.push_back(input.at(i));
+		}
+	}
+	
+	Table t = Table();
+	// this should generate a table (existing one, or combination of two, etc)
+	t = interpretAtomicExpression(valuesForAtomicExpression);
+
+	// this should narrow down that^ table according to conditions
+	t = modifyTableForCondition(valuesForCondition, t);
+
+	if (selectKeyword && properOpenParenthesis && properCloseParenthesis)
+	{
+		return t;
+	}
+	throw new exception("An error occurred while parsing a selection phrase");
+	return t;
+}
+Table Parser::interpretAtomicExpression(vector<string> input)
+{ // parse the given input and set the Table t appropriately
+	
+	Table newTable = Table();
+	if (input.size() == 1)
+	{ // atomic-expr ::= relation-name
+		string relationName = input.at(0);
+		newTable = _db->getTable(relationName);
+	}
+	else if (input.size() >= 3)
+	{ // atomic-expr ::= ( expr )
+		input.erase(input.begin());
+		input.erase(input.begin() + input.size() - 1);
+		newTable = getTableFromExpression(input);
+	}
+	return newTable;
+}
+Table Parser::getTableFromExpression(vector<string> expr)
+{ // evaluate an expression and return a pointer to a table
+	// expr ::= atomic-expr | selection | projection | renaming 
+	//						| union | difference | product | natural-join
+
+	string first = expr.at(0);
+
+	if (first == "select")
+	{ // selection
+		return selection(expr); // selection returns an appropriate table
+	}
+	else if (first == "project")
+	{ // projection
+// Elliut
+	}
+	else if (first == "rename")
+	{ // renaming
+// Elliut
+	}
+	else if (find(expr.begin(), expr.end(), "+") != expr.end())
+	{ // union ::= atomic-expr + atomic-expr
+// Waylon
+	}
+	else if (find(expr.begin(), expr.end(), "-") != expr.end())
+	{ // difference ::= atomic-expr - atomic-expr
+// Waylon
+	}
+	else if (find(expr.begin(), expr.end(), "*") != expr.end())
+	{ // product ::= atomic-expr * atomic-expr
+// Waylon
+	}
+	else if (find(expr.begin(), expr.end(), "JOIN") != expr.end())
+	{ // natural-join ::= atomic-expr JOIN atomic-expr
+// Waylon
+	}
+	return NULL;
+}
+Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
+{ // parse the given conditions and modify the Table t appropriately
+	return Table();
+}
 bool Parser::InsertCmd(vector<string> input)
 { // insert into a table from explicit values or one obtained from another table
 
@@ -135,8 +240,8 @@ bool Parser::InsertCmd(vector<string> input)
 			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
 				fields.push_back(input.at(i));
 			}
-			Table* t = _db->getTable(relationName);
-			t->addEntry(fields);
+			Table t = _db->getTable(relationName);
+			t.addEntry(fields);
 			return true;
 		}
 	}
