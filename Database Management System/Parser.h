@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 #include "Database.h"
 #include "Table.h"
@@ -16,6 +17,9 @@ public:
 	Parser();
 	Parser(Database* db);
 	~Parser();
+
+	// read a file containing DML commands
+	void readFile(string fileName);
 
 	// use this function with readInputLine's returned vector 
 	// to call the correct database/table functions
