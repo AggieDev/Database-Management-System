@@ -40,6 +40,9 @@ public:
 	// read a type from input, starting at inputIndex, assign it to word, (assign the varchar parameter to varCharNum if applicable),
 	// and return the number of characters read
 	int readType(std::string& word, std::string input, int inputIndex);
+    
+    int readOp(std::string& word, std::string input, int inputIndex);
+    
 
 	bool isOp(char c);
 	bool isType(std::string s);

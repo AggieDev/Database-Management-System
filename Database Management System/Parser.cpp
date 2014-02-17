@@ -94,6 +94,8 @@ vector<string> Parser::readInputLine(string inputLine)
 			}
 			else if (isOperator)		// Elliut
 			{ // this will also include the '<-' needed for a query, and +,-,* for set manipulation
+                charactersRead = readOp(word,inputLine, i);
+                inputVector.push_back(word);
 			}
 			else { throw new exception("token type was not identified"); }
 
@@ -279,4 +281,18 @@ int Parser::readType(std::string& word, std::string input, int inputIndex)
 		word = tempWord;
 	}
 	return (myIndex - inputIndex); // return how many characters were read
+}
+int Parser::readOp(std::string& word, std::string input, int inputIndex)
+{
+    string myWord = "";
+    int myIndex = inputIndex;
+    char nextDigit = input.at(myIndex);
+    while(isOp(nextDigit))
+    {
+        myWord +=nextDigit;
+        nextDigit = input.at(++myIndex);
+    }
+    word = myWord;
+    return (myIndex - inputIndex); // return how many characters were read
+    
 }
