@@ -90,7 +90,7 @@ vector<string> Parser::readInputLine(string inputLine)
 			}
 			else if (isIdentifier)		// Garrett
 			{
-				charactersRead = readLiteral(word, inputLine, i);
+				charactersRead = readIdentifier(word, inputLine, i);
 				inputVector.push_back(word);
 			}
 			else if (isOperator)		// Elliut
@@ -336,7 +336,16 @@ int Parser::readType(std::string& word, std::string input, int inputIndex)
 	return (myIndex - inputIndex); // return how many characters were read
 }
 
-int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
+int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 {
-	
+	int myIndex;
+	string myWord = "";
+	char character = input.at(myIndex);
+	while (isalpha(character) || isdigit(character))
+	{
+		myWord.push_back(character);
+		character = input.at(++myIndex);
+	}
+	word = myWord;
+	return (myIndex - inputIndex);
 }
