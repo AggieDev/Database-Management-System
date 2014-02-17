@@ -15,6 +15,25 @@ Parser::~Parser()
 {
 }
 
+void Parser::readFile(string fileName)
+{ // read a file written in DML. Send each line to readInputLine() which returns a vector of the tokens
+	// send those tokens to interpretInputVector()
+	ifstream inFile(fileName);
+	string line;
+	if (inFile.is_open())
+	{
+		while (getline(inFile, line))
+		{
+			interpretInputVector(readInputLine(line));
+		}
+		inFile.close();
+	}
+	else
+	{
+		cout << "Invalid input file name provided\n";
+	}
+}
+
 void Parser::interpretInputVector(vector<string> inputVector)
 { // conditional statements to match the input line to specific function calls
 	// NOTE: Individual members in this vector are all strings but will be one of -
