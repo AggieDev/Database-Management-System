@@ -26,8 +26,14 @@ public:
 
 	// call appropriate function based on user input, return true on success
 	bool InsertCmd(std::vector<std::string> inputLine);
+	Table selection(std::vector<std::string> input);
 
+	// parse the given input and set the Table t appropriately
+	Table interpretAtomicExpression(std::vector<std::string> input);
 
+	Table modifyTableForCondition(std::vector<std::string> conditions, Table t);
+
+	Table getTableFromExpression(std::vector<std::string> expr);
 	// read an integer from input, starting at inputIndex, assign it to word, and return the number of characters read
 	int readInteger(std::string& word, std::string input, int inputIndex);
 	
