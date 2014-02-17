@@ -19,12 +19,8 @@ private:
 	//'f' - float (double)
 	//'i' - int
 	vector<string> colNames;
-	vector<Entry> _entries;	// vector of vectors is an easier implementation...
-	//string* _arrEntries[2];		// array of arrays uses contiguous memory, good when searching columns
-	//char*** _ptrEntries;		// maintains a pointer to a block of memory containing-
-	//		pointers that point to blocks of memory containing-
-	//			pointers that point to blocks of memory containing-
-	//				chars
+	vector<Entry> _entries;	
+
 
 public:
 	Table() {}
