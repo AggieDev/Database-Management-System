@@ -371,7 +371,7 @@ int Parser::readType(std::string& word, std::string input, int inputIndex)
 
 int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 {
-	int myIndex;
+	int myIndex = inputIndex;
 	string myWord = "";
 	char character = input.at(myIndex);
 	while (isalpha(character) || isdigit(character))
