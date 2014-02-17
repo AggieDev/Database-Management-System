@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-	int you_suck;
-};
-=======
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
@@ -249,4 +245,3 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 }
 
->>>>>>> 99636ba5268439684a8d2b45175f3b29352fa5d7

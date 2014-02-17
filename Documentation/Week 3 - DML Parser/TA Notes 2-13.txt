@@ -1,0 +1,8 @@
+complicated conditions: and, or, parenthesis
+*more comments in headers - data members, I/O of functions
+formatting issues
+don't 'use namespaces std' in headers
+guard header files
+short lines (~80 chars)
+!!UNIT TESTS!!
+read from standard input

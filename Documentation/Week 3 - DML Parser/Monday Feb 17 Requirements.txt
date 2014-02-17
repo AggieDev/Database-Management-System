@@ -1,0 +1,62 @@
+This is a rough document trying to identify how we'll attack
+this week's deliverable
+
+
+Per Waylon's advice, it looks like the best way to implement grammar 
+rules is using the std::regex class, namely std::regex_search().
+
+http://www.cplusplus.com/reference/regex/regex_search/
+
+We can:
+- take a line of user input: 
+     INSERT INTO animals VALUES FROM ("Snoopy", "dog", 3);
+
+
+- split the long string into a vector<string> 
+
+- write functions to implement the logic for pattern matching a command. 
+
+
+
+
+Don't take this too seriously, but maybe something like:
+
+
+
+vector<string> input;
+
+// ....
+
+
+  if (input<0> == "INSERT" && input<1> == "INTO")
+  {  
+      callInsertFunction(input);
+  }
+
+// ....
+
+callInsertFunction(vector<string> input)
+{
+  string tableName = input<2>;
+
+  // collect all input needed, save into variables
+  // call appropriate function with those variables passed as parameters
+  //     this might make us realize we need to redo some older functions
+}
+
+
+There should be an html file in this folder copied from the grammar rules
+section on the assignment page.
+
+
+I assigned them to people in groups, trying to be fair. I did this quickly so 
+please say if you disagree or have a different suggestion (and modify the html):
+	
+	
+All four of us have a couple small sections labeled in the html file in this folder, 
+and Waylon will make a function that takes a full string of input and lexes it into
+a vector<string>, to be passed to another function.
+	
+	
+I think we all should try to meet up more often this week to get everything sorted out
+
