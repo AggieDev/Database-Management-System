@@ -332,6 +332,35 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	// the table will be empty if invalid expression was provided
 	return newTable;
 }
+/*----------Eli---*/
+/*Table Parser::interpretOperand(vector<string> input)
+{ // parse the given input and set the attribute appropriately
+	
+	Table newTable = Table();
+	if (input.size() == 1)
+	{ // operand ::= attribute-name
+		string attributeName = input.at(0);
+		newTable = _db->getTable(attributeName);
+	}
+	else if (input.size() > 1)
+	{ // operand ::= literal "..."
+		vector<string> inputCopy = input;
+        
+		// erase parenthesis if present
+		if (inputCopy.at(0) == "(")
+		{
+			inputCopy.erase(inputCopy.begin());
+		}
+		if (inputCopy.at(inputCopy.size() - 1) == ")")
+		{
+			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+		}
+		newTable = getTableFromExpression(inputCopy);
+	}
+    
+	// the table will be empty if invalid expression was provided
+	return newTable;
+}*/
 /*Table Parser::rename(vector<string> input)
 {
     // rename a table according
