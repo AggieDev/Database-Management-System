@@ -40,7 +40,7 @@ public:
     /*-----Eli---*/
     Table projection(std::vector<std::string>input);
     /*-----Eli---*/
-    Table rename(std::vector<std::string>input);
+    //Table rename(std::vector<std::string>input);
     /*-----Eli---*/
     bool ShowCmd(std::vector<std::string>input);
     /*-----Eli---*/
