@@ -12,10 +12,8 @@
 class Parser
 {
 private:
-	Database* _db;
 public:
 	Parser();
-	Parser(Database* db);
 	~Parser();
 
 	// read a file containing DML commands
