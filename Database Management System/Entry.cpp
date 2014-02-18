@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#include "stdafx.h"
-=======
 
->>>>>>> origin/master
 #include "Entry.h"
 
 Entry::Entry()
@@ -21,8 +17,6 @@ void Entry::printEntry()
 	}
 	cout << "\n";
 }
-<<<<<<< HEAD
-=======
 
 ostream& operator<<(ostream& out, const Entry& e)
 {
@@ -33,4 +27,3 @@ ostream& operator<<(ostream& out, const Entry& e)
 	return out;
 }
 
->>>>>>> origin/master
