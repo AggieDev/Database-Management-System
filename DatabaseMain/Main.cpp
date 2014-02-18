@@ -42,7 +42,7 @@ void testOccupyTables(Table &first, Table &second)
 }
 
 //using this to test difference table
-void testDifferenceTable(Database &database)
+void testDifferenceTable()
 {
 	cout << "\n=======Testing Difference Table=======\n\n";
 	//create and occupy 2 tables with data
@@ -55,18 +55,18 @@ void testDifferenceTable(Database &database)
 	testOccupyTables(first, second);
 
 	//test difference relation
-	database.addTable(first);
-	database.addTable(second);
+	Database::addTable(first);
+	Database::addTable(second);
 
-	Table diff = database.differenceTable(first, second);
+	Table diff = Database::differenceTable(first, second);
 	diff.printTable();
 }
 
-void testProductTable(Database &database)
+void testProductTable()
 {
 	cout << "\n=======Testing Product Table=======\n\n";
-	database.printTables();
-	Table product = database.productTable(database.getTables().at(0), database.getTables().at(1));
+	Database::printTables();
+	Table product = Database::productTable(Database::getTables().at(0), Database::getTables().at(1));
 	product.printTable();
 
 }
@@ -74,7 +74,6 @@ void testProductTable(Database &database)
 void testSelection()
 try {
 	cout << "\n=======Testing Select Table=======\n\n";
-	Database database;
 	vector<string> attributes;
 	vector<char> attTypes;
 	attributes.push_back("FirstName");
@@ -111,11 +110,11 @@ try {
 	selectWhere.push_back("Price"); //left
 	selectWhere.push_back("!="); //center
 	selectWhere.push_back("20.5"); //right
-	database.addTable(table);
+	Database::addTable(table);
 
 	table.printTable();
 
-	Table results = database.select(selectAttr, "Testing", selectWhere);
+	Table results = Database::select(selectAttr, "Testing", selectWhere);
 
 	results.printTable();
 
@@ -129,7 +128,6 @@ void testProjection()
 try {
 	cout << "\n=======Testing Project Table=======\n\n";
 
-	Database database;
 	vector<string> attributes;
 	vector<char> attTypes;
 	attributes.push_back("FirstName");
@@ -162,11 +160,11 @@ try {
 	//projectAttr.push_back("LastName");
 
 
-	database.addTable(table);
+	Database::addTable(table);
 
 	table.printTable();
 
-	Table results = database.Project(projectAttr, "Test");
+	Table results = Database::Project(projectAttr, "Test");
 
 	results.printTable();
 
@@ -177,7 +175,7 @@ catch (string error)
 }
 
 
-void testSetUnion(Database &database)
+void testSetUnion()
 {
 	//create and occupy 2 tables with data
 	vector<string> columnNames;
@@ -189,10 +187,10 @@ void testSetUnion(Database &database)
 	testOccupyTables(first, second);
 
 	//test union relation
-	database.addTable(first);
-	database.addTable(second);
+	Database::addTable(first);
+	Database::addTable(second);
 
-	Table union_table = database.setunion(first, second);
+	Table union_table = Database::setunion(first, second);
 	union_table.printTable();
 }
 
@@ -200,10 +198,8 @@ int main(int argc, const char* argv[])
 {
 	cout << "DBMS started.\n";
 
-	Database database = Database();
-
-	testDifferenceTable(database);
-	testProductTable(database);
+	testDifferenceTable();
+	testProductTable();
 	try
 	{
 
@@ -222,7 +218,7 @@ int main(int argc, const char* argv[])
 	{
 		cout << error << endl;
 	}
-	testSetUnion(database);
+	testSetUnion();
 
 	cout << "\n\n";
 	system("PAUSE");

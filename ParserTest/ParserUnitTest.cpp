@@ -41,10 +41,9 @@ namespace ParserTest
 			//		atomic-expr ::= relation-name
 			
 			// first make a database that has the table we are looking for
-			Database* db = new Database();
 			Table t = Table("dbTableName");
-			db->addTable(t);
-			Parser p = Parser(db);
+			Database::addTable(t);
+			Parser p = Parser();
 
 
 			// make an atomic expression with only one value; a relation-name
@@ -60,8 +59,7 @@ namespace ParserTest
 		TEST_METHOD(TestSelectionCall)
 		{ // test atomic expression if it is of the more complicated expression
 			//		atomic-expr ::= ( expr )
-			Database* db = new Database();
-			Parser p = Parser(db);
+			Parser p = Parser();
 
 			vector<string> columns;
 			columns.push_back("index");
