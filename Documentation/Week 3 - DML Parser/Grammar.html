@@ -137,4 +137,62 @@ A program in our data manipulation language (DML) is then defined as:
 
 </div>
 
+<div>
+<h4>Example</h4>
+<div>
+<pre class="example">CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);
+
+INSERT INTO animals VALUES FROM ("Joe", "cat", 4);
+INSERT INTO animals VALUES FROM ("Spot", "dog", 10);
+INSERT INTO animals VALUES FROM ("Snoopy", "dog", 3);
+INSERT INTO animals VALUES FROM ("Tweety", "bird", 1);
+INSERT INTO animals VALUES FROM ("Joe", "bird", 2);
+
+SHOW animals;
+
+dogs &lt;- select (kind == "dog") animals;
+old_dogs &lt;- select (age &gt; 10) dogs;
+
+cats_or_dogs &lt;- dogs + (select (kind == "cat") animals);
+
+CREATE TABLE species (kind VARCHAR(10)) PRIMARY KEY (kind);
+
+INSERT INTO species VALUES FROM RELATION project (kind) animals;
+
+a &lt;- rename (aname, akind) (project (name, kind) animals);
+common_names &lt;- project (name) (select (aname == name &amp;&amp; akind != kind) (a * animals));
+answer &lt;- common_names;
+
+SHOW answer;
+
+WRITE animals;
+CLOSE animals;
+
+EXIT;
+
+</pre>
+
+<p>
+Note that we made a distinction between queries and commands in the grammar of the DML.
+The result of a query is a <i>view</i>. A view is
+not stored in the database. Rather, it is a temporary relation whose lifetime
+ends when a DML program finishes. So only the updates caused by the
+commands persist from one DML program execution to another.
+</p>
+<p>
+The relations themselves should be saved in a file in plain ASCII text (<b>DO NOT use binary</b>), using the
+same DML described above (e.g., CREATE ... INSERT ... INSERT .... ). To make it simple, let us assume that each database file can only store one relation and the filename is the same as the relation name with the suffix ".db". To load a relation from a database file, use the OPEN command. Opening a nonexisting file will result in nothing. To create a new relation file, use the WRITE command (the filename will be by default "relationname.db"). To save all changes to the relation in a database file and close, use the CLOSE command. 
+</p>
+<p>
+To exit from the DML interpreter, use the EXIT command.
+</p>
+<p>
+To print a certain relation or a view, use the SHOW command.
+</p>
+
+</div>
+</div>
+
+</div>
+
 </html>
