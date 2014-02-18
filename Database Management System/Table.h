@@ -24,7 +24,7 @@ private:
 public:
 	Table() {}
 	Table(string name, int numCols = 2);
-	Table(string name, vector<string> cols, int numCols = 2){ _name = name; colNames = cols; }
+	Table(string name, vector<string> cols, int numCols = 2){ _name = name; colNames = cols; _numCols = numCols; }
 	Table(string name, vector<string> cols, vector<char> types){ _name = name; colNames = cols; colTypes = types; _numCols = cols.size(); }
 	~Table();
 	void printTable();
