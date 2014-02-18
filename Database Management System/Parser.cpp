@@ -1,7 +1,7 @@
 //#include "stdafx.h"
 #include "Parser.h"
 #include <exception>
-
+//hi waylon
 using namespace std;
 
 Parser::Parser()
@@ -142,7 +142,7 @@ vector<string> Parser::readInputLine(string inputLine)
 		{ // determine what the following token is going to be
 			bool isInteger = isdigit(c);
 			bool isLiteral = (c == '\"');
-			bool isIdentifier = isalpha(c) || (c == '_');
+			bool isIdentifier = isalpha(c);
 			bool isOperator = isOp(c);
 		
 				// the appropriate function reads a certain number of characters
@@ -302,7 +302,7 @@ Table Parser::projection(vector<string> input)
 }
 Table Parser::interpretAtomicExpression(vector<string> input)
 { // parse the given input and set the Table t appropriately
-
+	
 	Table newTable = Table();
 	if (input.size() == 1)
 	{ // atomic-expr ::= relation-name
@@ -328,6 +328,37 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	// the table will be empty if invalid expression was provided
 	return newTable;
 }
+<<<<<<< HEAD
+/*----------Eli---*/
+/*Table Parser::interpretOperand(vector<string> input)
+{ // parse the given input and set the attribute appropriately
+	
+	
+	if (input.size() == 1)
+	{ // operand ::= attribute-name
+		string attributeName = input.at(0);
+	
+	}
+	else if (input.size() > 1)
+	{ // operand ::= literal "..."
+		vector<string> inputCopy = input;
+        
+		// erase parenthesis if present
+		if (inputCopy.at(0) == '\"')
+		{
+			inputCopy.erase(inputCopy.begin());
+		}
+		if (inputCopy.at(inputCopy.size() - 1) == '\"')
+		{
+			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+		}
+		newTable = getTableFromExpression(inputCopy);
+	}
+    
+	// the table will be empty if invalid expression was provided
+	return newTable;
+}*/
+=======
 
 //returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
@@ -366,6 +397,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 		cout << "ERROR: Tried parsing expression of unknown type: " << arthOperator << "\n";
 }
 
+>>>>>>> master
 /*Table Parser::rename(vector<string> input)
 {
     // rename a table according
@@ -403,18 +435,21 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+<<<<<<< HEAD
+	Table renameTable = _db->rename(attributesList.getColNames(), &fromTable);
+=======
 	Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
+>>>>>>> master
 	return projectionTable;
 	return newTable;
 }*/
-
 Table Parser::getTableFromExpression(vector<string> expr)
 { // evaluate an expression and return a pointer to a table
 	// expr ::= atomic-expr | selection | projection | renaming 
 	//						| union | difference | product | natural-join
 
 	string first = expr.at(0);
-	
+
 	if (first == "select")
 	{ // selection
 		return selection(expr); // selection returns an appropriate table
@@ -431,19 +466,19 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	}
 	else if (find(expr.begin(), expr.end(), "+") != expr.end())
 	{ // union ::= atomic-expr + atomic-expr
-		return parseExpression(expr, "+");
+// Waylon
 	}
 	else if (find(expr.begin(), expr.end(), "-") != expr.end())
 	{ // difference ::= atomic-expr - atomic-expr
-		return parseExpression(expr, "-");
+// Waylon
 	}
 	else if (find(expr.begin(), expr.end(), "*") != expr.end())
 	{ // product ::= atomic-expr * atomic-expr
-		return parseExpression(expr, "*");
+// Waylon
 	}
 	else if (find(expr.begin(), expr.end(), "JOIN") != expr.end())
 	{ // natural-join ::= atomic-expr JOIN atomic-expr
-		return parseExpression(expr, "JOIN");
+// Waylon
 	}
 	else if (expr.size() == 1)
 	{ // atomic-expr, just the relation-name
@@ -480,6 +515,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 //
 //	return true;
 //}
+
 //bool Parser::satisfiesComparison(Table t, Entry entry, string columnName, string op, string operand2)
 //{ 	// return true if this individual comparison is satisfied
 //
@@ -514,6 +550,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 //
 //	return false;
 //}
+
 bool Parser::InsertCmd(vector<string> input)
 { // insert into a table from explicit values or one obtained from another table
 
@@ -562,13 +599,70 @@ bool Parser::ExitCmd(vector<string> input)
 /*-------Eli----*/
 bool Parser::ShowCmd(vector<string> input)
 {
-    return false;
+    string atomicExpression = input.at(1);
+    
+    
 }
 /*-------Eli----*/
-bool Parser::CreateCmd(vector<string> input)
+/*bool Parser::CreateCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
+<<<<<<< HEAD
+    
+	Table* t = _db->getTableByReference(relationName);
+=======
 	Table* t = Database::getTableByReference(relationName);
+>>>>>>> master
+    
+    bool properOpenParenthesis = input.at(3) == "(";
+    bool properCloseParenthesis = input.at(input.size() - 1) == ")";
+	if (properOpenParenthesis && properCloseParenthesis)
+	{ // create-cmd ::= CREATE TABLE relation-name (typed-attribute-list) PRIMARY KEY (attribute-list)
+		vector<string> attributeTypes;
+		for (unsigned int i = 4; i < input.size(); i++)
+		{ // fill expression vector with the values following the '('
+			attributeTypes.push_back(input.at(i));
+		}
+        
+        
+        
+		Table newValues = getTableFromExpression(expression);
+		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
+		{ // add every entry of the table of new values to the table referenced by relationName
+			t->addEntry(newValues.getEntries().at(i));
+		}
+		return true;
+	}
+	else
+	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
+        
+		bool properOpenParenthesis = input.at(5) == "(";
+		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
+		if (properOpenParenthesis && properCloseParenthesis)
+		{ // ensure parenthesis are appropriately placed
+			vector<string> fields;
+			for (unsigned int i = 6; i < input.size() - 1; i++)
+			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
+				fields.push_back(input.at(i));
+			}
+			Table t = Database::getTable(relationName);
+			t.addEntry(fields);
+			return true;
+		}
+	}
+	return false;
+
+}*/
+/*-------Eli----*/
+/*bool Parser::UpdateCmd(vector<string> input)
+{
+<<<<<<< HEAD
+    string relationName = input.at(1);	// name of Table in the Database
+	Table* t = _db->getTableByReference(relationName);
+=======
+    string relationName = input.at(2);	// name of Table in the Database
+	Table* t = Database::getTableByReference(relationName);
+>>>>>>> master
     
 	if (input.at(5) == "RELATION")
 	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
@@ -603,47 +697,7 @@ bool Parser::CreateCmd(vector<string> input)
 	}
 	return false;
 
-}
-/*-------Eli----*/
-bool Parser::UpdateCmd(vector<string> input)
-{
-    string relationName = input.at(2);	// name of Table in the Database
-	Table* t = Database::getTableByReference(relationName);
-    
-	if (input.at(5) == "RELATION")
-	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
-		vector<string> expression;
-		for (unsigned int i = 6; i < input.size(); i++)
-		{ // fill expression vector with the values following the word, 'RELATION'
-			expression.push_back(input.at(i));
-		}
-		Table newValues = getTableFromExpression(expression);
-		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
-		{ // add every entry of the table of new values to the table referenced by relationName
-			t->addEntry(newValues.getEntries().at(i));
-		}
-		return true;
-	}
-	else
-	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
-        
-		bool properOpenParenthesis = input.at(5) == "(";
-		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
-		if (properOpenParenthesis && properCloseParenthesis)
-		{ // ensure parenthesis are appropriately placed
-			vector<string> fields;
-			for (unsigned int i = 6; i < input.size() - 1; i++)
-			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
-				fields.push_back(input.at(i));
-			}
-			Table t = Database::getTable(relationName);
-			t.addEntry(fields);
-			return true;
-		}
-	}
-	return false;
-
-}
+}*/
 
 
 
@@ -667,7 +721,6 @@ int Parser::readInteger(string& word, string input, int inputIndex)
 	word = myWord;
 	return (myIndex - inputIndex); // return how many characters were read
 }
-
 int Parser::readType(std::string& word, std::string input, int inputIndex)
 { // read a type from input, starting at inputIndex, assign it to word
 	int myIndex = inputIndex;
@@ -701,7 +754,14 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 {
     string myWord = "";
     int myIndex = inputIndex;
-	if (input.find("\"") == myIndex)
+    char nextLiteral = input.at(myIndex);
+    while(nextLiteral != '\"')
+    {
+        //myWord +=nextLiteral;
+        nextLiteral = input.at(++myIndex);
+    }
+
+	if (input.find("\"") == 0)
 	{ // if theres an opening quote
 		for (; myIndex < input.size(); myIndex++)
 		{
@@ -713,8 +773,9 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 			}
 		}
 	}
+
     word = myWord;
-    return (myIndex - inputIndex + 1); // return how many characters were read
+    return (myIndex - inputIndex); // return how many characters were read
 }
 
 int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
@@ -722,7 +783,7 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	int myIndex = inputIndex;
 	string myWord = "";
 	char character = input.at(myIndex);
-	while (isalpha(character) || isdigit(character) || character == '_')
+	while (isalpha(character) || isdigit(character))
 	{
 		myWord.push_back(character);
 		character = input.at(++myIndex);
