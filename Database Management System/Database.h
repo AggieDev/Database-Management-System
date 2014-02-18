@@ -12,7 +12,8 @@ public:
 
 	void printTables();
 	void addTable(Table t){ _tables.push_back(t); }
-
+	Table differenceTable(Table t1, Table t2);
+	Table setunion(Table t1, Table t2);
 	//relational functions
 	Table select(vector<string> attributes, string fromTable, vector<string> _where);
 	//atributes = {"id","name","age"} or {"*"}
@@ -24,7 +25,6 @@ public:
     Table Project(vector<string> attributes, string fromTable);
     //atributes = {"id","name","age"} or {"*"}
     
-	Table differenceTable(Table t1, Table t2);
 	Table productTable(Table t1, Table t2);
 	Table naturalJoinTable(Table t1, Table t2);
 
@@ -32,7 +32,5 @@ public:
 	vector<Table> getTables(){ return _tables; }
 	Table getTable(string relationName);
 	Table* getTableByReference(string relationName);
-
-	Table setunion(Table t1, Table t2);
 };
 
