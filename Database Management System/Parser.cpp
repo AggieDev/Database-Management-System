@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "Parser.h"
+#include <exception>
 
 using namespace std;
 Parser::Parser(Database* db)
@@ -79,21 +80,26 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 
 	}
+    /*----Eli-----*/
 	else if (inputVector.at(0) == "EXIT")
 	{
+        ExitCmd(inputVector);
 
 	}
+    /*----Eli-----*/
 	else if (inputVector.at(0) == "SHOW")
 	{
-
+        ShowCmd(inputVector);
 	}
+    /*----Eli-----*/
 	else if (inputVector.at(0) == "CREATE" && inputVector.at(1) == "TABLE")
 	{
-
+        CreateCmd(inputVector);
 	}
+    /*----Eli-----*/
 	else if (inputVector.at(0) == "UPDATE")
 	{
-
+        UpdateCmd(inputVector);
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -136,9 +142,10 @@ vector<string> Parser::readInputLine(string inputLine)
 				charactersRead = readInteger(word, inputLine, i);
 				inputVector.push_back(word);
 			}
+            /*----Eli-----*/
 			else if (isLiteral)			// Elliut
 			{
-                charactersRead = readLiteral(word, inputLine, i)
+                charactersRead = readLiteral(word, inputLine, i);
                 inputVector.push_back(word);
 			}
 			else if (isIdentifier)		// Garrett
@@ -146,6 +153,7 @@ vector<string> Parser::readInputLine(string inputLine)
 				charactersRead = readIdentifier(word, inputLine, i);
 				inputVector.push_back(word);
 			}
+            /*----Eli-----*/
 			else if (isOperator)		// Elliut
 			{ // this will also include the '<-' needed for a query, and +,-,* for set manipulation
                 charactersRead = readOp(word,inputLine, i);
@@ -277,6 +285,7 @@ Table Parser::projection(vector<string> input)
 	
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+    /*------Fix----*/
 	Table projectionTable = _db->Project(attributesList.getColNames(), &fromTable);
 	return projectionTable;
 }
@@ -349,10 +358,12 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	{ // selection
 		return selection(expr); // selection returns an appropriate table
 	}
+    /*-----Eli---*/
 	else if (first == "project")
 	{ // projection
         return projection(expr);// Elliut
 	}
+    /*-----Eli---*/
 	else if (first == "rename")
 	{ // renaming
         return rename(expr);// Elliut
@@ -483,15 +494,97 @@ bool Parser::InsertCmd(vector<string> input)
 }
 
 /*-------Eli----*/
-bool Parser::ExitCmd(string input)
+bool Parser::ExitCmd(vector<string> input)
 {
-    if (input == "EXIT")
-    {
-        return true;
-    }
-    
+    return 0;
+}
+/*-------Eli----*/
+bool Parser::ShowCmd(vector<string> input)
+{
     return false;
 }
+/*-------Eli----*/
+bool Parser::CreateCmd(vector<string> input)
+{
+    string relationName = input.at(2);	// name of Table in the Database
+	Table* t = _db->getTableByReference(relationName);
+    
+	if (input.at(5) == "RELATION")
+	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
+		vector<string> expression;
+		for (unsigned int i = 6; i < input.size(); i++)
+		{ // fill expression vector with the values following the word, 'RELATION'
+			expression.push_back(input.at(i));
+		}
+		Table newValues = getTableFromExpression(expression);
+		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
+		{ // add every entry of the table of new values to the table referenced by relationName
+			t->addEntry(newValues.getEntries().at(i));
+		}
+		return true;
+	}
+	else
+	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
+        
+		bool properOpenParenthesis = input.at(5) == "(";
+		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
+		if (properOpenParenthesis && properCloseParenthesis)
+		{ // ensure parenthesis are appropriately placed
+			vector<string> fields;
+			for (unsigned int i = 6; i < input.size() - 1; i++)
+			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
+				fields.push_back(input.at(i));
+			}
+			Table t = _db->getTable(relationName);
+			t.addEntry(fields);
+			return true;
+		}
+	}
+	return false;
+
+}
+/*-------Eli----*/
+bool Parser::UpdateCmd(vector<string> input)
+{
+    string relationName = input.at(2);	// name of Table in the Database
+	Table* t = _db->getTableByReference(relationName);
+    
+	if (input.at(5) == "RELATION")
+	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
+		vector<string> expression;
+		for (unsigned int i = 6; i < input.size(); i++)
+		{ // fill expression vector with the values following the word, 'RELATION'
+			expression.push_back(input.at(i));
+		}
+		Table newValues = getTableFromExpression(expression);
+		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
+		{ // add every entry of the table of new values to the table referenced by relationName
+			t->addEntry(newValues.getEntries().at(i));
+		}
+		return true;
+	}
+	else
+	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
+        
+		bool properOpenParenthesis = input.at(5) == "(";
+		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
+		if (properOpenParenthesis && properCloseParenthesis)
+		{ // ensure parenthesis are appropriately placed
+			vector<string> fields;
+			for (unsigned int i = 6; i < input.size() - 1; i++)
+			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
+				fields.push_back(input.at(i));
+			}
+			Table t = _db->getTable(relationName);
+			t.addEntry(fields);
+			return true;
+		}
+	}
+	return false;
+
+}
+
+
 
 bool Parser::isType(string s)
 { // return true if the given string is a type, defined as:
@@ -526,7 +619,7 @@ int Parser::readType(std::string& word, std::string input, int inputIndex)
 	return (myIndex - inputIndex); // return how many characters were read
 }
 
-<<<<<<< HEAD
+
 /*---------Eli-----*/
 int Parser::readOp(std::string& word, std::string input, int inputIndex)
 {
@@ -542,6 +635,7 @@ int Parser::readOp(std::string& word, std::string input, int inputIndex)
     return (myIndex - inputIndex); // return how many characters were read
     
 }
+/*-----Eli--*/
 int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 {
     string myWord = "";
@@ -549,14 +643,14 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
     char nextLiteral = input.at(myIndex);
     while(nextLiteral != '"')
     {
-        myWord +=nextOp;
+        myWord +=nextLiteral;
         nextOp = input.at(++myIndex);
     }
     word = myWord;
     return (myIndex - inputIndex); // return how many characters were read
     
 }
-=======
+
 int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 {
 	int myIndex = inputIndex;
@@ -570,4 +664,4 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	word = myWord;
 	return (myIndex - inputIndex);
 }
->>>>>>> master
+
