@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include <fstream>
 #include "Entry.h"
 
 using namespace std;
@@ -20,6 +20,7 @@ private:
 	//'i' - int
 	vector<string> colNames;
 	vector<Entry> _entries;	
+	fstream table_file;
 
 
 public:
@@ -36,7 +37,7 @@ public:
 	Entry getEntry(unsigned int entryID);
 	//Entry getEntry(string name, int col=0);
 	vector<Entry> getEntries(){ return _entries; }
-
+	void setColTypes(std::string col_types);
 	string getName() { return _name; }
 	int getNumCols() { return _numCols; }
 
@@ -50,7 +51,7 @@ public:
 	void addEntry(Entry e);				// insert into
 	void addEntry(vector<string> fields);
 	void setName(string name){ _name = name; }
-
+	void setNumCols(int num_cols);
 	void dropTable();
 	bool update(string key, string newVal, int keyCol = 0, int valCol = 1);
 
@@ -61,5 +62,7 @@ public:
 
 	bool importDB(string fileName);
 	void rename(vector<string> new_attributes);
-
+	void open_file(std::string relation_name);
+	void close_file();
+	void write_to_file();
 };

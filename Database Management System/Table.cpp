@@ -2,7 +2,8 @@
 #include <exception>
 #include <stdexcept>
 #include "Table.h"
-
+#include "Database.h"
+#include <iostream>
 
 Table::Table(string name, int numCols)
 { // create a new empty table
@@ -97,6 +98,11 @@ void Table::addColumn(string colName, char colType)
 	colTypes.push_back(colType);
 }
 
+void Table::setNumCols(int num)
+{
+	_numCols = num;
+}
+
 bool Table::update(string key, string newVal, int keyCol, int valCol)
 { // update an existing entry with a new value, return true on success
 	for (unsigned int i = 0; i < _entries.size(); i++)
@@ -144,6 +150,72 @@ void Table::rename(vector<string> new_attributes){
 	}
 	else std::cout << "ERROR: Please match the number of attributes.";
 
+}
+
+void Table::open_file(std::string table_name)
+{
+	std::string file_name = table_name;
+	file_name += ".db";
+	table_file.open(file_name);
+	std::string num_cols;
+	std::string col_types;
+	std::string line;
+	std::vector<string> line_vec;
+	if (table_file.is_open())
+	{
+		while (getline(table_file, line))
+		{
+			line_vec.push_back(line);
+		}
+		std::cout << "File is open!\n";
+	}
+	setName(line_vec.at(0));
+	num_cols = line_vec.at(1);
+	setNumCols(std::stoi(num_cols));
+	col_types = line_vec.at(2);
+	split(colTypes, col_types, is_any_of(","));
+
+}
+
+void Table::setColTypes(std::string type_string)
+{
+	for (int i = 0; i < type_string.size(); i++)
+	{
+		colTypes.push_back(type_string.at(i));
+	}
+}
+
+void Table::close_file()
+{
+	if (table_file.is_open())
+	{
+		table_file.close();
+	}
+	else std::cout << "File was not open!\n";
+}
+
+void Table::write_to_file()
+{
+	if (table_file.is_open())
+	{
+		table_file << _name << "\n";
+		table_file << _numCols << "\n";
+		for (int i = 0; i < colTypes.size(); i++)
+		{
+			table_file << colTypes.at(0) << ",";
+		}
+		table_file << "\n";
+		for (int i = 0; i < colNames.size(); i++)
+		{
+			table_file << colNames.at(i) << ",";
+		}
+		table_file << "\n";
+		for (int i = 0; i < _entries.size(); i++)
+		{
+			table_file << _entries.at(i) << ",";
+		}
+	}
+	std::cout << "Writing to file complete!\n";
 }
 
 vector<int> Table::findCondition(vector<string> whereOps)

@@ -1,5 +1,7 @@
 //#include "stdafx.h"
 #include "Parser.h"
+#include <fstream>
+#include "Table.h"
 
 using namespace std;
 Parser::Parser(Database* db)
@@ -75,15 +77,30 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	}
 	else if (inputVector.at(0) == "OPEN")
 	{
+		//open file and then create a table based on the information in the file?
+		/*ifstream input_file;
+		std::string file_name = inputVector.at(1);
+		file_name += ".db";
+		input_file.open(file_name);
+		if (input_file.is_open())
+		{
+			while (!input_file.eof())
+			{
 
+			}
+		}*/
+		Database::getTable(inputVector.at(1)).open_file(inputVector.at(1));
 	}
 	else if (inputVector.at(0) == "CLOSE")
 	{
+		//close the file
+		Database::getTable(inputVector.at(1).close_file());
 
 	}
 	else if (inputVector.at(0) == "WRITE")
 	{
-
+		//write to file
+		Database::getTable(inputVector.at(1)).write_to_file();
 	}
 	else if (inputVector.at(0) == "EXIT")
 	{
