@@ -382,7 +382,6 @@ Table Database::getTable(string relationName)
 	}
 	return NULL;
 }
-
 Table* Database::getTableByReference(string relationName)
 { // return pointer to the correct table, so it can be modified
 	for (int i = 0; i < _tables.size(); i++)

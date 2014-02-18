@@ -54,6 +54,12 @@ void Parser::interpretInputVector(vector<string> inputVector)
 		// use relation-name to find the table, but the expr will be passed to 
 		// a parsing function that handles how an expression is evaluated
 		//		(can be a selection, projection, union, etc). 
+		std::vector<string> expression;
+		for (int i = 2; i < inputVector.size(); i++)
+		{
+			expression.push_back(inputVector.at(i));
+		}
+		getTableFromExpression(expression);
 	}
 	
 	if (inputVector.at(0) == "INSERT" && inputVector.at(1) == "INTO")
@@ -100,6 +106,14 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	else if (inputVector.at(0) == "UPDATE")
 	{
         UpdateCmd(inputVector);
+	}
+	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
+	{
+
+	}
+	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
+	{
+		deletion(inputVector);
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -595,7 +609,6 @@ bool Parser::isType(string s)
 
 int Parser::readInteger(string& word, string input, int inputIndex)
 { // read an integer from input, starting at inputIndex, assign it to word
-	
 	string myWord = "";
 	int myIndex = inputIndex;
 	char nextDigit = input.at(myIndex);
@@ -664,4 +677,7 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	word = myWord;
 	return (myIndex - inputIndex);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
