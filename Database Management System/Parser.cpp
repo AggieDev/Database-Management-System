@@ -332,7 +332,6 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	// the table will be empty if invalid expression was provided
 	return newTable;
 }
-
 //returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
 {
@@ -408,6 +407,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Table renameTable = _db->getTable(input)->rename(attributesList.getColNames(), &fromTable);
 	return projectionTable;
 	return newTable;
@@ -419,7 +419,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	//						| union | difference | product | natural-join
 
 	string first = expr.at(0);
-
+	
 	if (first == "select")
 	{ // selection
 		return selection(expr); // selection returns an appropriate table
