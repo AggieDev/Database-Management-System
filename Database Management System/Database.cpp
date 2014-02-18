@@ -112,8 +112,6 @@ Table Database::setunion(Table t1, Table t2)
 			if (match == false && union_table.hasEntry(t2.getEntries().at(i)) == 0)
 			{
 				union_table.addEntry(t2.getEntries().at(i));
-				std::cout << "something added \n";
-				std::cout << i << "\n";
 				break;
 			}
 		}
@@ -440,7 +438,7 @@ Table Database::Project(vector<string> attributes, string fromTable)
 }
 
 Table Database::getTable(string relationName)
-{ // return pointer to the correct table, so it can be modified
+{ // return the correct table, so it can be modified
 	for (int i = 0; i < _tables.size(); i++)
 	{
 		if (_tables.at(i).getName() == relationName)

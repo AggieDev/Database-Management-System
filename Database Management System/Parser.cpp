@@ -313,12 +313,23 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 		string relationName = input.at(0);
 		newTable = _db->getTable(relationName);
 	}
-	else if (input.size() >= 3)
+	else if (input.size() > 1)
 	{ // atomic-expr ::= ( expr )
-		input.erase(input.begin());
-		input.erase(input.begin() + input.size() - 1);
-		newTable = getTableFromExpression(input);
+		vector<string> inputCopy = input;
+
+		// erase parenthesis if present
+		if (inputCopy.at(0) == "(")
+		{
+			inputCopy.erase(inputCopy.begin());
+		}
+		if (inputCopy.at(inputCopy.size() - 1) == ")")
+		{
+			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+		}
+		newTable = getTableFromExpression(inputCopy);
 	}
+
+	// the table will be empty if invalid expression was provided
 	return newTable;
 }
 /*Table Parser::rename(vector<string> input)
@@ -399,9 +410,9 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	{ // natural-join ::= atomic-expr JOIN atomic-expr
 // Waylon
 	}
-	else
+	else if (expr.size() == 1)
 	{ // atomic-expr, just the relation-name
-		return _db->getTable(first);
+		return interpretAtomicExpression(expr);
 	}
 
 	return NULL;
