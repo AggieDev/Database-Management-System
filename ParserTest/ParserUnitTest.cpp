@@ -56,6 +56,35 @@ namespace ParserTest
 			// the table retrieved should be the one we added to the database
 			Assert::AreEqual(string("dbTableName"), interpretedTable.getName());
 		}
+		TEST_METHOD(TestInterpretAtomicExpression_Union)
+		{ // test atomic expression if it is of the simple form:
+			//		atomic-expr ::= relation-name
+
+			// first make a database that has the table we are looking for
+			vector<string> columnNames;
+			columnNames.push_back("Names");
+			columnNames.push_back("Ages");
+			Table first = Table("DiffTest1", columnNames, 2);
+			Table second = Table("DiffTest2", columnNames, 2);
+			Table unionTable = Database::setunion(first, second);
+			Database::addTable(unionTable);
+			Parser p = Parser();
+
+			// make an atomic expression with only one value; a relation-name
+			vector<string> AtomicExpression_UnionName;
+			AtomicExpression_UnionName.push_back("table1");
+			AtomicExpression_UnionName.push_back("+");
+			AtomicExpression_UnionName.push_back("table2");
+
+			// get a table using the parser's interpret atomic expression function
+			Table interpretedTable = p.interpretAtomicExpression(AtomicExpression_UnionName);
+
+			// the table retrieved should be the one we added to the database
+			//Assert::AreEqual(unionTable.getColNames().size(), interpretedTable.getColNames().size());
+			//Assert::AreEqual(unionTable.getColTypes().size(), interpretedTable.getColTypes().size());
+			//Assert::AreEqual(unionTable.getNumCols(), interpretedTable.getNumCols());
+			//Assert::AreEqual(unionTable.getEntries().size(), interpretedTable.getEntries().size());
+		}
 		TEST_METHOD(TestSelectionCall)
 		{ // test atomic expression if it is of the more complicated expression
 			//		atomic-expr ::= ( expr )
