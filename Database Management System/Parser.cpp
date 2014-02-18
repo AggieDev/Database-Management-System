@@ -146,7 +146,7 @@ vector<string> Parser::readInputLine(string inputLine)
 		{ // determine what the following token is going to be
 			bool isInteger = isdigit(c);
 			bool isLiteral = (c == '\"');
-			bool isIdentifier = isalpha(c);
+			bool isIdentifier = isalpha(c) || (c == '_');
 			bool isOperator = isOp(c);
 		
 				// the appropriate function reads a certain number of characters
@@ -694,6 +694,7 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 {
     string myWord = "";
     int myIndex = inputIndex;
+<<<<<<< HEAD
     char nextLiteral = input.at(myIndex);
     while(nextLiteral != '\"')
     {
@@ -702,6 +703,9 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
     }
 
 	if (input.find("\"") == 0)
+=======
+	if (input.find("\"") == myIndex)
+>>>>>>> master
 	{ // if theres an opening quote
 		for (; myIndex < input.size(); myIndex++)
 		{
@@ -715,7 +719,7 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 	}
 
     word = myWord;
-    return (myIndex - inputIndex); // return how many characters were read
+    return (myIndex - inputIndex + 1); // return how many characters were read
 }
 
 int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
@@ -723,7 +727,7 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	int myIndex = inputIndex;
 	string myWord = "";
 	char character = input.at(myIndex);
-	while (isalpha(character) || isdigit(character))
+	while (isalpha(character) || isdigit(character) || character == '_')
 	{
 		myWord.push_back(character);
 		character = input.at(++myIndex);
