@@ -568,7 +568,7 @@ bool Parser::ShowCmd(vector<string> input)
 bool Parser::CreateCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
-	Table* t = Database::getTableByReference(relationName);
+	Table* t = _db->getTableByReference(relationName);
     
 	if (input.at(5) == "RELATION")
 	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
@@ -596,7 +596,7 @@ bool Parser::CreateCmd(vector<string> input)
 			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
 				fields.push_back(input.at(i));
 			}
-			Table t = Database::getTable(relationName);
+			Table t = _db->getTable(relationName);
 			t.addEntry(fields);
 			return true;
 		}
@@ -608,7 +608,7 @@ bool Parser::CreateCmd(vector<string> input)
 bool Parser::UpdateCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
-	Table* t = Database::getTableByReference(relationName);
+	Table* t = _db->getTableByReference(relationName);
     
 	if (input.at(5) == "RELATION")
 	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
@@ -636,7 +636,7 @@ bool Parser::UpdateCmd(vector<string> input)
 			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
 				fields.push_back(input.at(i));
 			}
-			Table t = Database::getTable(relationName);
+			Table t = _db->getTable(relationName);
 			t.addEntry(fields);
 			return true;
 		}
