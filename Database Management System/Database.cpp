@@ -292,6 +292,74 @@ Table Database::select(vector<string> attributes, Table* fromTable, vector<strin
 
 	return *result;
 }
+Table Database::Project(vector<string> attributes, Table* fromTable)
+{
+    // alternative select method that allows selected from a table (by reference) that might
+	// not be in the database already
+	Table* result;
+	Table* selectedTable = fromTable;
+    
+    
+	int count = 0;
+	vector<char> colTypes;
+	for(int i = 0; i < attributes.size(); i++)
+	{
+		for(int j = 0; j < selectedTable->getColNames().size(); j++)
+		{
+			if(attributes[i] == selectedTable->getColNames()[j])
+			{
+				colTypes.push_back(selectedTable->getColTypes()[j]);
+				count++;
+				break;
+			}
+		}
+	}
+    
+    if(attributes[0]=="*")count++;
+    
+	if(count < attributes.size()) //check if all attributes were found
+	{
+		string error = "Not all attributes were found in table " + selectedTable->getName();
+		throw error;
+	}
+    
+	if(attributes[0] == "*")
+	{
+		result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
+        for(int i = 0; i < selectedTable->getEntries().size(); i++)
+		{
+			result->addEntry(selectedTable->getEntries()[i]);
+		}
+	}
+	else
+	{
+		vector<int> columnsToSelect;
+		for(int i =0; i < attributes.size(); i++)
+		{
+			for(int j = 0; j < selectedTable->getColNames().size(); j++)
+			{
+				if(attributes[i] == selectedTable->getColNames()[j])
+					columnsToSelect.push_back(j);
+			}
+		}
+        
+		result = new Table("Project",attributes,colTypes);
+        
+        for(int i = 0; i < selectedTable->getEntries().size(); i++) //error here
+		{
+			vector<string> fields;
+			for(int j = 0; j < columnsToSelect.size(); j++)
+			{
+				fields.push_back(selectedTable->getEntries()[i][columnsToSelect[j]]);
+			}
+			result->addEntry(fields);
+		}
+	}
+	
+    
+	return *result;
+    
+}
 
 Table Database::Project(vector<string> attributes, string fromTable)
 {

@@ -173,6 +173,7 @@ vector<string> Parser::readInputLine(string inputLine)
                 charactersRead = readOp(word,inputLine, i);
                 inputVector.push_back(word);
 			}
+            //else if ()
 			else { throw new exception("token type was not identified"); }
 
 			// advance the inputLine index by that many characters
@@ -300,7 +301,7 @@ Table Parser::projection(vector<string> input)
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
     /*------Fix----*/
-	Table projectionTable = _db->Project(attributesList.getColNames(), &fromTable);
+	Table projectionTable = _db->Project(fromTable.getColNames(), &fromTable);
 	return projectionTable;
 }
 Table Parser::interpretAtomicExpression(vector<string> input)
@@ -320,7 +321,7 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	}
 	return newTable;
 }
-Table Parser::rename(vector<string> input)
+/*Table Parser::rename(vector<string> input)
 {
     // rename a table according
 	// renaming::= rename ( attribute-list ) atomic-expr
@@ -357,10 +358,10 @@ Table Parser::rename(vector<string> input)
 	
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
-	Table projectionTable = _db->rename(attributesList.getColNames(), &fromTable);
+	Table renameTable = _db->rename(attributesList.getColNames(), &fromTable);
 	return projectionTable;
 	return newTable;
-}
+}*/
 Table Parser::getTableFromExpression(vector<string> expr)
 { // evaluate an expression and return a pointer to a table
 	// expr ::= atomic-expr | selection | projection | renaming 
@@ -656,8 +657,8 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
     char nextLiteral = input.at(myIndex);
     while(nextLiteral != '"')
     {
-        myWord +=nextLiteral;
-        nextOp = input.at(++myIndex);
+        //myWord +=nextLiteral;
+        nextLiteral = input.at(++myIndex);
     }
     word = myWord;
     return (myIndex - inputIndex); // return how many characters were read
