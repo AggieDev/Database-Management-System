@@ -30,7 +30,10 @@ public:
 
 	// call appropriate function based on user input, return true on success
 	bool InsertCmd(std::vector<std::string> inputLine);
+    bool ExitCmd(std::string inputLine);
 	Table selection(std::vector<std::string> input);
+    Table projection(std::vector<std::string>input);
+    Table rename(std::vector<std::string>input);
 	Table deletion(std::vector<std::string> input);
 
 	// parse the given input and set the Table t appropriately
@@ -50,10 +53,13 @@ public:
 	
 	// read a type from input, starting at inputIndex, assign it to word, (assign the varchar parameter to varCharNum if applicable),
 	// and return the number of characters read
+    
+    
 	int readType(std::string& word, std::string input, int inputIndex);
     
     int readOp(std::string& word, std::string input, int inputIndex);
     
+    int readLiteral(std::string& word, std::string input, int inputIndex);
 
 	bool isOp(char c);
 	bool isType(std::string s);

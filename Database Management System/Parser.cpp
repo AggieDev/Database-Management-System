@@ -109,7 +109,9 @@ vector<string> Parser::readInputLine(string inputLine)
 				inputVector.push_back(word);
 			}
 			else if (isLiteral)			// Elliut
-			{ 
+			{
+                charactersRead = readLiteral(word, inputLine, i)
+                inputVector.push_back(word);
 			}
 			else if (isIdentifier)		// Garrett
 			{
@@ -205,6 +207,47 @@ Table Parser::selection(vector<string> input)
 	Table selectionTable = _db->select(fromTable.getColNames(), &fromTable, valuesForCondition);
 	return selectionTable;
 }
+
+/*-------------Eli----------------*/
+Table Parser::projection(vector<string> input)
+{ // project from a table according
+	// projection::= project ( attribute-list ) atomic-expr
+    
+	bool selectKeyword = (input.at(0) == "project");
+	if (!selectKeyword)
+	{
+		throw new exception("Invalid projection call");
+		return NULL;
+	}
+	bool properOpenParenthesis = input.at(1) == "(";
+	bool properCloseParenthesis = false;
+    
+    
+	vector<string> attributesList;
+	vector<string> valuesForAtomicExpression;
+	unsigned int i;
+	for (i = 2; i < input.size(); i++)
+	{
+		string temp = input.at(i);
+		if (temp == ")")
+		{ // done adding to attributesList phrase if parenthesis are closed
+			properCloseParenthesis = true;
+		}
+		else if (!properCloseParenthesis)
+		{ // continue appending to attributesList phrase
+			attributesList.push_back(input.at(i));
+		}
+		else
+		{ // add to third part of selection phrase; the atomic-expr
+			valuesForAtomicExpression.push_back(input.at(i));
+		}
+	}
+	
+	// this will generate a table (existing one, or combination of two, etc)
+	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+	Table projectionTable = _db->Project(attributesList.getColNames(), &fromTable);
+	return projectionTable;
+}
 Table Parser::interpretAtomicExpression(vector<string> input)
 { // parse the given input and set the Table t appropriately
 	
@@ -222,6 +265,47 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	}
 	return newTable;
 }
+Table Parser::rename(vector<string> input)
+{
+    // rename a table according
+	// renaming::= rename ( attribute-list ) atomic-expr
+    
+	bool selectKeyword = (input.at(0) == "rename");
+	if (!selectKeyword)
+	{
+		throw new exception("Invalid renaming call");
+		return NULL;
+	}
+	bool properOpenParenthesis = input.at(1) == "(";
+	bool properCloseParenthesis = false;
+    
+    
+	vector<string> attributesList;
+	vector<string> valuesForAtomicExpression;
+	unsigned int i;
+	for (i = 2; i < input.size(); i++)
+	{
+		string temp = input.at(i);
+		if (temp == ")")
+		{ // done adding to attributesList phrase if parenthesis are closed
+			properCloseParenthesis = true;
+		}
+		else if (!properCloseParenthesis)
+		{ // continue appending to attributesList phrase
+			attributesList.push_back(input.at(i));
+		}
+		else
+		{ // add to third part of selection phrase; the atomic-expr
+			valuesForAtomicExpression.push_back(input.at(i));
+		}
+	}
+	
+	// this will generate a table (existing one, or combination of two, etc)
+	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+	Table projectionTable = _db->rename(attributesList.getColNames(), &fromTable);
+	return projectionTable;
+	return newTable;
+}
 Table Parser::getTableFromExpression(vector<string> expr)
 { // evaluate an expression and return a pointer to a table
 	// expr ::= atomic-expr | selection | projection | renaming 
@@ -235,11 +319,11 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	}
 	else if (first == "project")
 	{ // projection
-// Elliut
+        return projection(expr);// Elliut
 	}
 	else if (first == "rename")
 	{ // renaming
-// Elliut
+        return rename(expr);// Elliut
 	}
 	else if (find(expr.begin(), expr.end(), "+") != expr.end())
 	{ // union ::= atomic-expr + atomic-expr
@@ -366,6 +450,17 @@ bool Parser::InsertCmd(vector<string> input)
 	return false;
 }
 
+/*-------Eli----*/
+bool Parser::ExitCmd(string input)
+{
+    if (input == "EXIT")
+    {
+        return true;
+    }
+    
+    return false;
+}
+
 bool Parser::isType(string s)
 { // return true if the given string is a type, defined as:
 	// type ::= VARCHAR ( integer ) | INTEGER
@@ -398,15 +493,31 @@ int Parser::readType(std::string& word, std::string input, int inputIndex)
 	}
 	return (myIndex - inputIndex); // return how many characters were read
 }
+
+/*---------Eli-----*/
 int Parser::readOp(std::string& word, std::string input, int inputIndex)
 {
     string myWord = "";
     int myIndex = inputIndex;
-    char nextDigit = input.at(myIndex);
-    while(isOp(nextDigit))
+    char nextOp = input.at(myIndex);
+    while(isOp(nextOp))
     {
-        myWord +=nextDigit;
-        nextDigit = input.at(++myIndex);
+        myWord +=nextOp;
+        nextOp = input.at(++myIndex);
+    }
+    word = myWord;
+    return (myIndex - inputIndex); // return how many characters were read
+    
+}
+int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
+{
+    string myWord = "";
+    int myIndex = inputIndex;
+    char nextLiteral = input.at(myIndex);
+    while(nextLiteral != '"')
+    {
+        myWord +=nextOp;
+        nextOp = input.at(++myIndex);
     }
     word = myWord;
     return (myIndex - inputIndex); // return how many characters were read
