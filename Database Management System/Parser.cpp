@@ -1,7 +1,7 @@
 //#include "stdafx.h"
 #include "Parser.h"
 #include <exception>
-
+//hi waylon
 using namespace std;
 Parser::Parser(Database* db)
 {

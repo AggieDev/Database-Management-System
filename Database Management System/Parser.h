@@ -34,6 +34,8 @@ public:
     bool ExitCmd(std::vector<std::string> inputLine);
     
 	Table selection(std::vector<std::string> input);
+	Table deletion(std::vector<std::string> input);
+	Table getDifferenceTable(std::vector<std::string>);
     
     /*-----Eli---*/
     Table projection(std::vector<std::string>input);
@@ -45,11 +47,11 @@ public:
     bool CreateCmd(std::vector<std::string>input);
     /*-----Eli---*/
     bool UpdateCmd(std::vector<std::string>input);
-	
-    Table deletion(std::vector<std::string> input);
+
 
 	// parse the given input and set the Table t appropriately
 	Table interpretAtomicExpression(std::vector<std::string> input);
+	Table parseExpression(std::vector<std::string>, string);
 
 	// Below is not needed because of selection function in Database
 	// return a table as a subset of t that satisfies the conditions

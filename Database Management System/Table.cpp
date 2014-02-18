@@ -52,7 +52,7 @@ int Table::hasEntry(Entry e)
 		if (match)
 			return i;
 	}
-	return 0;
+	return -1;
 }
 
 Entry Table::getEntry(unsigned int entryID)
