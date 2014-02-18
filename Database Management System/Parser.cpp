@@ -1,12 +1,9 @@
 //#include "stdafx.h"
-#include "Parser.h"
+
 #include <exception>
-<<<<<<< HEAD
-//hi waylon
 #include <fstream>
 #include "Table.h"
-=======
->>>>>>> eliutt-branch
+#include "Parser.h"
 
 using namespace std;
 
@@ -342,7 +339,7 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	// the table will be empty if invalid expression was provided
 	return newTable;
 }
-<<<<<<< HEAD
+
 /*----------Eli---*/
 /*Table Parser::interpretOperand(vector<string> input)
 { // parse the given input and set the attribute appropriately
@@ -372,8 +369,6 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	// the table will be empty if invalid expression was provided
 	return newTable;
 }*/
-=======
->>>>>>> eliutt-branch
 
 //returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
@@ -449,13 +444,8 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
-<<<<<<< HEAD
 
 	Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
-
-=======
-	Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
->>>>>>> eliutt-branch
 	return projectionTable;
 	return newTable;
 }*/
@@ -615,33 +605,23 @@ bool Parser::ShowCmd(vector<string> input)
 bool Parser::CreateCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
-<<<<<<< HEAD
-
-    
-	Table* t = _db->getTableByReference(relationName);
 
 	Table* t = Database::getTableByReference(relationName);
-
-=======
-	Table* t = Database::getTableByReference(relationName);
->>>>>>> eliutt-branch
     
     bool properOpenParenthesis = input.at(3) == "(";
-     bool properOpenParenthesis = input.at(3) == ")";
-    
  //   bool properCloseParenthesis = input.at(input.size() - 1) == ")";
 	
     if (properOpenParenthesis)
 	{ // create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
 		vector<string> attributeType;
-		for (unsigned int i = 4; i < ; i++)
-		{ // fill expression vector with the values following
-			attributeType.push_back(input.at(i));
-		}
+		//for (unsigned int i = 4; i < ; i++)
+		//{ // fill expression vector with the values following
+			//attributeType.push_back(input.at(i));
+		//}
         
         
         
-		Table newValues = getTableFromExpression(expression);
+		Table newValues = getTableFromExpression(attributeType);
 		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
 		{ // add every entry of the table of new values to the table referenced by relationName
 			t->addEntry(newValues.getEntries().at(i));
@@ -760,11 +740,8 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	int myIndex = inputIndex;
 	string myWord = "";
 	char character = input.at(myIndex);
-<<<<<<< HEAD
+
 	do
-=======
-	while (isalpha(character) || isdigit(character) || character == '_')
->>>>>>> eliutt-branch
 	{
 		myWord.push_back(character);
 		character = input.at(++myIndex);

@@ -162,7 +162,7 @@ void Table::open_file(std::string table_name)
 	char* doe;
 	table_file.open(file_name);
 	std::string num_cols;
-	std::string col_types;
+	char* col_types;
 	std::string col_names;
 	std::string en_tries;
 	std::string line;
@@ -178,8 +178,8 @@ void Table::open_file(std::string table_name)
 	setName(line_vec.at(0));
 	num_cols = line_vec.at(1);
 	setNumCols(std::stoi(num_cols));
-	col_types = line_vec.at(2);
-	dis = strtok (col_types, ",");
+	col_types = line_vec.at(2).c_str();
+	dis = strtok(col_types, ",");
 	while(dis != NULL)
 	{
 		colTypes.push_back(dis);
