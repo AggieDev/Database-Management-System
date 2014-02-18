@@ -370,7 +370,7 @@ Table Database::Project(vector<string> attributes, string fromTable)
 }
 
 Table Database::getTable(string relationName)
-{ // return pointer to the correct table, so it can be modified
+{ // return the correct table, so it can be modified
 	for (int i = 0; i < _tables.size(); i++)
 	{
 		if (_tables.at(i).getName() == relationName)

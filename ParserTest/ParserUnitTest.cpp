@@ -36,9 +36,35 @@ namespace ParserTest
 			vector<string> inputVector = p.readInputLine(sampleInput);
 			Assert::AreEqual(2, (int)inputVector.size()); // should have these contents: [ 123 , 789 ]
 		}
-		TEST_METHOD(TestInsertCmdWithLiterals)
-		{
+		TEST_METHOD(TestInterpretAtomicExpression_RelationName)
+		{ // test atomic expression if it is of the simple form:
+			//		atomic-expr ::= relation-name
+			
+			// first make a database that has the table we are looking for
+			Database* db = new Database();
+			Table t = Table("existingTable");
+			db->addTable(t);
+			Parser p = Parser(db);
+
+
+			// make an atomic expression with only one value; a relation-name
+			vector<string> AtomicExpression_RelationName;
+			AtomicExpression_RelationName.push_back("dbTableName");
+
+			// get a table using the parser's interpret atomic expression function
+			Table interpretedTable = p.interpretAtomicExpression(AtomicExpression_RelationName);
+
+			// the table retrieved should be the one we added to the database
+			Assert::AreEqual(string("dbTableName"), interpretedTable.getName());
+		}
+		TEST_METHOD(TestInterpretAtomicExpression_Expr)
+		{ // test atomic expression if it is of the more complicated expression
+			//		atomic-expr ::= ( expr )
+
+
+			string expressionString = "select (team == \"Dinosaurs\") baseball_players";
 
 		}
+
 	};
 }
