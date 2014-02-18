@@ -42,7 +42,7 @@ namespace ParserTest
 			
 			// first make a database that has the table we are looking for
 			Database* db = new Database();
-			Table t = Table("existingTable");
+			Table t = Table("dbTableName");
 			db->addTable(t);
 			Parser p = Parser(db);
 
@@ -57,12 +57,34 @@ namespace ParserTest
 			// the table retrieved should be the one we added to the database
 			Assert::AreEqual(string("dbTableName"), interpretedTable.getName());
 		}
-		TEST_METHOD(TestInterpretAtomicExpression_Expr)
+		TEST_METHOD(TestSelectionCall)
 		{ // test atomic expression if it is of the more complicated expression
 			//		atomic-expr ::= ( expr )
+			Database* db = new Database();
+			Parser p = Parser(db);
 
+			vector<string> columns;
+			columns.push_back("index");
+			columns.push_back("team");
+			Table t = Table("baseball_players", columns, 2);
 
+			vector<string> entryFields1;
+			entryFields1.push_back("1");
+			entryFields1.push_back("Elephants");
+			vector<string> entryFields2;
+			entryFields2.push_back("2");
+			entryFields2.push_back("Dinosaurs");
+			vector<string> entryFields3;
+			entryFields3.push_back("3");
+			entryFields3.push_back("Giraffes");
+
+			// this should get a table of a singleton entry (2, Dinosaurs)
 			string expressionString = "select (team == \"Dinosaurs\") baseball_players";
+			vector<string> selectionExprVector = p.readInputLine(expressionString);
+			Table resultTable = p.selection(selectionExprVector);
+
+			Assert::AreEqual(1, (int)resultTable.getEntries().size());
+			Assert::AreEqual(string("2"), resultTable.getEntries().at(0).fields.at(0));
 
 		}
 
