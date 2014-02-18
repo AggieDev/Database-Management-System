@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Database.h"
 #include "Table.h"
+#include "Parser.h"
 
 using namespace std;
 
