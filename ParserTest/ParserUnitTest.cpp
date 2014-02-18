@@ -96,7 +96,7 @@ namespace ParserTest
 			// should read all characters; 19
 			int charsRead = p.readLiteral(wordToBeSet, myLiteral, 0);
 
-			Assert::AreEqual(18, charsRead);
+			Assert::AreEqual(19, charsRead);
 			Assert::AreEqual(wordToBeSet, myLiteral);
 		}
 
