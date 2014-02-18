@@ -65,20 +65,10 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 		selection(inputVector);
 	}
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/garrett-branch
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
 	{
 		deletion(inputVector);
 	}
-<<<<<<< HEAD
-=======
->>>>>>> Removed Arrows and Github stuff
->>>>>>> origin/garrett-branch
 	else if (inputVector.at(0) == "OPEN")
 	{
 
@@ -107,21 +97,14 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 
 	}
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
 	{
 
-=======
+	}
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
 	{
 		deletion(inputVector);
->>>>>>> selection, deletion
 	}
-=======
->>>>>>> Removed Arrows and Github stuff
->>>>>>> origin/garrett-branch
 }
 vector<string> Parser::readInputLine(string inputLine)
 { // expect an identifier to be a word, integer, or operand
@@ -193,16 +176,7 @@ bool Parser::isDelimiter(char c)
 { // ignored characters in the input line
 	return (c == ' ') || (c == ',') || (c == ';');
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-=======
-=======
-=======
-
->>>>>>> Removed Arrows and Github stuff
->>>>>>> origin/garrett-branch
 Table Parser::deletion(std::vector<std::string> input)
 {
 	bool deleteKeyword = (input.at(0) == "DELETE") && (input.at(1) == "FROM");
@@ -233,15 +207,7 @@ Table Parser::deletion(std::vector<std::string> input)
 	// and return the same one stored as a temp
 	return temp;
 }
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
->>>>>>> selection, deletion
-=======
-
->>>>>>> Removed Arrows and Github stuff
->>>>>>> origin/garrett-branch
 Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr
@@ -449,11 +415,6 @@ bool Parser::isType(string s)
 
 int Parser::readInteger(string& word, string input, int inputIndex)
 { // read an integer from input, starting at inputIndex, assign it to word
-	
-<<<<<<< HEAD
-}
-
-=======
 	string myWord = "";
 	int myIndex = inputIndex;
 	char nextDigit = input.at(myIndex);
@@ -490,4 +451,3 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	word = myWord;
 	return (myIndex - inputIndex);
 }
->>>>>>> 4f5260eed04e3612271aca5176f46ea298b6a716
