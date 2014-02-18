@@ -229,7 +229,7 @@ Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr
 
-	bool selectKeyword = (input.at(0) == "select");
+	bool selectKeyword = (input.at(0).compare("select") == 0);
 	if (!selectKeyword)
 	{
 		throw new exception("Invalid selection call");
@@ -726,11 +726,11 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	int myIndex = inputIndex;
 	string myWord = "";
 	char character = input.at(myIndex);
-	while (isalpha(character) || isdigit(character) || character == '_')
+	do
 	{
 		myWord.push_back(character);
 		character = input.at(++myIndex);
-	}
+	} while ((isalpha(character) || isdigit(character) || character == '_') && myIndex < input.size());
 	word = myWord;
 	return (myIndex - inputIndex);
 }

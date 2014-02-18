@@ -78,8 +78,13 @@ namespace ParserTest
 			entryFields3.push_back("3");
 			entryFields3.push_back("Giraffes");
 
+			t.addEntry(entryFields1);
+			t.addEntry(entryFields2);
+			t.addEntry(entryFields3);
+			Database::addTable(t);
+
 			// this should get a table of a singleton entry (2, Dinosaurs)
-			string expressionString = "select (team == \"Dinosaurs\") baseball_players";
+			string expressionString = "select (team == \"Dinosaurs\") baseball_players;";
 			vector<string> selectionExprVector = p.readInputLine(expressionString);
 			Table resultTable = p.selection(selectionExprVector);
 
