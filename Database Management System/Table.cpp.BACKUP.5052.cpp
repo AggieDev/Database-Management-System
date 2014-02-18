@@ -1,11 +1,10 @@
-
-
-
-
+<<<<<<< HEAD
+	int you_suck;
+};
+=======
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
-#include <exception>
 #include "Table.h"
 
 
@@ -52,7 +51,7 @@ int Table::hasEntry(Entry e)
 		if (match)
 			return i;
 	}
-	return -1;
+	return 0;
 }
 
 Entry Table::getEntry(unsigned int entryID)
@@ -250,3 +249,4 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 }
 
+>>>>>>> origin/master

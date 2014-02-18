@@ -19,11 +19,12 @@ public:
 	//atributes = {"id","name","age"} or {"*"}
 	//_where = {"age","<","10"} parse the where operations
 
-// TODO: a select function where the 'fromTable' is an actual table, might not be in DB
 	Table select(vector<string> attributes, Table* fromTable, vector<string> _where);
    
     Table Project(vector<string> attributes, string fromTable);
     //atributes = {"id","name","age"} or {"*"}
+    Table Project(vector<string> attributes, Table* fromTable);
+    
     
 	Table productTable(Table t1, Table t2);
 	Table naturalJoinTable(Table t1, Table t2);

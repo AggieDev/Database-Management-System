@@ -30,9 +30,25 @@ public:
 
 	// call appropriate function based on user input, return true on success
 	bool InsertCmd(std::vector<std::string> inputLine);
+    /*-----Eli---*/
+    bool ExitCmd(std::vector<std::string> inputLine);
+    
 	Table selection(std::vector<std::string> input);
 	Table deletion(std::vector<std::string> input);
 	Table getDifferenceTable(std::vector<std::string>);
+    
+    /*-----Eli---*/
+    Table projection(std::vector<std::string>input);
+    /*-----Eli---*/
+    Table rename(std::vector<std::string>input);
+    /*-----Eli---*/
+    bool ShowCmd(std::vector<std::string>input);
+    /*-----Eli---*/
+    bool CreateCmd(std::vector<std::string>input);
+    /*-----Eli---*/
+    bool UpdateCmd(std::vector<std::string>input);
+	
+    Table deletion(std::vector<std::string> input);
 
 	// parse the given input and set the Table t appropriately
 	Table interpretAtomicExpression(std::vector<std::string> input);
@@ -52,7 +68,13 @@ public:
 	
 	// read a type from input, starting at inputIndex, assign it to word, (assign the varchar parameter to varCharNum if applicable),
 	// and return the number of characters read
+    
+    
 	int readType(std::string& word, std::string input, int inputIndex);
+    /*-----Eli---*/
+    int readOp(std::string& word, std::string input, int inputIndex);
+    /*-----Eli---*/
+    int readLiteral(std::string& word, std::string input, int inputIndex);
 
 	bool isOp(char c);
 	bool isType(std::string s);
