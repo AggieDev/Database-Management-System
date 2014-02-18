@@ -20,7 +20,6 @@ private:
 	//'i' - int
 	vector<string> colNames;
 	vector<Entry> _entries;	
-	fstream table_file;
 
 
 public:
@@ -63,6 +62,6 @@ public:
 	bool importDB(string fileName);
 	void rename(vector<string> new_attributes);
 	void open_file(std::string relation_name);
-	void close_file();
-	void write_to_file();
+	void close_file(string relationName);
+	void write_to_file(string relationName);
 };

@@ -92,13 +92,13 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	else if (inputVector.at(0) == "CLOSE")
 	{
 		//close the file
-		Database::getTable(inputVector.at(1)).close_file();
+		Database::getTable(inputVector.at(1)).close_file(inputVector.at(1));
 
 	}
 	else if (inputVector.at(0) == "WRITE")
 	{
 		//write to file
-		Database::getTable(inputVector.at(1)).write_to_file();
+		Database::getTable(inputVector.at(1)).write_to_file(inputVector.at(1));
 	}
 	else if (inputVector.at(0) == "EXIT")
 	{
@@ -601,6 +601,8 @@ bool Parser::ExitCmd(vector<string> input)
 bool Parser::ShowCmd(vector<string> input)
 {
     string atomicExpression = input.at(1);
+
+	return false;
 }
 bool Parser::CreateCmd(vector<string> input)
 {
