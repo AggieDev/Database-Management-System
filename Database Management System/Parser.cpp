@@ -689,7 +689,4 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	word = myWord;
 	return (myIndex - inputIndex);
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master

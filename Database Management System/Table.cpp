@@ -1,12 +1,7 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int you_suck;
-};
-=======
-=======
 
 
->>>>>>> 75a1d8363dce74e6258cf62e92e274dc343042f5
+
+
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
@@ -254,8 +249,4 @@ vector<int> Table::findCondition(vector<string> whereOps)
 	return results;
 
 }
-<<<<<<< HEAD
 
->>>>>>> b4b4dbdd7794626873d98fc2b57c7569914d5443
-=======
->>>>>>> 75a1d8363dce74e6258cf62e92e274dc343042f5
