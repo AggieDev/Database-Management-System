@@ -53,8 +53,12 @@ void Parser::interpretInputVector(vector<string> inputVector)
 		// use relation-name to find the table, but the expr will be passed to 
 		// a parsing function that handles how an expression is evaluated
 		//		(can be a selection, projection, union, etc). 
-
-		interpretAtomicExpression(inputVector);
+		std::vector<string> expression;
+		for (int i = 2; i < inputVector.size(); i++)
+		{
+			expression.push_back(inputVector.at(i));
+		}
+		getTableFromExpression(expression);
 	}
 	
 	if (inputVector.at(0) == "INSERT" && inputVector.at(1) == "INTO")
