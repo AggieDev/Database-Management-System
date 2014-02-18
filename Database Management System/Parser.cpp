@@ -235,6 +235,7 @@ Table Parser::selection(vector<string> input)
 	Table selectionTable = _db->select(fromTable.getColNames(), &fromTable, valuesForCondition);
 	return selectionTable;
 }
+
 Table Parser::interpretAtomicExpression(vector<string> input)
 { // parse the given input and set the Table t appropriately
 	
@@ -252,6 +253,44 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	}
 	return newTable;
 }
+
+//returns the union, difference, etc. table based on arthOperator
+Table Parser::parseExpression(vector <string> expr, string arthOperator)
+{
+	//gets index of +
+	int index = std::distance(expr.begin(), std::find(expr.begin(), expr.end(), arthOperator));
+	cout << "Index that " << arthOperator << " is at in expression: " << index << "\n";
+
+	vector<string>::const_iterator beginning = expr.begin();
+	vector<string>::const_iterator end = expr.begin() + index;
+	vector<string> beforeOperator(beginning, end);
+
+	cout << "vector before the " << arthOperator << ": ";
+	for (int i = 0; i < beforeOperator.size(); i++)
+		cout << beforeOperator.at(i) << " ";
+	cout << "\n";
+
+	beginning = expr.begin() + index + 1;
+	end = expr.end();
+	vector<string> afterOperator(beginning, end);
+
+	cout << "vector after the " << arthOperator << ": ";
+	for (int i = 0; i < afterOperator.size(); i++)
+		cout << afterOperator.at(i) << " ";
+	cout << "\n";
+
+	if (arthOperator == "+")
+		return _db->setunion(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+	else if (arthOperator == "-")
+		return _db->differenceTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+	else if (arthOperator == "*")
+		return _db->productTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+	else if (arthOperator == "JOIN")
+		return _db->naturalJoinTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+	else
+		cout << "ERROR: Tried parsing expression of unknown type: " << arthOperator << "\n";
+}
+
 Table Parser::getTableFromExpression(vector<string> expr)
 { // evaluate an expression and return a pointer to a table
 	// expr ::= atomic-expr | selection | projection | renaming 
@@ -273,19 +312,19 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	}
 	else if (find(expr.begin(), expr.end(), "+") != expr.end())
 	{ // union ::= atomic-expr + atomic-expr
-// Waylon
+		return parseExpression(expr, "+");
 	}
 	else if (find(expr.begin(), expr.end(), "-") != expr.end())
 	{ // difference ::= atomic-expr - atomic-expr
-// Waylon
+		return parseExpression(expr, "-");
 	}
 	else if (find(expr.begin(), expr.end(), "*") != expr.end())
 	{ // product ::= atomic-expr * atomic-expr
-// Waylon
+		return parseExpression(expr, "*");
 	}
 	else if (find(expr.begin(), expr.end(), "JOIN") != expr.end())
 	{ // natural-join ::= atomic-expr JOIN atomic-expr
-// Waylon
+		return parseExpression(expr, "JOIN");
 	}
 	else
 	{ // atomic-expr, just the relation-name
@@ -417,6 +456,7 @@ int Parser::readInteger(string& word, string input, int inputIndex)
 	word = myWord;
 	return (myIndex - inputIndex); // return how many characters were read
 }
+
 int Parser::readType(std::string& word, std::string input, int inputIndex)
 { // read a type from input, starting at inputIndex, assign it to word
 	int myIndex = inputIndex;
