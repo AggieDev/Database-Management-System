@@ -173,7 +173,8 @@ void Table::open_file(std::string table_name)
 	num_cols = line_vec.at(1);
 	setNumCols(std::stoi(num_cols));
 	col_types = line_vec.at(2);
-	split(colTypes, col_types, is_any_of(","));
+	colTypes = col_types.split(',');
+
 
 }
 
