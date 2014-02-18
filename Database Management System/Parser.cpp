@@ -145,7 +145,7 @@ vector<string> Parser::readInputLine(string inputLine)
 		else // if alpha, digit, quotation, operator, or attribute
 		{ // determine what the following token is going to be
 			bool isInteger = isdigit(c);
-			bool isLiteral = (c == '"');
+			bool isLiteral = (c == '\"');
 			bool isIdentifier = isalpha(c);
 			bool isOperator = isOp(c);
 		
@@ -431,7 +431,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
     /*-----Eli---*/
 	else if (first == "rename")
 	{ // renaming
-        return rename(expr);// Elliut
+        //return rename(expr);// Elliut
 	}
 	else if (find(expr.begin(), expr.end(), "+") != expr.end())
 	{ // union ::= atomic-expr + atomic-expr
@@ -705,15 +705,20 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 {
     string myWord = "";
     int myIndex = inputIndex;
-    char nextLiteral = input.at(myIndex);
-    while(nextLiteral != '"')
-    {
-        //myWord +=nextLiteral;
-        nextLiteral = input.at(++myIndex);
-    }
+	if (input.find("\"") == 0)
+	{ // if theres an opening quote
+		for (; myIndex < input.size(); myIndex++)
+		{
+			char c = input.at(myIndex);
+			myWord += c;
+			if (c == '\"' && myIndex > inputIndex)
+			{ // if end of literal is reached; the closing quote
+				break;
+			}
+		}
+	}
     word = myWord;
     return (myIndex - inputIndex); // return how many characters were read
-    
 }
 
 int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
