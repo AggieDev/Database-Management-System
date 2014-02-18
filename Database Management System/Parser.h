@@ -57,6 +57,10 @@ public:
 	bool isDelimiter(char c); // can be space, quote, parenthesis, semi-colon, ...
 	bool is_identifier (char c);
 
+<<<<<<< HEAD
+
+=======
 	int readIdentifier(std::string& word, std::string , int inputIndex);
+>>>>>>> 4f5260eed04e3612271aca5176f46ea298b6a716
 };
 
