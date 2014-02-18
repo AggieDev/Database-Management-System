@@ -47,8 +47,7 @@ public:
     bool CreateCmd(std::vector<std::string>input);
     /*-----Eli---*/
     bool UpdateCmd(std::vector<std::string>input);
-	
-    Table deletion(std::vector<std::string> input);
+
 
 	// parse the given input and set the Table t appropriately
 	Table interpretAtomicExpression(std::vector<std::string> input);
