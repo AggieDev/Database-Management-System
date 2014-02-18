@@ -23,6 +23,8 @@ public:
    
     Table Project(vector<string> attributes, string fromTable);
     //atributes = {"id","name","age"} or {"*"}
+    Table Project(vector<string> attributes, Table* fromTable);
+    
     
 	Table productTable(Table t1, Table t2);
 	Table naturalJoinTable(Table t1, Table t2);

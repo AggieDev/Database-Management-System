@@ -1,11 +1,10 @@
-
-
-
-
+<<<<<<< HEAD
+	int you_suck;
+};
+=======
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
-#include <exception>
 #include "Table.h"
 
 
@@ -250,3 +249,4 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 }
 
+>>>>>>> origin/master

@@ -1,11 +1,6 @@
-
-
-
-
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
-#include <exception>
 #include "Table.h"
 
 
