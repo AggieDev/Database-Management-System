@@ -1,13 +1,10 @@
 //#include "stdafx.h"
 #include "Parser.h"
-<<<<<<< HEAD
 #include <exception>
 //hi waylon
-=======
 #include <fstream>
 #include "Table.h"
 
->>>>>>> origin/garrett-branch
 using namespace std;
 
 Parser::Parser()
@@ -349,7 +346,6 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	// the table will be empty if invalid expression was provided
 	return newTable;
 }
-<<<<<<< HEAD
 /*----------Eli---*/
 /*Table Parser::interpretOperand(vector<string> input)
 { // parse the given input and set the attribute appropriately
@@ -379,7 +375,6 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	// the table will be empty if invalid expression was provided
 	return newTable;
 }*/
-=======
 
 //returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
@@ -418,7 +413,6 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 		cout << "ERROR: Tried parsing expression of unknown type: " << arthOperator << "\n";
 }
 
->>>>>>> master
 /*Table Parser::rename(vector<string> input)
 {
     // rename a table according
@@ -456,11 +450,9 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
-<<<<<<< HEAD
-	Table renameTable = _db->rename(attributesList.getColNames(), &fromTable);
-=======
+
 	Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
->>>>>>> master
+
 	return projectionTable;
 	return newTable;
 }*/
@@ -628,12 +620,12 @@ bool Parser::ShowCmd(vector<string> input)
 /*bool Parser::CreateCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
-<<<<<<< HEAD
+
     
 	Table* t = _db->getTableByReference(relationName);
-=======
+
 	Table* t = Database::getTableByReference(relationName);
->>>>>>> master
+
     
     bool properOpenParenthesis = input.at(3) == "(";
     bool properCloseParenthesis = input.at(input.size() - 1) == ")";
