@@ -145,7 +145,7 @@ vector<string> Parser::readInputLine(string inputLine)
 		else // if alpha, digit, quotation, operator, or attribute
 		{ // determine what the following token is going to be
 			bool isInteger = isdigit(c);
-			bool isLiteral = (c == '"');
+			bool isLiteral = (c == '\"');
 			bool isIdentifier = isalpha(c);
 			bool isOperator = isOp(c);
 		
@@ -666,7 +666,7 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
     string myWord = "";
     int myIndex = inputIndex;
     char nextLiteral = input.at(myIndex);
-    while(nextLiteral != '"')
+    while(nextLiteral != '\"')
     {
         //myWord +=nextLiteral;
         nextLiteral = input.at(++myIndex);
