@@ -694,14 +694,13 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 {
     string myWord = "";
     int myIndex = inputIndex;
-<<<<<<< HEAD
     char nextLiteral = input.at(myIndex);
     while(nextLiteral != '\"')
     {
         //myWord +=nextLiteral;
         nextLiteral = input.at(++myIndex);
     }
-=======
+
 	if (input.find("\"") == 0)
 	{ // if theres an opening quote
 		for (; myIndex < input.size(); myIndex++)
@@ -714,7 +713,7 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 			}
 		}
 	}
->>>>>>> master
+
     word = myWord;
     return (myIndex - inputIndex); // return how many characters were read
 }
