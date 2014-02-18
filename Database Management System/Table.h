@@ -4,10 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-<<<<<<< HEAD
 #include <fstream>
-=======
->>>>>>> origin/waylon-branch
 #include "Entry.h"
 
 using namespace std;
