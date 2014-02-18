@@ -34,8 +34,11 @@ public:
     bool ExitCmd(std::vector<std::string> inputLine);
     
 	Table selection(std::vector<std::string> input);
+<<<<<<< HEAD
 	Table deletion(std::vector<std::string> input);
 	Table getDifferenceTable(std::vector<std::string>);
+=======
+>>>>>>> 1ee135590ff4210531d9598b2e708eb0aee38ffe
     
     /*-----Eli---*/
     Table projection(std::vector<std::string>input);
