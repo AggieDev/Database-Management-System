@@ -249,4 +249,4 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 }
 
->>>>>>> b4b4dbdd7794626873d98fc2b57c7569914d5443
+>>>>>>> origin/master
