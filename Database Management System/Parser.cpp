@@ -336,22 +336,22 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 /*Table Parser::interpretOperand(vector<string> input)
 { // parse the given input and set the attribute appropriately
 	
-	Table newTable = Table();
+	
 	if (input.size() == 1)
 	{ // operand ::= attribute-name
 		string attributeName = input.at(0);
-		newTable = _db->getTable(attributeName);
+	
 	}
 	else if (input.size() > 1)
 	{ // operand ::= literal "..."
 		vector<string> inputCopy = input;
         
 		// erase parenthesis if present
-		if (inputCopy.at(0) == "(")
+		if (inputCopy.at(0) == '\"')
 		{
 			inputCopy.erase(inputCopy.begin());
 		}
-		if (inputCopy.at(inputCopy.size() - 1) == ")")
+		if (inputCopy.at(inputCopy.size() - 1) == '\"')
 		{
 			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
 		}
@@ -474,6 +474,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 //
 //	return true;
 //}
+
 //bool Parser::satisfiesComparison(Table t, Entry entry, string columnName, string op, string operand2)
 //{ 	// return true if this individual comparison is satisfied
 //
@@ -508,6 +509,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 //
 //	return false;
 //}
+
 bool Parser::InsertCmd(vector<string> input)
 { // insert into a table from explicit values or one obtained from another table
 
@@ -556,12 +558,60 @@ bool Parser::ExitCmd(vector<string> input)
 /*-------Eli----*/
 bool Parser::ShowCmd(vector<string> input)
 {
-    return false;
+    string atomicExpression = input.at(1);
+    
+    
 }
 /*-------Eli----*/
-bool Parser::CreateCmd(vector<string> input)
+/*bool Parser::CreateCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
+    
+	Table* t = _db->getTableByReference(relationName);
+    
+    bool properOpenParenthesis = input.at(3) == "(";
+    bool properCloseParenthesis = input.at(input.size() - 1) == ")";
+	if (properOpenParenthesis && properCloseParenthesis)
+	{ // create-cmd ::= CREATE TABLE relation-name (typed-attribute-list) PRIMARY KEY (attribute-list)
+		vector<string> attributeTypes;
+		for (unsigned int i = 4; i < input.size(); i++)
+		{ // fill expression vector with the values following the '('
+			attributeTypes.push_back(input.at(i));
+		}
+        
+        
+        
+		Table newValues = getTableFromExpression(expression);
+		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
+		{ // add every entry of the table of new values to the table referenced by relationName
+			t->addEntry(newValues.getEntries().at(i));
+		}
+		return true;
+	}
+	else
+	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
+        
+		bool properOpenParenthesis = input.at(5) == "(";
+		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
+		if (properOpenParenthesis && properCloseParenthesis)
+		{ // ensure parenthesis are appropriately placed
+			vector<string> fields;
+			for (unsigned int i = 6; i < input.size() - 1; i++)
+			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
+				fields.push_back(input.at(i));
+			}
+			Table t = _db->getTable(relationName);
+			t.addEntry(fields);
+			return true;
+		}
+	}
+	return false;
+
+}*/
+/*-------Eli----*/
+/*bool Parser::UpdateCmd(vector<string> input)
+{
+    string relationName = input.at(1);	// name of Table in the Database
 	Table* t = _db->getTableByReference(relationName);
     
 	if (input.at(5) == "RELATION")
@@ -597,47 +647,7 @@ bool Parser::CreateCmd(vector<string> input)
 	}
 	return false;
 
-}
-/*-------Eli----*/
-bool Parser::UpdateCmd(vector<string> input)
-{
-    string relationName = input.at(2);	// name of Table in the Database
-	Table* t = _db->getTableByReference(relationName);
-    
-	if (input.at(5) == "RELATION")
-	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
-		vector<string> expression;
-		for (unsigned int i = 6; i < input.size(); i++)
-		{ // fill expression vector with the values following the word, 'RELATION'
-			expression.push_back(input.at(i));
-		}
-		Table newValues = getTableFromExpression(expression);
-		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
-		{ // add every entry of the table of new values to the table referenced by relationName
-			t->addEntry(newValues.getEntries().at(i));
-		}
-		return true;
-	}
-	else
-	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
-        
-		bool properOpenParenthesis = input.at(5) == "(";
-		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
-		if (properOpenParenthesis && properCloseParenthesis)
-		{ // ensure parenthesis are appropriately placed
-			vector<string> fields;
-			for (unsigned int i = 6; i < input.size() - 1; i++)
-			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
-				fields.push_back(input.at(i));
-			}
-			Table t = _db->getTable(relationName);
-			t.addEntry(fields);
-			return true;
-		}
-	}
-	return false;
-
-}
+}*/
 
 
 
