@@ -87,6 +87,18 @@ namespace ParserTest
 			Assert::AreEqual(string("2"), resultTable.getEntries().at(0).fields.at(0));
 
 		}
+		TEST_METHOD(TestReadLiteral)
+		{
+			Parser p = Parser();
+			string myLiteral = "\"words with spaces\"";
+			string wordToBeSet;
+
+			// should read all characters; 19
+			int charsRead = p.readLiteral(wordToBeSet, myLiteral, 0);
+
+			Assert::AreEqual(18, charsRead);
+			Assert::AreEqual(wordToBeSet, myLiteral);
+		}
 
 	};
 }

@@ -421,7 +421,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
     /*-----Eli---*/
 	else if (first == "rename")
 	{ // renaming
-        return rename(expr);// Elliut
+        //return rename(expr);// Elliut
 	}
 	else if (find(expr.begin(), expr.end(), "+") != expr.end())
 	{ // union ::= atomic-expr + atomic-expr
@@ -694,15 +694,29 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 {
     string myWord = "";
     int myIndex = inputIndex;
+<<<<<<< HEAD
     char nextLiteral = input.at(myIndex);
     while(nextLiteral != '\"')
     {
         //myWord +=nextLiteral;
         nextLiteral = input.at(++myIndex);
     }
+=======
+	if (input.find("\"") == 0)
+	{ // if theres an opening quote
+		for (; myIndex < input.size(); myIndex++)
+		{
+			char c = input.at(myIndex);
+			myWord += c;
+			if (c == '\"' && myIndex > inputIndex)
+			{ // if end of literal is reached; the closing quote
+				break;
+			}
+		}
+	}
+>>>>>>> master
     word = myWord;
     return (myIndex - inputIndex); // return how many characters were read
-    
 }
 
 int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
