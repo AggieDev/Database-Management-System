@@ -306,7 +306,7 @@ Table Parser::projection(vector<string> input)
 }
 Table Parser::interpretAtomicExpression(vector<string> input)
 { // parse the given input and set the Table t appropriately
-	
+
 	Table newTable = Table();
 	if (input.size() == 1)
 	{ // atomic-expr ::= relation-name
@@ -407,6 +407,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+<<<<<<< HEAD
 	Table renameTable = _db->getTable(input)->rename(attributesList.getColNames(), &fromTable);
 	return projectionTable;
 	return newTable;
