@@ -156,9 +156,14 @@ void Table::open_file(std::string table_name)
 {
 	std::string file_name = table_name;
 	file_name += ".db";
+	char* dis;
+	char* dat;
+	char* doe;
 	table_file.open(file_name);
 	std::string num_cols;
 	std::string col_types;
+	std::string col_names;
+	std::string en_tries;
 	std::string line;
 	std::vector<string> line_vec;
 	if (table_file.is_open())
@@ -173,8 +178,28 @@ void Table::open_file(std::string table_name)
 	num_cols = line_vec.at(1);
 	setNumCols(std::stoi(num_cols));
 	col_types = line_vec.at(2);
-	colTypes = col_types.split(',');
-
+	dis = strtok (col_types, ",");
+	while(dis != NULL)
+	{
+		colTypes.push_back(dis);
+		dis = strtok (col_types, ",");
+	}
+	//colTypes = col_types.split(',');
+	col_names = line_vec.at(3);
+	dat = strtok (col_names, ",");
+	while(dat != NULL)
+	{
+		colNames.push_back(dat);
+		dat = strtok (col_names, ",");
+	}
+	en_tries = line_vec.at(4);
+	doe = strtok (en_tries, ",");
+	while(doe != NULL)
+	{
+		_entries.push_back(doe);
+		doe = strtok (en_tries, ",");
+	}
+	std::cout << "Open and Reading complete\n";
 
 }
 
