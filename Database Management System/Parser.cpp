@@ -332,8 +332,7 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	// the table will be empty if invalid expression was provided
 	return newTable;
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 //returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
 {
@@ -371,10 +370,6 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 		cout << "ERROR: Tried parsing expression of unknown type: " << arthOperator << "\n";
 }
 
-=======
->>>>>>> 1ee135590ff4210531d9598b2e708eb0aee38ffe
-=======
->>>>>>> 1ee135590ff4210531d9598b2e708eb0aee38ffe
 /*Table Parser::rename(vector<string> input)
 {
     // rename a table according
@@ -412,26 +407,11 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 	Table renameTable = _db->getTable(input)->rename(attributesList.getColNames(), &fromTable);
 	return projectionTable;
 	return newTable;
 }*/
 
-=======
-=======
->>>>>>> 1ee135590ff4210531d9598b2e708eb0aee38ffe
-	Table renameTable = _db->rename(attributesList.getColNames(), &fromTable);
-	return projectionTable;
-	return newTable;
-}*/
-<<<<<<< HEAD
->>>>>>> 1ee135590ff4210531d9598b2e708eb0aee38ffe
-=======
->>>>>>> 1ee135590ff4210531d9598b2e708eb0aee38ffe
 Table Parser::getTableFromExpression(vector<string> expr)
 { // evaluate an expression and return a pointer to a table
 	// expr ::= atomic-expr | selection | projection | renaming 
