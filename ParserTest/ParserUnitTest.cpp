@@ -122,14 +122,15 @@ namespace ParserTest
 		TEST_METHOD(TestReadLiteral)
 		{
 			Parser p = Parser();
-			string myLiteral = "\"words with spaces\"";
+			string myLiteral = "\"literal with spaces\" and the rest of my line";
 			string wordToBeSet;
 
-			// should read all characters; 19
-			int charsRead = p.readLiteral(wordToBeSet, myLiteral, 0);
+			// should read all characters in the literal; 21
+			int litStartIndex = 0;
+			int charsRead = p.readLiteral(wordToBeSet, myLiteral, litStartIndex);
 
-			Assert::AreEqual(19, charsRead);
-			Assert::AreEqual(wordToBeSet, myLiteral);
+			Assert::AreEqual(21, charsRead);
+			Assert::AreEqual(wordToBeSet, string("\"literal with spaces\""));
 		}
 
 	};
