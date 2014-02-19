@@ -40,7 +40,7 @@ public:
     bool CreateCmd(std::vector<std::string>input);
     bool UpdateCmd(std::vector<std::string>input);
 
-
+	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
 	// parse the given input and set the Table t appropriately
 	Table interpretAtomicExpression(std::vector<std::string> input);
 	Table parseExpression(std::vector<std::string>, string);

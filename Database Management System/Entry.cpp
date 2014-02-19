@@ -11,7 +11,7 @@ Entry::~Entry()
 
 void Entry::printEntry()
 {
-	for (int i = 0; i < fields.size(); i++)
+	for (unsigned int i = 0; i < fields.size(); i++)
 	{
 		cout << fields.at(i) + "\t";
 	}
@@ -20,7 +20,7 @@ void Entry::printEntry()
 
 ostream& operator<<(ostream& out, const Entry& e)
 {
-	for (int i = 0; i < e.getFields().size(); i++)
+	for (unsigned int i = 0; i < e.getFields().size(); i++)
 	{
 		out << e.getFields().at(i) + "\t";
 	}

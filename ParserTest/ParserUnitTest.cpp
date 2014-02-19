@@ -61,8 +61,6 @@ namespace ParserTest
 			//		atomic-expr ::= relation-name
 
 			// first make a database that has the table we are looking for
-<<<<<<< HEAD
-=======
 			Parser p = Parser();
 			vector<string> expr;
 			Table t1 = Table("table1");
@@ -70,17 +68,11 @@ namespace ParserTest
 			Database::addTable(t1);
 			Database::addTable(t2);
 
->>>>>>> origin/master
 			vector<string> columnNames;
 			columnNames.push_back("Names");
 			columnNames.push_back("Ages");
 			Table first = Table("DiffTest1", columnNames, 2);
 			Table second = Table("DiffTest2", columnNames, 2);
-<<<<<<< HEAD
-			Table unionTable = Database::setunion(first, second);
-			Database::addTable(unionTable);
-			Parser p = Parser();
-=======
 			vector<string> firstCols;
 			vector<string> secondCols;
 			firstCols.push_back("debra");
@@ -91,7 +83,6 @@ namespace ParserTest
 			second.addEntry(secondCols);
 			Table unionTable = Database::setunion(first, second);
 			Database::addTable(unionTable);
->>>>>>> origin/master
 
 			// make an atomic expression with only one value; a relation-name
 			vector<string> AtomicExpression_UnionName;
@@ -101,12 +92,9 @@ namespace ParserTest
 
 			// get a table using the parser's interpret atomic expression function
 			Table interpretedTable = p.interpretAtomicExpression(AtomicExpression_UnionName);
-<<<<<<< HEAD
-=======
 			cout << "manual union table then interpreted table:\n=================\n\n";
 			unionTable.printTable();
 			interpretedTable.printTable();
->>>>>>> origin/master
 
 			// the table retrieved should be the one we added to the database
 			//Assert::AreEqual(unionTable.getColNames().size(), interpretedTable.getColNames().size());
@@ -151,11 +139,11 @@ namespace ParserTest
 		TEST_METHOD(TestReadLiteral)
 		{
 			Parser p = Parser();
-			string myLiteral = "\"literal with spaces\" and the rest of my line";
+			string myLiteral = "0123456789\"literal with spaces\" and the rest of my line";
 			string wordToBeSet;
 
 			// should read all characters in the literal; 21
-			int litStartIndex = 0;
+			int litStartIndex = 10;
 			int charsRead = p.readLiteral(wordToBeSet, myLiteral, litStartIndex);
 
 			Assert::AreEqual(21, charsRead);

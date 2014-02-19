@@ -54,7 +54,7 @@ void Parser::interpretInputVector(vector<string> inputVector)
 		// a parsing function that handles how an expression is evaluated
 		//		(can be a selection, projection, union, etc). 
 		std::vector<string> expression;
-		for (int i = 2; i < inputVector.size(); i++)
+		for (unsigned int i = 2; i < inputVector.size(); i++)
 		{
 			expression.push_back(inputVector.at(i));
 		}
@@ -239,37 +239,60 @@ Table Parser::selection(vector<string> input)
 	// selection ::= select ( condition ) atomic-expr
 
 	bool selectKeyword = (input.at(0).compare("select") == 0);
-	if (!selectKeyword)
-	{
+	if (!selectKeyword || input.at(1) != "(")
+	{ // selection call needs to start with "select" then "("
 		throw new exception("Invalid selection call");
 		return NULL;
 	}
-	bool properOpenParenthesis = input.at(1) == "(";
-	bool properCloseParenthesis = false;
-	vector<string> valuesForCondition;
-	vector<string> valuesForAtomicExpression;
+	bool parenthesisClosed = false;
+	vector<string> conditionVec;	// a vector to represent a condition
+	vector<string> atomicExprVec;	// a vector to represent an atomic expression
 	unsigned int i;
-	for (i = 2; i < input.size(); i++)
-	{		
+	for (i = 1; i < input.size(); i++)
+	{ // read each value in the vector after "select"
 		string temp = input.at(i);
-		if (temp == ")")
-		{ // done adding to condition phrase if parenthesis are closed
-			properCloseParenthesis = true;
-		}
-		else if (!properCloseParenthesis)
+		if (!parenthesisClosed)
 		{ // continue appending to condition phrase
-			valuesForCondition.push_back(input.at(i));
+			conditionVec.push_back(input.at(i));
+			if (temp == ")")
+			{ // done adding to condition phrase, if parenthesis are closed
+				parenthesisClosed = true;
+			}
 		}
 		else
-		{ // add to third part of selection phrase; the atomic-expr
-			valuesForAtomicExpression.push_back(input.at(i));
+		{ // add to the atomic-expr
+			atomicExprVec.push_back(input.at(i));
 		}
 	}
 	
 	// this will generate a table (existing one, or combination of two, etc)
-	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
-	Table selectionTable = Database::select(fromTable.getColNames(), &fromTable, valuesForCondition);
+	Table fromTable = interpretAtomicExpression(atomicExprVec);
+
+	// this will return the proper selection of the 'fromTable'
+	Table selectionTable = evaluateCondition(conditionVec, fromTable);
+	
 	return selectionTable;
+}
+Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
+{ // return a Table satisfying the conditions in conditionVec
+	// formally:
+	//			condition ::= conjunction { || conjunction }
+	//			conjunction ::= comparison { && comparison }
+	//			comparison ::= operand op operand | (condition)
+	vector<string> operand1;
+	string op;
+	vector<string> operand2;
+
+	for (unsigned int i = 0; i < conditionVec.size(); i++)
+	{
+		string val = conditionVec.at(i);
+		if (isOp(val[0]))
+		{ // reached an operand
+			readOp(op, val, 0);
+		}
+
+	}
+	return Table();
 }
 Table Parser::projection(vector<string> input)
 { // project from a table according
@@ -382,7 +405,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	vector<string> beforeOperator(beginning, end);
 
 	cout << "vector before the " << arthOperator << ": ";
-	for (int i = 0; i < beforeOperator.size(); i++)
+	for (unsigned int i = 0; i < beforeOperator.size(); i++)
 		cout << beforeOperator.at(i) << " ";
 	cout << "\n";
 
@@ -391,7 +414,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	vector<string> afterOperator(beginning, end);
 
 	cout << "vector after the " << arthOperator << ": ";
-	for (int i = 0; i < afterOperator.size(); i++)
+	for (unsigned int i = 0; i < afterOperator.size(); i++)
 		cout << afterOperator.at(i) << " ";
 	cout << "\n";
 
@@ -721,7 +744,7 @@ int Parser::readOp(std::string& word, std::string input, int inputIndex)
 int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 {
     string myWord = "";
-    int myIndex = inputIndex;
+	unsigned int myIndex = inputIndex;
 	if (input.find("\"") == myIndex)
 	{ // if theres an opening quote
 		for (; myIndex < input.size(); myIndex++)
@@ -739,7 +762,7 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
 }
 int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 {
-	int myIndex = inputIndex;
+	unsigned int myIndex = inputIndex;
 	string myWord = "";
 	char character = input.at(myIndex);
 
