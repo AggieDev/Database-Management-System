@@ -596,7 +596,7 @@ bool Parser::InsertCmd(vector<string> input)
 }
 bool Parser::ExitCmd(vector<string> input)
 {
-    return 0;
+    return false;
 }
 bool Parser::ShowCmd(vector<string> input)
 {
@@ -616,19 +616,13 @@ bool Parser::CreateCmd(vector<string> input)
     if (properOpenParenthesis)
 	{ // create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
 		vector<string> attributeType;
-<<<<<<< HEAD
-		/*for (unsigned int i = 4; i < ; i++)
-		{ // fill expression vector with the values following
-			attributeType.push_back(input.at(i));
-		}*/
-=======
+
 		//for (unsigned int i = 4; i < ; i++)
 		//{ // fill expression vector with the values following
 			//attributeType.push_back(input.at(i));
 		//}
->>>>>>> master
-        
-        
+
+    
         
 		Table newValues = getTableFromExpression(attributeType);
 		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
@@ -660,7 +654,7 @@ bool Parser::UpdateCmd(vector<string> input)
 		return true;
 	}
 	else
-	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
+	{
         
 		bool properOpenParenthesis = input.at(5) == "(";
 		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
