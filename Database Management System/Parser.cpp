@@ -566,10 +566,10 @@ bool Parser::CreateCmd(vector<string> input)
     if (properOpenParenthesis)
 	{ // create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
 		vector<string> attributeType;
-		for (unsigned int i = 4; i < ; i++)
+		/*for (unsigned int i = 4; i < ; i++)
 		{ // fill expression vector with the values following
 			attributeType.push_back(input.at(i));
-		}
+		}*/
         
         
         
