@@ -5,6 +5,7 @@
 #include "Table.h"
 #include "Database.h"
 #include <iostream>
+#include <sstream>
 
 Table::Table(string name, int numCols)
 { // create a new empty table
@@ -16,6 +17,20 @@ Table::~Table()
 { // table destructor
 	_entries.clear();  // NOTE: is this needed?
 }
+
+vector<string> &split(const string &str, char chr, vector<string> &list) {
+	stringstream ss(str);
+	string item;
+	while (getline(ss, item, chr)) {	//for each split, push into the list
+		list.push_back(item);
+	}
+	return list;
+};
+vector<string> split(const string &str, char chr) {
+	vector<string> vecList;
+	split(str, chr, vecList);	//split string str by chr, returning vector vecList
+	return vecList;
+};
 
 void Table::printTable()
 {
@@ -150,58 +165,49 @@ void Table::rename(vector<string> new_attributes){
 
 	}
 	else std::cout << "ERROR: Please match the number of attributes.";
-
 }
 
 void Table::open_file(std::string table_name)
-{
+{ // set the values of this Table according to the table_name file
 	std::string file_name = table_name;
 	file_name += ".db";
-	char* dis;
-	char* dat;
-	char* doe;
+	fstream table_file;
 	table_file.open(file_name);
-	std::string num_cols;
-	std::string col_types;
-	std::string col_names;
-	std::string en_tries;
-	std::string line;
-	std::vector<string> line_vec;
 	if (table_file.is_open())
 	{
-		while (getline(table_file, line))
+		string tableName;
+		getline(table_file, tableName);
+		setName(tableName);
+		_name = tableName;
+
+		string numCols;
+		getline(table_file, numCols);
+		setNumCols(std::stoi(numCols));
+
+		string colTypes;
+		getline(table_file, colTypes);
+		for (int i = 0; i < colTypes.size(); i++)
 		{
-			line_vec.push_back(line);
+			char c = colTypes[i];
+			if (c != ',' && (c == 's' || c == 'f' || c == 'i'))
+			{ // if this is a valid column type identifier
+				colTypes.push_back(c);
+			}
+		}
+
+		string colNamesStrings;
+		vector<string> fileColNames = split(colNamesStrings, ',');
+		colNames = fileColNames;
+
+
+		string fieldsLine;
+		while (getline(table_file, fieldsLine))
+		{
+			vector<string> fieldsVec = split(fieldsLine, ',');
+			addEntry(fieldsVec);
 		}
 		std::cout << "File is open!\n";
 	}
-	setName(line_vec.at(0));
-	num_cols = line_vec.at(1);
-	setNumCols(std::stoi(num_cols));
-	col_types = line_vec.at(2);
-	dis = strtok (col_types, ",");
-	while(dis != NULL)
-	{
-		colTypes.push_back(dis);
-		dis = strtok (col_types, ",");
-	}
-	//colTypes = col_types.split(',');
-	col_names = line_vec.at(3);
-	dat = strtok (col_names, ",");
-	while(dat != NULL)
-	{
-		colNames.push_back(dat);
-		dat = strtok (col_names, ",");
-	}
-	en_tries = line_vec.at(4);
-	doe = strtok (en_tries, ",");
-	while(doe != NULL)
-	{
-		_entries.push_back(doe);
-		doe = strtok (en_tries, ",");
-	}
-	std::cout << "Open and Reading complete\n";
-
 }
 
 void Table::setColTypes(std::string type_string)
@@ -212,8 +218,10 @@ void Table::setColTypes(std::string type_string)
 	}
 }
 
-void Table::close_file()
-{
+void Table::close_file(string relationName)
+{ // close file associated with this table, if open
+	string fileName = relationName.append(".db");
+	fstream table_file(fileName);
 	if (table_file.is_open())
 	{
 		table_file.close();
@@ -221,8 +229,10 @@ void Table::close_file()
 	else std::cout << "File was not open!\n";
 }
 
-void Table::write_to_file()
-{
+void Table::write_to_file(string relationName)
+{ // write this table to a file
+	string fileName = relationName.append(".db");
+	fstream table_file(fileName);
 	if (table_file.is_open())
 	{
 		table_file << _name << "\n";
