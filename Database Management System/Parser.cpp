@@ -1,6 +1,9 @@
 //#include "stdafx.h"
-#include "Parser.h"
+
 #include <exception>
+#include <fstream>
+#include "Table.h"
+#include "Parser.h"
 
 using namespace std;
 
@@ -72,15 +75,30 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	}
 	else if (inputVector.at(0) == "OPEN")
 	{
+		//open file and then create a table based on the information in the file?
+		/*ifstream input_file;
+		std::string file_name = inputVector.at(1);
+		file_name += ".db";
+		input_file.open(file_name);
+		if (input_file.is_open())
+		{
+			while (!input_file.eof())
+			{
 
+			}
+		}*/
+		Database::getTable(inputVector.at(1)).open_file(inputVector.at(1));
 	}
 	else if (inputVector.at(0) == "CLOSE")
 	{
+		//close the file
+		Database::getTable(inputVector.at(1)).close_file(inputVector.at(1));
 
 	}
 	else if (inputVector.at(0) == "WRITE")
 	{
-
+		//write to file
+		Database::getTable(inputVector.at(1)).write_to_file(inputVector.at(1));
 	}
 	else if (inputVector.at(0) == "EXIT")
 	{
@@ -220,7 +238,7 @@ Table Parser::selection(vector<string> input)
 { // select from a table according to a specific condition
 	// selection ::= select ( condition ) atomic-expr
 
-	bool selectKeyword = (input.at(0) == "select");
+	bool selectKeyword = (input.at(0).compare("select") == 0);
 	if (!selectKeyword)
 	{
 		throw new exception("Invalid selection call");
@@ -322,6 +340,36 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 	return newTable;
 }
 
+/*----------Eli---*/
+/*Table Parser::interpretOperand(vector<string> input)
+{ // parse the given input and set the attribute appropriately
+	
+	
+	if (input.size() == 1)
+	{ // operand ::= attribute-name
+		string attributeName = input.at(0);
+	
+	}
+	else if (input.size() > 1)
+	{ // operand ::= literal "..."
+		vector<string> inputCopy = input;
+        
+		// erase parenthesis if present
+		if (inputCopy.at(0) == '\"')
+		{
+			inputCopy.erase(inputCopy.begin());
+		}
+		if (inputCopy.at(inputCopy.size() - 1) == '\"')
+		{
+			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+		}
+		newTable = getTableFromExpression(inputCopy);
+	}
+    
+	// the table will be empty if invalid expression was provided
+	return newTable;
+}*/
+
 //returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
 {
@@ -396,6 +444,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+
 	Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
 	return projectionTable;
 	return newTable;
@@ -552,28 +601,36 @@ bool Parser::ExitCmd(vector<string> input)
 bool Parser::ShowCmd(vector<string> input)
 {
     string atomicExpression = input.at(1);
+
+	return false;
 }
 bool Parser::CreateCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
+
 	Table* t = Database::getTableByReference(relationName);
     
     bool properOpenParenthesis = input.at(3) == "(";
-     bool properOpenParenthesis = input.at(3) == ")";
-    
  //   bool properCloseParenthesis = input.at(input.size() - 1) == ")";
 	
     if (properOpenParenthesis)
 	{ // create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
 		vector<string> attributeType;
+<<<<<<< HEAD
 		/*for (unsigned int i = 4; i < ; i++)
 		{ // fill expression vector with the values following
 			attributeType.push_back(input.at(i));
 		}*/
+=======
+		//for (unsigned int i = 4; i < ; i++)
+		//{ // fill expression vector with the values following
+			//attributeType.push_back(input.at(i));
+		//}
+>>>>>>> master
         
         
         
-		Table newValues = getTableFromExpression(expression);
+		Table newValues = getTableFromExpression(attributeType);
 		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
 		{ // add every entry of the table of new values to the table referenced by relationName
 			t->addEntry(newValues.getEntries().at(i));
@@ -692,11 +749,12 @@ int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
 	int myIndex = inputIndex;
 	string myWord = "";
 	char character = input.at(myIndex);
-	while (isalpha(character) || isdigit(character) || character == '_')
+
+	do
 	{
 		myWord.push_back(character);
 		character = input.at(++myIndex);
-	}
+	} while ((isalpha(character) || isdigit(character) || character == '_') && myIndex < input.size());
 	word = myWord;
 	return (myIndex - inputIndex);
 }

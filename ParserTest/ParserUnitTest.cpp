@@ -56,6 +56,52 @@ namespace ParserTest
 			// the table retrieved should be the one we added to the database
 			Assert::AreEqual(string("dbTableName"), interpretedTable.getName());
 		}
+		TEST_METHOD(TestInterpretAtomicExpression_Union)
+		{ // test atomic expression if it is of the simple form:
+			//		atomic-expr ::= relation-name
+
+			// first make a database that has the table we are looking for
+			Parser p = Parser();
+			vector<string> expr;
+			Table t1 = Table("table1");
+			Table t2 = Table("table2");
+			Database::addTable(t1);
+			Database::addTable(t2);
+
+			vector<string> columnNames;
+			columnNames.push_back("Names");
+			columnNames.push_back("Ages");
+			Table first = Table("DiffTest1", columnNames, 2);
+			Table second = Table("DiffTest2", columnNames, 2);
+			vector<string> firstCols;
+			vector<string> secondCols;
+			firstCols.push_back("debra");
+			firstCols.push_back("40");
+			secondCols.push_back("tom");
+			secondCols.push_back("30");
+			first.addEntry(firstCols);
+			second.addEntry(secondCols);
+			Table unionTable = Database::setunion(first, second);
+			Database::addTable(unionTable);
+
+			// make an atomic expression with only one value; a relation-name
+			vector<string> AtomicExpression_UnionName;
+			AtomicExpression_UnionName.push_back("table1");
+			AtomicExpression_UnionName.push_back("+");
+			AtomicExpression_UnionName.push_back("table2");
+
+			// get a table using the parser's interpret atomic expression function
+			Table interpretedTable = p.interpretAtomicExpression(AtomicExpression_UnionName);
+			cout << "manual union table then interpreted table:\n=================\n\n";
+			unionTable.printTable();
+			interpretedTable.printTable();
+
+			// the table retrieved should be the one we added to the database
+			//Assert::AreEqual(unionTable.getColNames().size(), interpretedTable.getColNames().size());
+			//Assert::AreEqual(unionTable.getColTypes().size(), interpretedTable.getColTypes().size());
+			//Assert::AreEqual(unionTable.getNumCols(), interpretedTable.getNumCols());
+			//Assert::AreEqual(unionTable.getEntries().size(), interpretedTable.getEntries().size());
+		}
 		TEST_METHOD(TestSelectionCall)
 		{ // test atomic expression if it is of the more complicated expression
 			//		atomic-expr ::= ( expr )
@@ -76,8 +122,13 @@ namespace ParserTest
 			entryFields3.push_back("3");
 			entryFields3.push_back("Giraffes");
 
+			t.addEntry(entryFields1);
+			t.addEntry(entryFields2);
+			t.addEntry(entryFields3);
+			Database::addTable(t);
+
 			// this should get a table of a singleton entry (2, Dinosaurs)
-			string expressionString = "select (team == \"Dinosaurs\") baseball_players";
+			string expressionString = "select (team == \"Dinosaurs\") baseball_players;";
 			vector<string> selectionExprVector = p.readInputLine(expressionString);
 			Table resultTable = p.selection(selectionExprVector);
 
