@@ -226,7 +226,4 @@ int main(int argc, const char* argv[])
 
 	Application application = Application();
 	application.launch();
-
-	cout << "\n\n";
-	system("PAUSE");
 }
