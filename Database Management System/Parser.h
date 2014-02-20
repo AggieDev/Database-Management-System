@@ -36,7 +36,7 @@ public:
     
     Table projection(std::vector<std::string>input);
     //Table rename(std::vector<std::string>input);
-    bool ShowCmd(std::vector<std::string>input);
+    void ShowCmd(std::vector<std::string>input);
     bool CreateCmd(std::vector<std::string>input);
     bool UpdateCmd(std::vector<std::string>input);
 

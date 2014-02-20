@@ -400,7 +400,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	else if (arthOperator == "-")
 		return Database::differenceTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
 	else if (arthOperator == "*")
-		return Database::productTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+		return Database::product Table(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
 	else if (arthOperator == "JOIN")
 		return Database::naturalJoinTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
 	else
@@ -598,11 +598,13 @@ bool Parser::ExitCmd(vector<string> input)
 {
     return false;
 }
-bool Parser::ShowCmd(vector<string> input)
+void Parser::ShowCmd(vector<string> input)
 {
-    string atomicExpression = input.at(1);
+    
+    vector<string> atomicExpression(input.begin()+1, input.end());
+    Table t(interpretAtomicExpression(atomicExpression));
+    t.printTable();
 
-	return false;
 }
 bool Parser::CreateCmd(vector<string> input)
 {
@@ -613,7 +615,8 @@ bool Parser::CreateCmd(vector<string> input)
     bool properOpenParenthesis = input.at(3) == "(";
  //   bool properCloseParenthesis = input.at(input.size() - 1) == ")";
 	
-    if (properOpenParenthesis)
+    vector<string> attributeType;
+    while ()
 	{ // create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
 		vector<string> attributeType;
 
@@ -636,7 +639,7 @@ bool Parser::CreateCmd(vector<string> input)
 }
 bool Parser::UpdateCmd(vector<string> input)
 {
-    string relationName = input.at(2);	// name of Table in the Database
+    string relationName = input.at(1);	// name of Table in the Database
 	Table* t = Database::getTableByReference(relationName);
     
 	if (input.at(5) == "RELATION")
