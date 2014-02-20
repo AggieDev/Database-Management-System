@@ -1,15 +1,10 @@
 *.opensdf
 *.suo
 *.sdf
-<<<<<<< HEAD
 *.vcxproj
 *.sln
-<<<<<<< HEAD
-=======
-=======
->>>>>>> origin/master
 *.zip
->>>>>>> origin/master
+
 
 #################
 ## Eclipse
