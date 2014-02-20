@@ -83,46 +83,24 @@ Table Database::differenceTable(Table t1, Table t2)
 
 Table Database::setunion(Table t1, Table t2)
 {
-	bool match = true;
-	Table union_table("Union Table", t1.getNumCols());
-	vector<Entry> entry_vec;
+	vector<string> columnNames;
+	columnNames.push_back("Names");
+	columnNames.push_back("Ages");
+	Table union_table = Table(t1.getName() + " difference " + t2.getName(), columnNames, 2);													//copy first table
+	union_table.setName(t1.getName() + " difference " + t2.getName());	//set name back 
+
 	for (unsigned int i = 0; i < t1.getEntries().size(); i++)
 	{
-		entry_vec.push_back(t1.getEntries().at(i));
+		union_table.addEntry(t1.getEntries().at(i));
 	}
 
-	for (unsigned int i = 0; i < entry_vec.size(); i++){
-		union_table.addEntry(entry_vec.at(i));
+	for (unsigned int i = 0; i < t2.getEntries().size(); i++){
+		if (union_table.hasEntry(t2.getEntries().at(i)) == -1)
+			union_table.addEntry(t2.getEntries().at(i));
 	}
 
-	for (unsigned int i = 0; i < t2.getEntries().size(); i++)
-	{
-		//match = false;
-		match = true;
-		//union_table.addEntry(entry_vec.at(i));
-		for (unsigned int j = 0; j < t1.getEntries().size(); j++)
-		{
-			match = true;
-			for (unsigned int k = 0; k < t1.getEntries().at(j).getFields().size(); k++)
-			{
-				if (t2.getEntries().at(i).getFields().at(k).compare(t1.getEntries().at(j).getFields().at(k)) == 0)
-				{
-					match = false;
-					break;
-				}
-			}
-			if (match == false && union_table.hasEntry(t2.getEntries().at(i)) == 0)
-			{
-				union_table.addEntry(t2.getEntries().at(i));
-				std::cout << "something added \n";
-				std::cout << i << "\n";
-				break;
-			}
-		}
-
-
-	}
 	return union_table;
+	
 }
 
 Table Database::productTable(Table t1, Table t2)
@@ -307,6 +285,14 @@ Table Database::Project(vector<string> attributes, string fromTable)
     
 	return *result;
 
+}
+
+Table Database::rename_table(Table* fromTable, vector<string> new_attributes)
+{
+	Table* rename_table;
+	rename_table->
+	fromTablerename(new_attributes)
+	return rename_table;
 }
 
 Table Database::Project(vector<string> attributes, Table* fromTable)

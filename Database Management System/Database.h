@@ -47,5 +47,6 @@ public:
 	static vector<Table> getTables(){ return _tables; }
 	static Table getTable(string relationName);
 	static Table* getTableByReference(string relationName);
+	static Table rename_table(Table* fromTable, vector<string> new_attributes);
 };
 
