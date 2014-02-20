@@ -1,0 +1,17 @@
+you'll see that the definition for literal is "intentionally left unspecified" on the webpage, I propose:
+
+
+   literal ::= "(identifier)" | integer
+
+
+(it's either an identifier in quotes or its an integer) 
+I'm basing this off of the insert-cmd structure:
+
+
+   insert-cmd ::= INSERT INTO relation-name VALUES FROM ( literal { , literal } )
+
+
+that is used like this:
+
+
+   INSERT INTO friends VALUES FROM ("X", "N/A", "Awesome!", 100);

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Database Management System", "Database Management System\Database Management System.vcxproj", "{F9C201A5-D491-4193-8EFA-1508E9BACEF9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParserTest", "ParserTest\ParserTest.vcxproj", "{8D213E47-6ECB-49AB-AE08-BD8539FAEBA6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DatabaseMain", "DatabaseMain\DatabaseMain.vcxproj", "{E32A2582-27E0-4767-950D-F06DFDB67A71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9C201A5-D491-4193-8EFA-1508E9BACEF9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9C201A5-D491-4193-8EFA-1508E9BACEF9}.Debug|Win32.Build.0 = Debug|Win32
+		{F9C201A5-D491-4193-8EFA-1508E9BACEF9}.Release|Win32.ActiveCfg = Release|Win32
+		{F9C201A5-D491-4193-8EFA-1508E9BACEF9}.Release|Win32.Build.0 = Release|Win32
+		{8D213E47-6ECB-49AB-AE08-BD8539FAEBA6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8D213E47-6ECB-49AB-AE08-BD8539FAEBA6}.Debug|Win32.Build.0 = Debug|Win32
+		{8D213E47-6ECB-49AB-AE08-BD8539FAEBA6}.Release|Win32.ActiveCfg = Release|Win32
+		{8D213E47-6ECB-49AB-AE08-BD8539FAEBA6}.Release|Win32.Build.0 = Release|Win32
+		{E32A2582-27E0-4767-950D-F06DFDB67A71}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E32A2582-27E0-4767-950D-F06DFDB67A71}.Debug|Win32.Build.0 = Debug|Win32
+		{E32A2582-27E0-4767-950D-F06DFDB67A71}.Release|Win32.ActiveCfg = Release|Win32
+		{E32A2582-27E0-4767-950D-F06DFDB67A71}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

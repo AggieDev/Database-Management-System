@@ -1,12 +1,18 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int you_suck;
 };
 =======
+=======
+>>>>>>> 8d4dd06e48210d806df5627f6a092aef00129707
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
+#include <exception>
 #include "Table.h"
-
+#include "Database.h"
+#include <iostream>
+#include <sstream>
 
 Table::Table(string name, int numCols)
 { // create a new empty table
@@ -18,6 +24,20 @@ Table::~Table()
 { // table destructor
 	_entries.clear();  // NOTE: is this needed?
 }
+
+vector<string> &split(const string &str, char chr, vector<string> &list) {
+	stringstream ss(str);
+	string item;
+	while (getline(ss, item, chr)) {	//for each split, push into the list
+		list.push_back(item);
+	}
+	return list;
+};
+vector<string> split(const string &str, char chr) {
+	vector<string> vecList;
+	split(str, chr, vecList);	//split string str by chr, returning vector vecList
+	return vecList;
+};
 
 void Table::printTable()
 {
@@ -51,7 +71,7 @@ int Table::hasEntry(Entry e)
 		if (match)
 			return i;
 	}
-	return 0;
+	return -1;
 }
 
 Entry Table::getEntry(unsigned int entryID)
@@ -101,6 +121,11 @@ void Table::addColumn(string colName, char colType)
 	colTypes.push_back(colType);
 }
 
+void Table::setNumCols(int num)
+{
+	_numCols = num;
+}
+
 bool Table::update(string key, string newVal, int keyCol, int valCol)
 { // update an existing entry with a new value, return true on success
 	for (unsigned int i = 0; i < _entries.size(); i++)
@@ -147,7 +172,94 @@ void Table::rename(vector<string> new_attributes){
 
 	}
 	else std::cout << "ERROR: Please match the number of attributes.";
+}
 
+void Table::open_file(std::string table_name)
+{ // set the values of this Table according to the table_name file
+	std::string file_name = table_name;
+	file_name += ".db";
+	fstream table_file;
+	table_file.open(file_name);
+	if (table_file.is_open())
+	{
+		string tableName;
+		getline(table_file, tableName);
+		setName(tableName);
+		_name = tableName;
+
+		string numCols;
+		getline(table_file, numCols);
+		setNumCols(std::stoi(numCols));
+
+		string colTypes;
+		getline(table_file, colTypes);
+		for (int i = 0; i < colTypes.size(); i++)
+		{
+			char c = colTypes[i];
+			if (c != ',' && (c == 's' || c == 'f' || c == 'i'))
+			{ // if this is a valid column type identifier
+				colTypes.push_back(c);
+			}
+		}
+
+		string colNamesStrings;
+		vector<string> fileColNames = split(colNamesStrings, ',');
+		colNames = fileColNames;
+
+
+		string fieldsLine;
+		while (getline(table_file, fieldsLine))
+		{
+			vector<string> fieldsVec = split(fieldsLine, ',');
+			addEntry(fieldsVec);
+		}
+		std::cout << "File is open!\n";
+	}
+}
+
+void Table::setColTypes(std::string type_string)
+{
+	for (int i = 0; i < type_string.size(); i++)
+	{
+		colTypes.push_back(type_string.at(i));
+	}
+}
+
+void Table::close_file(string relationName)
+{ // close file associated with this table, if open
+	string fileName = relationName.append(".db");
+	fstream table_file(fileName);
+	if (table_file.is_open())
+	{
+		table_file.close();
+	}
+	else std::cout << "File was not open!\n";
+}
+
+void Table::write_to_file(string relationName)
+{ // write this table to a file
+	string fileName = relationName.append(".db");
+	fstream table_file(fileName);
+	if (table_file.is_open())
+	{
+		table_file << _name << "\n";
+		table_file << _numCols << "\n";
+		for (int i = 0; i < colTypes.size(); i++)
+		{
+			table_file << colTypes.at(0) << ",";
+		}
+		table_file << "\n";
+		for (int i = 0; i < colNames.size(); i++)
+		{
+			table_file << colNames.at(i) << ",";
+		}
+		table_file << "\n";
+		for (int i = 0; i < _entries.size(); i++)
+		{
+			table_file << _entries.at(i) << ",";
+		}
+	}
+	std::cout << "Writing to file complete!\n";
 }
 
 vector<int> Table::findCondition(vector<string> whereOps)
@@ -249,4 +361,7 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 }
 
+<<<<<<< HEAD
 >>>>>>> b4b4dbdd7794626873d98fc2b57c7569914d5443
+=======
+>>>>>>> 8d4dd06e48210d806df5627f6a092aef00129707
