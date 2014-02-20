@@ -24,7 +24,6 @@ Table Application::insertIntoTable(string tableName, Entry& e)
 	Database::getTable(tableName).addEntry(e);
 }
 
-//will change if using GUI
 void Application::showTable(string tableName)
 {
 	Database::getTable(tableName).printTable();
@@ -61,7 +60,6 @@ void Application::renameTable(string tableName)
 {
 }
 
-//does this mean write to file?
 void Application::writeTable(string tableName)
 {
 }
