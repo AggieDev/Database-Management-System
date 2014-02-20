@@ -25,7 +25,8 @@ void Application::createTable(string tableName, vector<string> columnNames)
 
 Table Application::insertIntoTable(string tableName, Entry& e)
 {
-	Database::getTable(tableName).addEntry(e);
+	 Database::getTable(tableName).addEntry(e);
+	 return Database::getTable(tableName);
 }
 
 void Application::showTable(string tableName)
