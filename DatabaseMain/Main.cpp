@@ -42,6 +42,8 @@ void testOccupyTables(Table &first, Table &second)
 	second.printTable();
 }
 
+
+
 //using this to test difference table
 void testDifferenceTable()
 {
@@ -193,6 +195,65 @@ void testSetUnion()
 
 	Table union_table = Database::setunion(first, second);
 	union_table.printTable();
+}
+
+/////////////////////////////
+//functions for application//
+/////////////////////////////
+void createTable(string tableName, vector<string> columnNames)
+{
+	Database::addTable(Table(tableName, columnNames));
+}
+
+Table insertIntoTable(string tableName, Entry& e)
+{
+	Database::getTable(tableName).addEntry(e);
+}
+
+//will change if using GUI
+void showTable(string tableName)
+{
+	Database::getTable(tableName).printTable();
+}
+
+Table unionTable(string firstTable, string secondTable)
+{
+	return Database::setunion(Database::getTable(firstTable), Database::getTable(secondTable));
+}
+
+Table differenceTable(string firstTable, string secondTable)
+{
+	return Database::differenceTable(Database::getTable(firstTable), Database::getTable(secondTable));
+}
+
+Table productTable(string firstTable, string secondTable)
+{
+	return Database::productTable(Database::getTable(firstTable), Database::getTable(secondTable));
+}
+
+void updateTable(string tableName)
+{
+}
+
+void deleteFromTable(string tableName)
+{
+}
+
+void tableSelect(string tableName)
+{
+}
+
+void renameTable(string tableName)
+{
+}
+
+//does this mean write to file?
+void writeTable(string tableName)
+{
+}
+
+void tableProjection()
+{
 }
 
 int main(int argc, const char* argv[])
