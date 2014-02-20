@@ -4,6 +4,7 @@
 #include "Database.h"
 #include "Table.h"
 #include "Parser.h"
+#include "Application.h"
 
 using namespace std;
 
@@ -41,6 +42,8 @@ void testOccupyTables(Table &first, Table &second)
 
 	second.printTable();
 }
+
+
 
 //using this to test difference table
 void testDifferenceTable()
@@ -221,6 +224,6 @@ int main(int argc, const char* argv[])
 	}
 	testSetUnion();
 
-	cout << "\n\n";
-	system("PAUSE");
+	Application application = Application();
+	application.launch();
 }

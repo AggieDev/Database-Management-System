@@ -44,12 +44,12 @@ void Table::printTable()
 	cout << "\nTable: " << _name << "\n" << "----------------\n";
 	if (!colNames.empty())	//print column names
 	{
-		for (int i = 0; i < colNames.size(); i++)
+		for (unsigned int i = 0; i < colNames.size(); i++)
 			cout << colNames.at(i) << "\t";
 		cout << "\n----------------\n";
 	}
 	//print entries
-	for (int i = 0; i < _entries.size(); i++)
+	for (unsigned int i = 0; i < _entries.size(); i++)
 		_entries.at(i).printEntry();
 	cout << "\n";
 }
@@ -57,11 +57,11 @@ void Table::printTable()
 int Table::hasEntry(Entry e)
 {
 	//check each entry
-	for (int i = 0; i < _entries.size(); i++)
+	for (unsigned int i = 0; i < _entries.size(); i++)
 	{
 		bool match = true;
 		//see if all entry parameters match up
-		for (int j = 0; j < _entries.at(i).getFields().size(); j++)
+		for (unsigned int j = 0; j < _entries.at(i).getFields().size(); j++)
 		{
 			//if field at j doesnt match, entry isnt same so move on to next one
 			if (e.getFields().at(j).compare(_entries.at(i).getFields().at(j)) != 0)
@@ -193,7 +193,7 @@ void Table::open_file(std::string table_name)
 
 		string colTypes;
 		getline(table_file, colTypes);
-		for (int i = 0; i < colTypes.size(); i++)
+		for (unsigned int i = 0; i < colTypes.size(); i++)
 		{
 			char c = colTypes[i];
 			if (c != ',' && (c == 's' || c == 'f' || c == 'i'))
@@ -219,7 +219,7 @@ void Table::open_file(std::string table_name)
 
 void Table::setColTypes(std::string type_string)
 {
-	for (int i = 0; i < type_string.size(); i++)
+	for (unsigned int i = 0; i < type_string.size(); i++)
 	{
 		colTypes.push_back(type_string.at(i));
 	}
@@ -244,17 +244,17 @@ void Table::write_to_file(string relationName)
 	{
 		table_file << _name << "\n";
 		table_file << _numCols << "\n";
-		for (int i = 0; i < colTypes.size(); i++)
+		for (unsigned int i = 0; i < colTypes.size(); i++)
 		{
 			table_file << colTypes.at(0) << ",";
 		}
 		table_file << "\n";
-		for (int i = 0; i < colNames.size(); i++)
+		for (unsigned int i = 0; i < colNames.size(); i++)
 		{
 			table_file << colNames.at(i) << ",";
 		}
 		table_file << "\n";
-		for (int i = 0; i < _entries.size(); i++)
+		for (unsigned int i = 0; i < _entries.size(); i++)
 		{
 			table_file << _entries.at(i) << ",";
 		}
@@ -274,7 +274,7 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 	//find the column that corresponds to the 
 	int columnToCheck = -1;
-	for (int i = 0; i < colNames.size(); i++)
+	for (unsigned int i = 0; i < colNames.size(); i++)
 	{
 		if (colNames[i] == left)
 		{
@@ -310,7 +310,7 @@ vector<int> Table::findCondition(vector<string> whereOps)
 		break;
 	}
 
-	for (int i = 0; i < _entries.size(); i++)
+	for (unsigned int i = 0; i < _entries.size(); i++)
 	{
 		string valueToCheck = _entries[i][columnToCheck];
 		if (center == "==")

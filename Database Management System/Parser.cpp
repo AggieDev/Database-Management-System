@@ -17,14 +17,14 @@ Parser::~Parser()
 
 void Parser::readFile(string fileName)
 { // read a file written in DML. Send each line to readInputLine() which returns a vector of the tokens
-	// send those tokens to interpretInputVector()
+	// send those tokens to evaluateInputVector()
 	ifstream inFile(fileName);
 	string line;
 	if (inFile.is_open())
 	{
 		while (getline(inFile, line))
 		{
-			interpretInputVector(readInputLine(line));
+			evaluateInputVector(readInputLine(line));
 		}
 		inFile.close();
 	}
@@ -34,7 +34,7 @@ void Parser::readFile(string fileName)
 	}
 }
 
-void Parser::interpretInputVector(vector<string> inputVector)
+void Parser::evaluateInputVector(vector<string> inputVector)
 { // conditional statements to match the input line to specific function calls
 	// NOTE: Individual members in this vector are all strings but will be one of -
 	//		- identifier(basically an individual word, ie INSERT, pets-table-name, etc)
@@ -53,8 +53,8 @@ void Parser::interpretInputVector(vector<string> inputVector)
 		// use relation-name to find the table, but the expr will be passed to 
 		// a parsing function that handles how an expression is evaluated
 		//		(can be a selection, projection, union, etc). 
-		std::vector<string> expression;
-		for (int i = 2; i < inputVector.size(); i++)
+		vector<string> expression;
+		for (unsigned int i = 2; i < inputVector.size(); i++)
 		{
 			expression.push_back(inputVector.at(i));
 		}
@@ -63,7 +63,7 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	
 	if (inputVector.at(0) == "INSERT" && inputVector.at(1) == "INTO")
 	{
-		InsertCmd(inputVector);
+		insertCmd(inputVector);
 	}
 	else if (inputVector.at(0) == "select")
 	{
@@ -77,7 +77,7 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	{
 		//open file and then create a table based on the information in the file?
 		/*ifstream input_file;
-		std::string file_name = inputVector.at(1);
+		string file_name = inputVector.at(1);
 		file_name += ".db";
 		input_file.open(file_name);
 		if (input_file.is_open())
@@ -102,29 +102,21 @@ void Parser::interpretInputVector(vector<string> inputVector)
 	}
 	else if (inputVector.at(0) == "EXIT")
 	{
-        ExitCmd(inputVector);
+        exitCmd(inputVector);
 
 	}
 	else if (inputVector.at(0) == "SHOW")
 	{
-        ShowCmd(inputVector);
+        showCmd(inputVector);
 	}
 
 	else if (inputVector.at(0) == "CREATE" && inputVector.at(1) == "TABLE")
 	{
-        CreateCmd(inputVector);
+        createCmd(inputVector);
 	}
 	else if (inputVector.at(0) == "UPDATE")
 	{
-        UpdateCmd(inputVector);
-	}
-	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
-	{
-
-	}
-	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
-	{
-		deletion(inputVector);
+        updateCmd(inputVector);
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -155,7 +147,7 @@ vector<string> Parser::readInputLine(string inputLine)
 		
 		else // if alpha, digit, quotation, operator, or attribute
 		{ // determine what the following token is going to be
-			bool isInteger = isdigit(c);
+			bool isInteger = isdigit(c) != 0;
 			bool isLiteral = (c == '\"');
 			bool isIdentifier = isalpha(c) || (c == '_');
 			bool isOperator = isOp(c);
@@ -194,8 +186,8 @@ vector<string> Parser::readInputLine(string inputLine)
 }
 bool Parser::isOp(char c)
 { // return true if c is the start of an operator
-	// a full operator can be one of: [+,-,*,==,!=,<,<=,>,>=,<-]
-	string operators = "=!<>+-*";
+	// a full operator can be one of: [+,-,*,==,!=,<,<=,>,>=,<-,||,&&]
+	string operators = "=!<>+-*|&";
 	return (operators.find(c) != string::npos);
 }
 bool Parser::isDelimiter(char c)
@@ -203,7 +195,7 @@ bool Parser::isDelimiter(char c)
 	return (c == ' ') || (c == ',') || (c == ';');
 }
 
-Table Parser::deletion(std::vector<std::string> input)
+Table Parser::deletion(vector<string> input)
 {
 	bool deleteKeyword = (input.at(0) == "DELETE") && (input.at(1) == "FROM");
 	if (!deleteKeyword)
@@ -239,37 +231,96 @@ Table Parser::selection(vector<string> input)
 	// selection ::= select ( condition ) atomic-expr
 
 	bool selectKeyword = (input.at(0).compare("select") == 0);
-	if (!selectKeyword)
-	{
+	if (!selectKeyword || input.at(1) != "(")
+	{ // selection call needs to start with "select" then "("
 		throw new exception("Invalid selection call");
 		return NULL;
 	}
-	bool properOpenParenthesis = input.at(1) == "(";
-	bool properCloseParenthesis = false;
-	vector<string> valuesForCondition;
-	vector<string> valuesForAtomicExpression;
+	bool parenthesisClosed = false;
+	vector<string> conditionVec;	// a vector to represent a condition
+	vector<string> atomicExprVec;	// a vector to represent an atomic expression
 	unsigned int i;
-	for (i = 2; i < input.size(); i++)
-	{		
+	for (i = 1; i < input.size(); i++)
+	{ // read each value in the vector after "select"
 		string temp = input.at(i);
-		if (temp == ")")
-		{ // done adding to condition phrase if parenthesis are closed
-			properCloseParenthesis = true;
-		}
-		else if (!properCloseParenthesis)
+		if (!parenthesisClosed)
 		{ // continue appending to condition phrase
-			valuesForCondition.push_back(input.at(i));
+			conditionVec.push_back(input.at(i));
+			if (temp == ")")
+			{ // done adding to condition phrase, if parenthesis are closed
+				parenthesisClosed = true;
+			}
 		}
 		else
-		{ // add to third part of selection phrase; the atomic-expr
-			valuesForAtomicExpression.push_back(input.at(i));
+		{ // add to the atomic-expr
+			atomicExprVec.push_back(input.at(i));
 		}
 	}
 	
 	// this will generate a table (existing one, or combination of two, etc)
-	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
-	Table selectionTable = Database::select(fromTable.getColNames(), &fromTable, valuesForCondition);
+	Table fromTable = evaluateAtomicExpression(atomicExprVec);
+
+	// this will return the proper selection of the 'fromTable'
+	Table selectionTable = evaluateCondition(conditionVec, fromTable);
+	
 	return selectionTable;
+}
+Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
+{ // return a Table satisfying the conditions in conditionVec
+	// formally:
+	//			condition ::= conjunction { || conjunction }
+	//			conjunction ::= comparison { && comparison }
+	//			comparison ::= operand op operand | (condition)
+	
+	vector<string> operand1Vec;
+	string op;
+	bool opFound = false;
+	vector<string> operand2Vec;
+
+	for (unsigned int i = 0; i < conditionVec.size(); i++)
+	{
+		string val = conditionVec.at(i);
+		if (isOp(val[0]))
+		{ // reached an operand
+			readOp(op, val, 0);
+			opFound = true;
+		}
+		else if (!opFound)
+		{ // still appending to first operand vector
+			operand1Vec.push_back(val);
+		}
+		else 
+		{ // if (opFound) keep appending to second operand vector
+			operand2Vec.push_back(val);
+		}
+	}
+	
+	if (op == "||" || op == "&&")
+	{
+//TODO: handle more complicated, multi-condition phrase
+	}
+	else
+	{ // otherwise, both operands should be of the simple form:
+		// operand ::= literal | attribute-name
+		if (operand1Vec.size() == 1 && operand2Vec.size() == 1)
+		{ // simple case where operandVec is single operand
+			//NOTE: Database::select() does not work yet
+			// the following line will depend on this Database function working:
+			//			Table Database::select(vector<string> condition, Table t)
+			// then this following should work as well
+			
+			
+			// return Database::select(conditionVec, table);
+
+		}
+		else
+		{
+			throw new exception("Error while parsing a condition, expected form: 'operand op operand'");
+		}
+	}
+	
+
+	return Table();
 }
 Table Parser::projection(vector<string> input)
 { // project from a table according
@@ -306,12 +357,12 @@ Table Parser::projection(vector<string> input)
 	}
 	
 	// this will generate a table (existing one, or combination of two, etc)
-	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
     /*------Fix----*/
 	Table projectionTable = Database::Project(fromTable.getColNames(), &fromTable);
 	return projectionTable;
 }
-Table Parser::interpretAtomicExpression(vector<string> input)
+Table Parser::evaluateAtomicExpression(vector<string> input)
 { // parse the given input and set the Table t appropriately
 
 	Table newTable = Table();
@@ -373,8 +424,8 @@ Table Parser::interpretAtomicExpression(vector<string> input)
 //returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
 {
-	//gets index of +
-	int index = std::distance(expr.begin(), std::find(expr.begin(), expr.end(), arthOperator));
+	//gets index of set manipulation operator: +,-,*, or JOIN
+	int index = distance(expr.begin(), find(expr.begin(), expr.end(), arthOperator));
 	cout << "Index that " << arthOperator << " is at in expression: " << index << "\n";
 
 	vector<string>::const_iterator beginning = expr.begin();
@@ -382,7 +433,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	vector<string> beforeOperator(beginning, end);
 
 	cout << "vector before the " << arthOperator << ": ";
-	for (int i = 0; i < beforeOperator.size(); i++)
+	for (unsigned int i = 0; i < beforeOperator.size(); i++)
 		cout << beforeOperator.at(i) << " ";
 	cout << "\n";
 
@@ -391,20 +442,25 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	vector<string> afterOperator(beginning, end);
 
 	cout << "vector after the " << arthOperator << ": ";
-	for (int i = 0; i < afterOperator.size(); i++)
+	for (unsigned int i = 0; i < afterOperator.size(); i++)
 		cout << afterOperator.at(i) << " ";
 	cout << "\n";
 
 	if (arthOperator == "+")
-		return Database::setunion(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+		return Database::setunion(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
 	else if (arthOperator == "-")
-		return Database::differenceTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+		return Database::differenceTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
 	else if (arthOperator == "*")
+<<<<<<< HEAD
 		return Database::product Table(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+=======
+		return Database::productTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
+>>>>>>> origin/master
 	else if (arthOperator == "JOIN")
-		return Database::naturalJoinTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
-	else
-		cout << "ERROR: Tried parsing expression of unknown type: " << arthOperator << "\n";
+		return Database::naturalJoinTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
+	
+	throw new exception("Invalid call to parseExpression for union/diff/prod/join");
+	return NULL;
 }
 
 /*Table Parser::rename(vector<string> input)
@@ -443,7 +499,7 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	}
 	
 	// this will generate a table (existing one, or combination of two, etc)
-	Table fromTable = interpretAtomicExpression(valuesForAtomicExpression);
+	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
 
 	Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
 	return projectionTable;
@@ -488,7 +544,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	}
 	else if (expr.size() == 1)
 	{ // atomic-expr, just the relation-name
-		return interpretAtomicExpression(expr);
+		return evaluateAtomicExpression(expr);
 	}
 
 	return NULL;
@@ -555,7 +611,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 //
 //	return false;
 //}
-bool Parser::InsertCmd(vector<string> input)
+bool Parser::insertCmd(vector<string> input)
 { // insert into a table from explicit values or one obtained from another table
 
 	string relationName = input.at(2);	// name of Table in the Database
@@ -594,11 +650,15 @@ bool Parser::InsertCmd(vector<string> input)
 	}
 	return false;
 }
-bool Parser::ExitCmd(vector<string> input)
+bool Parser::exitCmd(vector<string> input)
 {
     return false;
 }
+<<<<<<< HEAD
 void Parser::ShowCmd(vector<string> input)
+=======
+bool Parser::showCmd(vector<string> input)
+>>>>>>> origin/master
 {
     
     vector<string> atomicExpression(input.begin()+1, input.end());
@@ -606,7 +666,7 @@ void Parser::ShowCmd(vector<string> input)
     t.printTable();
 
 }
-bool Parser::CreateCmd(vector<string> input)
+bool Parser::createCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
 
@@ -637,7 +697,7 @@ bool Parser::CreateCmd(vector<string> input)
 	return false;
 
 }
-bool Parser::UpdateCmd(vector<string> input)
+bool Parser::updateCmd(vector<string> input)
 {
     string relationName = input.at(1);	// name of Table in the Database
 	Table* t = Database::getTableByReference(relationName);
@@ -682,7 +742,10 @@ bool Parser::isType(string s)
 
 	return (s.compare("VARCHAR") == 0) || (s.compare("INTEGER") == 0);
 }
-
+bool Parser::isLiteral(string s)
+{ // return true if the string is enclose in quotation marks
+	return (s[0] == '\"' && s[s.size()] == '\"');
+}
 int Parser::readInteger(string& word, string input, int inputIndex)
 { // read an integer from input, starting at inputIndex, assign it to word
 	string myWord = "";
@@ -697,7 +760,7 @@ int Parser::readInteger(string& word, string input, int inputIndex)
 	return (myIndex - inputIndex); // return how many characters were read
 }
 
-int Parser::readType(std::string& word, std::string input, int inputIndex)
+int Parser::readType(string& word, string input, int inputIndex)
 { // read a type from input, starting at inputIndex, assign it to word
 	int myIndex = inputIndex;
 	string tempWord = input.substr(inputIndex, 7); // assumes types are VARCHAR or INTEGER, both 7 chars
@@ -708,24 +771,31 @@ int Parser::readType(std::string& word, std::string input, int inputIndex)
 	}
 	return (myIndex - inputIndex); // return how many characters were read
 }
-int Parser::readOp(std::string& word, std::string input, int inputIndex)
-{
-    string myWord = "";
-    int myIndex = inputIndex;
-    char nextOp = input.at(myIndex);
-    while(isOp(nextOp))
+int Parser::readOp(string& word, string input, int inputIndex)
+{ // will read a one or two char operand from input, starting at inputIndex
+	// valid operands are: <,<=,>,>=,<-,==,!=,*
+
+	int myIndex = inputIndex;
+	char c = input.at(myIndex);
+	if (!isOp(c))
+	{
+		throw new exception("Invalid call to readOp");
+	}
+    
+	string myWord = "";
+    while(isOp(c))
     {
-        myWord +=nextOp;
-        nextOp = input.at(++myIndex);
+        myWord += c;
+        c = input.at(++myIndex);
     }
     word = myWord;
     return (myIndex - inputIndex); // return how many characters were read
     
 }
-int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
+int Parser::readLiteral(string& word, string input, unsigned int inputIndex)
 {
     string myWord = "";
-    int myIndex = inputIndex;
+	unsigned int myIndex = inputIndex;
 	if (input.find("\"") == myIndex)
 	{ // if theres an opening quote
 		for (; myIndex < input.size(); myIndex++)
@@ -741,9 +811,9 @@ int Parser::readLiteral(std::string& word, std::string input, int inputIndex)
     word = myWord;
     return (myIndex - inputIndex + 1); // return how many characters were read
 }
-int Parser::readIdentifier(std::string& word, std::string input, int inputIndex)
+int Parser::readIdentifier(string& word, string input, int inputIndex)
 {
-	int myIndex = inputIndex;
+	unsigned int myIndex = inputIndex;
 	string myWord = "";
 	char character = input.at(myIndex);
 
