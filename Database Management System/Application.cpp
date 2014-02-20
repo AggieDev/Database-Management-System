@@ -12,6 +12,10 @@ Application::~Application()
 void Application::launch()
 {
 	//application main code here
+
+
+	cout << "\n\n";
+	system("PAUSE");
 }
 
 void Application::createTable(string tableName, vector<string> columnNames)
