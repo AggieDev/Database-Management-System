@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="Entry.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="Main.cpp" />
