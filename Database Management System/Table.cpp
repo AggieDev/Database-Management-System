@@ -361,7 +361,4 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 }
 
-<<<<<<< HEAD
->>>>>>> b4b4dbdd7794626873d98fc2b57c7569914d5443
-=======
->>>>>>> 8d4dd06e48210d806df5627f6a092aef00129707
+

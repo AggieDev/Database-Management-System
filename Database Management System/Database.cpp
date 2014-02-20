@@ -230,6 +230,80 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 	return *result;
 
 }
+Table Database::select(vector<string> condition, string fromTable)
+{
+	Table* result;
+	Table* selectedTable = NULL;
+	for (unsigned int i = 0; i < _tables.size(); i++)
+	{
+		if (_tables[i].getName() == fromTable)
+			selectedTable = &_tables[i];
+	}
+	if (selectedTable == NULL)
+	{
+		string error = "Error: Table " + fromTable + " does not exist.";
+		throw error;
+	}
+
+
+	unsigned int count = 0;
+	vector<char> colTypes;
+	for (unsigned int i = 0; i < attributes.size(); i++)
+	{
+		for (unsigned int j = 0; j < selectedTable->getColNames().size(); j++)
+		{
+			if (attributes[i] == selectedTable->getColNames()[j])
+			{
+				colTypes.push_back(selectedTable->getColTypes()[j]);
+				count++;
+				break;
+			}
+		}
+	}
+	if (attributes[0] == "*")count++;
+	if (count < attributes.size()) //check if all attributes were found
+	{
+		string error = "Not all attributes were found in table " + selectedTable->getName();
+		throw error;
+	}
+	vector<int> validEntries = selectedTable->findCondition(_where);
+
+
+
+	if (attributes[0] == "*")
+	{
+		result = new Table("Result", selectedTable->getColNames(), selectedTable->getColTypes());
+		for (unsigned int i = 0; i < validEntries.size(); i++)
+		{
+			result->addEntry(selectedTable->getEntries()[validEntries[i]]);
+		}
+	}
+	else
+	{
+		vector<int> columnsToSelect;
+		for (unsigned int i = 0; i < attributes.size(); i++)
+		{
+			for (unsigned int j = 0; j < selectedTable->getColNames().size(); j++)
+			{
+				if (attributes[i] == selectedTable->getColNames()[j])
+					columnsToSelect.push_back(j);
+			}
+		}
+		result = new Table("Result", attributes, colTypes);
+		for (unsigned int i = 0; i < validEntries.size(); i++) 
+		{
+			vector<string> fields;
+			for (unsigned int j = 0; j < columnsToSelect.size(); j++)
+			{
+				fields.push_back(selectedTable->getEntries()[validEntries[i]][columnsToSelect[j]]);
+			}
+			result->addEntry(fields);
+		}
+	}
+
+	return *result;
+
+}
 
 Table Database::Project(vector<string> attributes, string fromTable)
 {
