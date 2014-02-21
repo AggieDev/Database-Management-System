@@ -289,10 +289,9 @@ Table Database::Project(vector<string> attributes, string fromTable)
 
 Table Database::rename_table(Table* fromTable, vector<string> new_attributes)
 {
-	Table* rename_table;
-	rename_table->
-	fromTablerename(new_attributes)
-	return rename_table;
+	Table* rename_table = fromTable;
+	rename_table->rename(new_attributes);
+	return *rename_table;
 }
 
 Table Database::Project(vector<string> attributes, Table* fromTable)
