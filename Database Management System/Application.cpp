@@ -49,7 +49,7 @@ string Application::insertIntoTable(string tableName, Entry& e)
 	//remove comma at end
 	returnString = returnString.substr(0, returnString.size() - 2);
 	returnString += ");";
-	return "";
+	return returnString;
 }
 
 string Application::showTable(string tableName)
@@ -59,17 +59,34 @@ string Application::showTable(string tableName)
 
 string Application::unionTable(string newTableName, string firstTable, string secondTable)
 {
-	return newTableName + " <- " + firstTable + " + " + secondTable;
+	return newTableName + " <- " + firstTable + " + " + secondTable + ";";
 }
 
 string Application::differenceTable(string newTableName, string firstTable, string secondTable)
 {
-	return newTableName + " <- " + firstTable + " - " + secondTable;
+	return newTableName + " <- " + firstTable + " - " + secondTable + ";";
 }
 
 string Application::productTable(string newTableName, string firstTable, string secondTable)
 {
-	return newTableName + " <- " + firstTable + " * " + secondTable;
+	return newTableName + " <- " + firstTable + " * " + secondTable + ";";
+}
+
+string Application::renameTable(string newTableName, string tableName, vector<string> newAttributes)
+{
+	string returnString = newTableName + " <- rename (";
+	for (int i = 0; i < newAttributes.size(); i++)
+		returnString += newAttributes.at(i) + ", ";
+	//remove last comma and space
+	returnString = returnString.substr(0, returnString.size() - 2);
+	returnString += ") " + tableName + ";";
+
+	return returnString;
+}
+
+string Application::writeTable(string tableName)
+{
+	return "WRITE " + tableName + ";";
 }
 
 string Application::updateTable(string tableName, string key, string newVal, int keyCol, int valCol)
@@ -83,16 +100,6 @@ string Application::deleteFromTable(string tableName)
 }
 
 string Application::tableSelect(string tableName)
-{
-	return "";
-}
-
-string Application::renameTable(string tableName)
-{
-	return "";
-}
-
-string Application::writeTable(string tableName)
 {
 	return "";
 }

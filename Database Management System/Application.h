@@ -17,7 +17,7 @@ class Application
 	string updateTable(string, string, string, int, int);
 	string deleteFromTable(string tableName);
 	string tableSelect(string tableName);
-	string renameTable(string tableName);
+	string renameTable(string, string, vector<string>);
 	string writeTable(string tableName);	//does this mean write to file?
 	string tableProjection();
 
