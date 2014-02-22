@@ -43,10 +43,7 @@ public:
 	// MUTATORS
 
 	int hasEntry(Entry e);	//returns index of matched entry, unless it doesn't exist then it returns 0
-
-
 	void addColumn(string colName, char colType); //USE THIS FUNCTION TO ADD MORE COLUMNS
-
 	void addEntry(Entry e);				// insert into
 	void addEntry(vector<string> fields);
 	void setName(string name){ _name = name; }
