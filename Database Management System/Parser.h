@@ -31,7 +31,7 @@ public:
 	Table deletion(std::vector<std::string> input);
     Table projection(std::vector<std::string>input);
     //Table rename(std::vector<std::string>input);
-<<<<<<< HEAD
+
     void ShowCmd(std::vector<std::string>input);
     bool CreateCmd(std::vector<std::string>input);
     bool UpdateCmd(std::vector<std::string>input);
@@ -40,9 +40,7 @@ public:
 	// parse the given input and set the Table t appropriately
 	Table interpretAtomicExpression(std::vector<std::string> input);
 	Table parseExpression(std::vector<std::string>, string);
-=======
-	
->>>>>>> origin/master
+
 
 	// call command function based on user input, return true on success
 	bool insertCmd(std::vector<std::string> inputLine);
@@ -57,7 +55,7 @@ public:
 	Table getTableFromExpression(std::vector<std::string> expr);
 
 	// evaluate the union, difference, product, or natural-join
-	Table parseExpression(std::vector<std::string>, std::string);
+	//Table parseExpression(std::vector<std::string>, std::string);
 	
 	Table evaluateAtomicExpression(std::vector<std::string> input);
 	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);

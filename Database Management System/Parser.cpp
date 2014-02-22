@@ -451,11 +451,12 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	else if (arthOperator == "-")
 		return Database::differenceTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
 	else if (arthOperator == "*")
-<<<<<<< HEAD
-		return Database::product Table(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
-=======
+	{
+
+		return Database::productTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+
 		return Database::productTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
->>>>>>> origin/master
+	}
 	else if (arthOperator == "JOIN")
 		return Database::naturalJoinTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
 	
@@ -654,11 +655,8 @@ bool Parser::exitCmd(vector<string> input)
 {
     return false;
 }
-<<<<<<< HEAD
+
 void Parser::ShowCmd(vector<string> input)
-=======
-bool Parser::showCmd(vector<string> input)
->>>>>>> origin/master
 {
     
     vector<string> atomicExpression(input.begin()+1, input.end());
@@ -666,7 +664,7 @@ bool Parser::showCmd(vector<string> input)
     t.printTable();
 
 }
-bool Parser::createCmd(vector<string> input)
+/*bool Parser::createCmd(vector<string> input)
 {
     string relationName = input.at(2);	// name of Table in the Database
 
@@ -696,7 +694,7 @@ bool Parser::createCmd(vector<string> input)
 	}
 	return false;
 
-}
+}*/
 bool Parser::updateCmd(vector<string> input)
 {
     string relationName = input.at(1);	// name of Table in the Database

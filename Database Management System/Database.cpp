@@ -208,7 +208,7 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 	return *result;
 
 }
-Table Database::select(vector<string> condition, string fromTable)
+/*Table Database::select(vector<string> condition, string fromTable)
 {
 	Table* result;
 	Table* selectedTable = NULL;
@@ -281,7 +281,7 @@ Table Database::select(vector<string> condition, string fromTable)
 
 	return *result;
 
-}
+}*/
 
 Table Database::Project(vector<string> attributes, string fromTable)
 {

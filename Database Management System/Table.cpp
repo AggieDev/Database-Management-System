@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int you_suck;
-};
-=======
-=======
->>>>>>> 8d4dd06e48210d806df5627f6a092aef00129707
+
+
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
