@@ -11,9 +11,9 @@ class Application
 	string createTable(string tableName, vector<string>, vector<char>);
 	string insertIntoTable(string tableName, Entry& e);
 	string showTable(string tableName);	//will change how this works if using GUI
-	string unionTable(string firstTable, string secondTable);
-	string differenceTable(string firstTable, string secondTable);
-	string productTable(string firstTable, string secondTable);
+	string unionTable(string, string, string);
+	string differenceTable(string, string, string);
+	string productTable(string, string, string);
 	string updateTable(string, string, string, int, int);
 	string deleteFromTable(string tableName);
 	string tableSelect(string tableName);
