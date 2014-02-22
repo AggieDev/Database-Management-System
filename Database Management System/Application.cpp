@@ -15,7 +15,7 @@ void Application::launch()
 	//command line application structure:
 	//give user a menu with an option for each of the functions in this class
 	//   then ask user for inputs for each parameter of that function
-	//each of these functions returns a string that the dbms can call as a query
+	//each of these functions in this class returns a string that the dbms can call as a query
 
 
 	cout << "\n\n";
@@ -26,8 +26,7 @@ string Application::createTable(string tableName, vector<string> columnNames, ve
 {
 	//following this: CREATE TABLE points (x INTEGER, y INTEGER, z INTEGER) PRIMARY KEY (x, y, z);
 
-	string returnString;
-	returnString = "CREATE TABLE " + tableName + " (";
+	string returnString = "CREATE TABLE " + tableName + " (";
 	for (int i = 0; i < columnNames.size(); i++)
 		returnString += columnNames.at(i) + " " + types.at(i) + ", ";
 	//remove comma at end
@@ -44,38 +43,37 @@ string Application::createTable(string tableName, vector<string> columnNames, ve
 
 string Application::insertIntoTable(string tableName, Entry& e)
 {
-	 /*Database::getTable(tableName).addEntry(e);
-	 return Database::getTable(tableName);*/
+	string returnString = "INSERT INTO " + tableName + " VALUES FROM (";
+	for (int i = 0; i < e.getFields().size(); i++)
+		returnString += "\"" + e.getFields().at(i) + "\", ";
+	//remove comma at end
+	returnString = returnString.substr(0, returnString.size() - 2);
+	returnString += ");";
 	return "";
 }
 
 string Application::showTable(string tableName)
 {
-	//Database::getTable(tableName).printTable();
-	return "";
+	return "SHOW " + tableName + ";";
 }
 
-string Application::unionTable(string firstTable, string secondTable)
+string Application::unionTable(string newTableName, string firstTable, string secondTable)
 {
-	//return Database::setunion(Database::getTable(firstTable), Database::getTable(secondTable));
-	return "";
+	return newTableName + " <- " + firstTable + " + " + secondTable;
 }
 
-string Application::differenceTable(string firstTable, string secondTable)
+string Application::differenceTable(string newTableName, string firstTable, string secondTable)
 {
-	//return Database::differenceTable(Database::getTable(firstTable), Database::getTable(secondTable));
-	return "";
+	return newTableName + " <- " + firstTable + " - " + secondTable;
 }
 
-string Application::productTable(string firstTable, string secondTable)
+string Application::productTable(string newTableName, string firstTable, string secondTable)
 {
-	//return Database::productTable(Database::getTable(firstTable), Database::getTable(secondTable));
-	return "";
+	return newTableName + " <- " + firstTable + " * " + secondTable;
 }
 
 string Application::updateTable(string tableName, string key, string newVal, int keyCol, int valCol)
 {
-	//Database::getTable(tableName).update(key, newVal, keyCol, valCol);
 	return "";
 }
 
