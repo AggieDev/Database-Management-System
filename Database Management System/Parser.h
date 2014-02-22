@@ -59,7 +59,7 @@ public:
 	
 	Table evaluateAtomicExpression(std::vector<std::string> input);
 	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
-
+	string evaluateAttributeList(vector<string>attributes);
 
 
 
@@ -79,6 +79,9 @@ public:
 	bool isType(std::string s);
 	// word(s) in quotes
 	bool isLiteral(std::string s);
+
+
+
 
 	
 };

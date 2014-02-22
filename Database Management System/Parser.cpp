@@ -322,234 +322,43 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 
 	return Table();
 }
-Table Parser::projection(vector<string> input)
-{ // project from a table according
-	// projection::= project ( attribute-list ) atomic-expr
-    
-	bool selectKeyword = (input.at(0) == "project");
-	if (!selectKeyword)
-	{
-		throw new exception("Invalid projection call");
-		return NULL;
-	}
-	bool properOpenParenthesis = input.at(1) == "(";
-	bool properCloseParenthesis = false;
-    
-    
-	vector<string> attributesList;
-	vector<string> valuesForAtomicExpression;
-	unsigned int i;
-	for (i = 2; i < input.size(); i++)
-	{
-		string temp = input.at(i);
-		if (temp == ")")
-		{ // done adding to attributesList phrase if parenthesis are closed
-			properCloseParenthesis = true;
-		}
-		else if (!properCloseParenthesis)
-		{ // continue appending to attributesList phrase
-			attributesList.push_back(input.at(i));
-		}
-		else
-		{ // add to third part of selection phrase; the atomic-expr
-			valuesForAtomicExpression.push_back(input.at(i));
-		}
-	}
-	
-	// this will generate a table (existing one, or combination of two, etc)
-	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
-    /*------Fix----*/
-	Table projectionTable = Database::Project(fromTable.getColNames(), &fromTable);
-	return projectionTable;
-}
-Table Parser::evaluateAtomicExpression(vector<string> input)
-{ // parse the given input and set the Table t appropriately
-
-	Table newTable = Table();
-	if (input.size() == 1)
-	{ // atomic-expr ::= relation-name
-		string relationName = input.at(0);
-		newTable = Database::getTable(relationName);
-	}
-	else if (input.size() > 1)
-	{ // atomic-expr ::= ( expr )
-		vector<string> inputCopy = input;
-
-		// erase parenthesis if present
-		if (inputCopy.at(0) == "(")
-		{
-			inputCopy.erase(inputCopy.begin());
-		}
-		if (inputCopy.at(inputCopy.size() - 1) == ")")
-		{
-			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
-		}
-		newTable = getTableFromExpression(inputCopy);
-	}
-
-	// the table will be empty if invalid expression was provided
-	return newTable;
-}
-
 /*----------Eli---*/
-/*Table Parser::interpretOperand(vector<string> input)
+/*string Parser::evaluateOperand(vector<string> input)
 { // parse the given input and set the attribute appropriately
-	
+
+	vector<string> identifier;
 	
 	if (input.size() == 1)
 	{ // operand ::= attribute-name
-		string attributeName = input.at(0);
-	
+	string attributeName = input.at(0);
+	identifier = attributeName;
 	}
+
 	else if (input.size() > 1)
 	{ // operand ::= literal "..."
-		vector<string> inputCopy = input;
-        
-		// erase parenthesis if present
-		if (inputCopy.at(0) == '\"')
-		{
-			inputCopy.erase(inputCopy.begin());
-		}
-		if (inputCopy.at(inputCopy.size() - 1) == '\"')
-		{
-			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
-		}
-		newTable = getTableFromExpression(inputCopy);
+	vector<string> inputCopy = input;
+
+	// erase parenthesis if present
+	if (inputCopy.at(0) == '\"')
+	{
+	inputCopy.erase(inputCopy.begin());
 	}
-    
-	// the table will be empty if invalid expression was provided
-	return newTable;
+	if (inputCopy.at(inputCopy.size() - 1) == '\"')
+	{
+	inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+	}
+
+	identifier = inputCopy;
+	}
+
+	return identifier;
 }*/
 
-//returns the union, difference, etc. table based on arthOperator
-Table Parser::parseExpression(vector <string> expr, string arthOperator)
+/*string Parser::evaluateAttributeList(vector<string>attributes)
 {
-	//gets index of set manipulation operator: +,-,*, or JOIN
-	int index = distance(expr.begin(), find(expr.begin(), expr.end(), arthOperator));
-	cout << "Index that " << arthOperator << " is at in expression: " << index << "\n";
 
-	vector<string>::const_iterator beginning = expr.begin();
-	vector<string>::const_iterator end = expr.begin() + index;
-	vector<string> beforeOperator(beginning, end);
-
-	cout << "vector before the " << arthOperator << ": ";
-	for (unsigned int i = 0; i < beforeOperator.size(); i++)
-		cout << beforeOperator.at(i) << " ";
-	cout << "\n";
-
-	beginning = expr.begin() + index + 1;
-	end = expr.end();
-	vector<string> afterOperator(beginning, end);
-
-	cout << "vector after the " << arthOperator << ": ";
-	for (unsigned int i = 0; i < afterOperator.size(); i++)
-		cout << afterOperator.at(i) << " ";
-	cout << "\n";
-
-	if (arthOperator == "+")
-		return Database::setunion(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
-	else if (arthOperator == "-")
-		return Database::differenceTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
-	else if (arthOperator == "*")
-	{
-
-		return Database::productTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
-
-		return Database::productTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
-	}
-	else if (arthOperator == "JOIN")
-		return Database::naturalJoinTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
-	
-	throw new exception("Invalid call to parseExpression for union/diff/prod/join");
-	return NULL;
-}
-
-/*Table Parser::rename(vector<string> input)
-{
-    // rename a table according
-	// renaming::= rename ( attribute-list ) atomic-expr
-    
-	bool selectKeyword = (input.at(0) == "rename");
-	if (!selectKeyword)
-	{
-		throw new exception("Invalid renaming call");
-		return NULL;
-	}
-	bool properOpenParenthesis = input.at(1) == "(";
-	bool properCloseParenthesis = false;
-    
-    
-	vector<string> attributesList;
-	vector<string> valuesForAtomicExpression;
-	unsigned int i;
-	for (i = 2; i < input.size(); i++)
-	{
-		string temp = input.at(i);
-		if (temp == ")")
-		{ // done adding to attributesList phrase if parenthesis are closed
-			properCloseParenthesis = true;
-		}
-		else if (!properCloseParenthesis)
-		{ // continue appending to attributesList phrase
-			attributesList.push_back(input.at(i));
-		}
-		else
-		{ // add to third part of selection phrase; the atomic-expr
-			valuesForAtomicExpression.push_back(input.at(i));
-		}
-	}
-	
-	// this will generate a table (existing one, or combination of two, etc)
-	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
-
-	Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
-	return projectionTable;
-	return newTable;
 }*/
 
-Table Parser::getTableFromExpression(vector<string> expr)
-{ // evaluate an expression and return a pointer to a table
-	// expr ::= atomic-expr | selection | projection | renaming 
-	//						| union | difference | product | natural-join
-
-	string first = expr.at(0);
-	
-	if (first == "select")
-	{ // selection
-		return selection(expr); // selection returns an appropriate table
-	}
-	else if (first == "project")
-	{ // projection
-        return projection(expr);// Elliut
-	}
-
-	else if (first == "rename")
-	{ // renaming
-        //return rename(expr);// Elliut
-	}
-	else if (find(expr.begin(), expr.end(), "+") != expr.end())
-	{ // union ::= atomic-expr + atomic-expr
-		return parseExpression(expr, "+");
-	}
-	else if (find(expr.begin(), expr.end(), "-") != expr.end())
-	{ // difference ::= atomic-expr - atomic-expr
-		return parseExpression(expr, "-");
-	}
-	else if (find(expr.begin(), expr.end(), "*") != expr.end())
-	{ // product ::= atomic-expr * atomic-expr
-		return parseExpression(expr, "*");
-	}
-	else if (find(expr.begin(), expr.end(), "JOIN") != expr.end())
-	{ // natural-join ::= atomic-expr JOIN atomic-expr
-		return parseExpression(expr, "JOIN");
-	}
-	else if (expr.size() == 1)
-	{ // atomic-expr, just the relation-name
-		return evaluateAtomicExpression(expr);
-	}
-
-	return NULL;
-}
 //Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
 //{ // parse the given conditions and modify the Table t appropriately
 //
@@ -612,6 +421,204 @@ Table Parser::getTableFromExpression(vector<string> expr)
 //
 //	return false;
 //}
+Table Parser::projection(vector<string> input)
+{ // project from a table according
+	// projection::= project ( attribute-list ) atomic-expr
+    
+	bool selectKeyword = (input.at(0) == "project");
+	if (!selectKeyword)
+	{
+		throw new exception("Invalid projection call");
+		return NULL;
+	}
+	bool properOpenParenthesis = input.at(1) == "(";
+	bool properCloseParenthesis = false;
+    
+    
+	vector<string> attributesList;
+	vector<string> valuesForAtomicExpression;
+	unsigned int i;
+	for (i = 2; i < input.size(); i++)
+	{
+		string temp = input.at(i);
+		if (temp == ")")
+		{ // done adding to attributesList phrase if parenthesis are closed
+			properCloseParenthesis = true;
+		}
+		else if (!properCloseParenthesis)
+		{ // continue appending to attributesList phrase
+			attributesList.push_back(input.at(i));
+		}
+		else
+		{ // add to third part of selection phrase; the atomic-expr
+			valuesForAtomicExpression.push_back(input.at(i));
+		}
+	}
+	
+	// this will generate a table (existing one, or combination of two, etc)
+	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
+    /*------Fix----*/
+	Table projectionTable = Database::Project(fromTable.getColNames(), &fromTable);
+	return projectionTable;
+}
+/*Table Parser::rename(vector<string> input)
+{
+// rename a table according
+// renaming::= rename ( attribute-list ) atomic-expr
+
+bool selectKeyword = (input.at(0) == "rename");
+if (!selectKeyword)
+{
+throw new exception("Invalid renaming call");
+return NULL;
+}
+bool properOpenParenthesis = input.at(1) == "(";
+bool properCloseParenthesis = false;
+
+
+vector<string> attributesList;
+vector<string> valuesForAtomicExpression;
+unsigned int i;
+for (i = 2; i < input.size(); i++)
+{
+string temp = input.at(i);
+if (temp == ")")
+{ // done adding to attributesList phrase if parenthesis are closed
+properCloseParenthesis = true;
+}
+else if (!properCloseParenthesis)
+{ // continue appending to attributesList phrase
+attributesList.push_back(input.at(i));
+}
+else
+{ // add to third part of selection phrase; the atomic-expr
+valuesForAtomicExpression.push_back(input.at(i));
+}
+}
+
+// this will generate a table (existing one, or combination of two, etc)
+Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
+
+Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
+return projectionTable;
+return newTable;
+}*/
+
+Table Parser::evaluateAtomicExpression(vector<string> input)
+{ // parse the given input and set the Table t appropriately
+
+	Table newTable = Table();
+	if (input.size() == 1)
+	{ // atomic-expr ::= relation-name
+		string relationName = input.at(0);
+		newTable = Database::getTable(relationName);
+	}
+	else if (input.size() > 1)
+	{ // atomic-expr ::= ( expr )
+		vector<string> inputCopy = input;
+
+		// erase parenthesis if present
+		if (inputCopy.at(0) == "(")
+		{
+			inputCopy.erase(inputCopy.begin());
+		}
+		if (inputCopy.at(inputCopy.size() - 1) == ")")
+		{
+			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+		}
+		newTable = getTableFromExpression(inputCopy);
+	}
+
+	// the table will be empty if invalid expression was provided
+	return newTable;
+}
+
+
+//returns the union, difference, etc. table based on arthOperator
+Table Parser::parseExpression(vector <string> expr, string arthOperator)
+{
+	//gets index of set manipulation operator: +,-,*, or JOIN
+	int index = distance(expr.begin(), find(expr.begin(), expr.end(), arthOperator));
+	cout << "Index that " << arthOperator << " is at in expression: " << index << "\n";
+
+	vector<string>::const_iterator beginning = expr.begin();
+	vector<string>::const_iterator end = expr.begin() + index;
+	vector<string> beforeOperator(beginning, end);
+
+	cout << "vector before the " << arthOperator << ": ";
+	for (unsigned int i = 0; i < beforeOperator.size(); i++)
+		cout << beforeOperator.at(i) << " ";
+	cout << "\n";
+
+	beginning = expr.begin() + index + 1;
+	end = expr.end();
+	vector<string> afterOperator(beginning, end);
+
+	cout << "vector after the " << arthOperator << ": ";
+	for (unsigned int i = 0; i < afterOperator.size(); i++)
+		cout << afterOperator.at(i) << " ";
+	cout << "\n";
+
+	if (arthOperator == "+")
+		return Database::setunion(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
+	else if (arthOperator == "-")
+		return Database::differenceTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
+	else if (arthOperator == "*")
+		//return Database::productTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+		return Database::productTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
+	
+	else if (arthOperator == "JOIN")
+		return Database::naturalJoinTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
+	
+	throw new exception("Invalid call to parseExpression for union/diff/prod/join");
+	return NULL;
+}
+
+
+Table Parser::getTableFromExpression(vector<string> expr)
+{ // evaluate an expression and return a pointer to a table
+	// expr ::= atomic-expr | selection | projection | renaming 
+	//						| union | difference | product | natural-join
+
+	string first = expr.at(0);
+	
+	if (first == "select")
+	{ // selection
+		return selection(expr); // selection returns an appropriate table
+	}
+	else if (first == "project")
+	{ // projection
+        return projection(expr);// Elliut
+	}
+
+	else if (first == "rename")
+	{ // renaming
+        //return rename(expr);// Elliut
+	}
+	else if (find(expr.begin(), expr.end(), "+") != expr.end())
+	{ // union ::= atomic-expr + atomic-expr
+		return parseExpression(expr, "+");
+	}
+	else if (find(expr.begin(), expr.end(), "-") != expr.end())
+	{ // difference ::= atomic-expr - atomic-expr
+		return parseExpression(expr, "-");
+	}
+	else if (find(expr.begin(), expr.end(), "*") != expr.end())
+	{ // product ::= atomic-expr * atomic-expr
+		return parseExpression(expr, "*");
+	}
+	else if (find(expr.begin(), expr.end(), "JOIN") != expr.end())
+	{ // natural-join ::= atomic-expr JOIN atomic-expr
+		return parseExpression(expr, "JOIN");
+	}
+	else if (expr.size() == 1)
+	{ // atomic-expr, just the relation-name
+		return evaluateAtomicExpression(expr);
+	}
+
+	return NULL;
+}
+
 bool Parser::insertCmd(vector<string> input)
 { // insert into a table from explicit values or one obtained from another table
 
@@ -660,7 +667,7 @@ void Parser::ShowCmd(vector<string> input)
 {
     
     vector<string> atomicExpression(input.begin()+1, input.end());
-    Table t(interpretAtomicExpression(atomicExpression));
+	Table t(evaluateAtomicExpression(atomicExpression));
     t.printTable();
 
 }
@@ -670,6 +677,13 @@ void Parser::ShowCmd(vector<string> input)
 
 	Table* t = Database::getTableByReference(relationName);
     
+
+
+
+
+
+
+
     bool properOpenParenthesis = input.at(3) == "(";
  //   bool properCloseParenthesis = input.at(input.size() - 1) == ")";
 	
@@ -695,7 +709,7 @@ void Parser::ShowCmd(vector<string> input)
 	return false;
 
 }*/
-bool Parser::updateCmd(vector<string> input)
+/*bool Parser::updateCmd(vector<string> input)
 {
     string relationName = input.at(1);	// name of Table in the Database
 	Table* t = Database::getTableByReference(relationName);
@@ -733,7 +747,7 @@ bool Parser::updateCmd(vector<string> input)
 	}
 	return false;
 
-}
+}*/
 bool Parser::isType(string s)
 { // return true if the given string is a type, defined as:
 	// type ::= VARCHAR ( integer ) | INTEGER

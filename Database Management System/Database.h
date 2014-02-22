@@ -17,7 +17,7 @@ public:
 	static Table differenceTable(Table t1, Table t2);
 	static Table setunion(Table t1, Table t2);
 	//relational functions
-	static Table select(vector<string> attributes, string fromTable, vector<string> _where);
+	static Table selectEliutt(vector<string> attributes, Table fromTable, vector<string> _where);
 	//atributes = {"id","name","age"} or {"*"}
 	//_where = {"age","<","10"} parse the where operations
 
