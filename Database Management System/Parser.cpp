@@ -323,41 +323,60 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 	return Table();
 }
 /*----------Eli---*/
-/*string Parser::evaluateOperand(vector<string> input)
+/*vector <string> Parser::Operand(vector<string> input)
 { // parse the given input and set the attribute appropriately
 
 	vector<string> identifier;
 	
-	if (input.size() == 1)
+		if (isLiteral(input.size()))
+		{ // operand ::= literal "..."
+
+			// erase parenthesis if present
+			vector<string> inputCopy = input;
+			if (inputCopy.at(0) == '\"')
+			{
+				inputCopy.erase(inputCopy.begin());
+			}
+			if (inputCopy.at(inputCopy.size() - 1) == '\"')
+			{
+				inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+			}
+
+			identifier = inputCopy;
+	}
+
+	else
 	{ // operand ::= attribute-name
-	string attributeName = input.at(0);
-	identifier = attributeName;
-	}
 
-	else if (input.size() > 1)
-	{ // operand ::= literal "..."
-	vector<string> inputCopy = input;
-
-	// erase parenthesis if present
-	if (inputCopy.at(0) == '\"')
-	{
-	inputCopy.erase(inputCopy.begin());
-	}
-	if (inputCopy.at(inputCopy.size() - 1) == '\"')
-	{
-	inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
-	}
-
-	identifier = inputCopy;
+		string attributeName = input.at(0);
+		identifier = attributeName;
 	}
 
 	return identifier;
 }*/
 
-/*string Parser::evaluateAttributeList(vector<string>attributes)
+vector<string> Parser::evaluateAttributeList(vector<string>attributes)
 {
+	vector<string> input = attributes;
+	vector<string> result;
+	
+	result.push_back(input.at(0));
 
-}*/
+	for (int i = 1; i < input.size(); i++)
+	{
+		if(isDelimiter(input.at(i)))
+		{
+			i++;
+		}
+
+		else
+		{
+			result.push_back(input.at(i)); 
+		}
+	}
+
+	return result;
+}
 
 //Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
 //{ // parse the given conditions and modify the Table t appropriately
@@ -421,6 +440,34 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 //
 //	return false;
 //}
+Table Parser::evaluateAtomicExpression(vector<string> input)
+{ // parse the given input and set the Table t appropriately
+
+	Table newTable = Table();
+	if (input.size() == 1)
+	{ // atomic-expr ::= relation-name
+		string relationName = input.at(0);
+		newTable = Database::getTable(relationName);
+	}
+	else if (input.size() > 1)
+	{ // atomic-expr ::= ( expr )
+		vector<string> inputCopy = input;
+
+		// erase parenthesis if present
+		if (inputCopy.at(0) == "(")
+		{
+			inputCopy.erase(inputCopy.begin());
+		}
+		if (inputCopy.at(inputCopy.size() - 1) == ")")
+		{
+			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+		}
+		newTable = getTableFromExpression(inputCopy);
+	}
+
+	// the table will be empty if invalid expression was provided
+	return newTable;
+}
 Table Parser::projection(vector<string> input)
 { // project from a table according
 	// projection::= project ( attribute-list ) atomic-expr
@@ -458,80 +505,53 @@ Table Parser::projection(vector<string> input)
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
     /*------Fix----*/
-	Table projectionTable = Database::Project(fromTable.getColNames(), &fromTable);
+	Table projectionTable = Database::Project(evaluateAttributeList(attributesList), &fromTable);
 	return projectionTable;
 }
-/*Table Parser::rename(vector<string> input)
+Table Parser::rename(vector<string> input)
 {
-// rename a table according
-// renaming::= rename ( attribute-list ) atomic-expr
+	// rename a table according
+	// renaming::= rename ( attribute-list ) atomic-expr
 
-bool selectKeyword = (input.at(0) == "rename");
-if (!selectKeyword)
-{
-throw new exception("Invalid renaming call");
-return NULL;
-}
-bool properOpenParenthesis = input.at(1) == "(";
-bool properCloseParenthesis = false;
-
-
-vector<string> attributesList;
-vector<string> valuesForAtomicExpression;
-unsigned int i;
-for (i = 2; i < input.size(); i++)
-{
-string temp = input.at(i);
-if (temp == ")")
-{ // done adding to attributesList phrase if parenthesis are closed
-properCloseParenthesis = true;
-}
-else if (!properCloseParenthesis)
-{ // continue appending to attributesList phrase
-attributesList.push_back(input.at(i));
-}
-else
-{ // add to third part of selection phrase; the atomic-expr
-valuesForAtomicExpression.push_back(input.at(i));
-}
-}
-
-// this will generate a table (existing one, or combination of two, etc)
-Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
-
-Table renameTable = Database::getTable(input)->rename(attributesList.getColNames(), &fromTable);
-return projectionTable;
-return newTable;
-}*/
-
-Table Parser::evaluateAtomicExpression(vector<string> input)
-{ // parse the given input and set the Table t appropriately
-
-	Table newTable = Table();
-	if (input.size() == 1)
-	{ // atomic-expr ::= relation-name
-		string relationName = input.at(0);
-		newTable = Database::getTable(relationName);
+	bool selectKeyword = (input.at(0) == "rename");
+	if (!selectKeyword)
+	{
+	throw new exception("Invalid renaming call");
+	return NULL;
 	}
-	else if (input.size() > 1)
-	{ // atomic-expr ::= ( expr )
-		vector<string> inputCopy = input;
+	bool properOpenParenthesis = input.at(1) == "(";
+	bool properCloseParenthesis = false;
 
-		// erase parenthesis if present
-		if (inputCopy.at(0) == "(")
-		{
-			inputCopy.erase(inputCopy.begin());
+
+	vector<string> attributesList;
+	vector<string> valuesForAtomicExpression;
+	unsigned int i;
+	for (i = 2; i < input.size(); i++)
+	{
+		string temp = input.at(i);
+		if (temp == ")")
+		{ // done adding to attributesList phrase if parenthesis are closed
+		properCloseParenthesis = true;
 		}
-		if (inputCopy.at(inputCopy.size() - 1) == ")")
-		{
-			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
+		else if (!properCloseParenthesis)
+		{ // continue appending to attributesList phrase
+		attributesList.push_back(input.at(i));
 		}
-		newTable = getTableFromExpression(inputCopy);
+		else
+		{ // add to third part of selection phrase; the atomic-expr
+		valuesForAtomicExpression.push_back(input.at(i));
+		}
 	}
 
-	// the table will be empty if invalid expression was provided
+	// this will generate a table (existing one, or combination of two, etc)
+	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
+
+	Table renameTable = Database::getTable(input)->rename(attributesList, &fromTable);
+
 	return newTable;
 }
+
+
 
 
 //returns the union, difference, etc. table based on arthOperator
@@ -593,7 +613,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 
 	else if (first == "rename")
 	{ // renaming
-        //return rename(expr);// Elliut
+        return rename(expr);// Elliut
 	}
 	else if (find(expr.begin(), expr.end(), "+") != expr.end())
 	{ // union ::= atomic-expr + atomic-expr
