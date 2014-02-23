@@ -258,7 +258,7 @@ void Table::write_to_file(string relationName)
 }
 
 vector<int> Table::findCondition(vector<string> whereOps)
-{
+{ // assumes condition with three values; operand1 op operand2
 	vector<int> results;
 	string left = whereOps[0];
 	string center = whereOps[1];
