@@ -86,8 +86,8 @@ Table Database::setunion(Table t1, Table t2)
 	vector<string> columnNames;
 	columnNames.push_back("Names");
 	columnNames.push_back("Ages");
-	Table union_table = Table(t1.getName() + " difference " + t2.getName(), columnNames, 2);													//copy first table
-	union_table.setName(t1.getName() + " difference " + t2.getName());	//set name back 
+	Table union_table = Table(t1.getName() + " Union " + t2.getName(), columnNames, 2);													//copy first table
+	union_table.setName(t1.getName() + " Union " + t2.getName());	//set name back 
 
 	for (unsigned int i = 0; i < t1.getEntries().size(); i++)
 	{
