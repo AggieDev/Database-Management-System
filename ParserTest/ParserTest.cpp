@@ -473,5 +473,74 @@ namespace ParserTest
 			Assert::AreEqual('i', colTypes.at(2));
 			
 		}
+		TEST_METHOD(TestFindCondition)
+		{	// check Table::findCondition(vector<string> whereOps)
+			// whereOps.size() == 3 and of form operand1 op operand2
+			
+			Parser p = Parser();
+
+			// create a table
+			vector<string> columns;
+			columns.push_back("index");
+			columns.push_back("team");
+			columns.push_back("name");
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t = Table("baseball_players", columns, colTypes);
+
+			vector<string> entryFields1;
+			entryFields1.push_back("1");
+			entryFields1.push_back("Elephants");
+			entryFields1.push_back("\"jose\"");
+			t.addEntry(entryFields1);
+
+			vector<string> entryFields2;
+			entryFields2.push_back("2");
+			entryFields2.push_back("Dinosaurs");
+			entryFields2.push_back("\"hernandez\"");
+			t.addEntry(entryFields2); 
+			
+			vector<string> entryFields3;
+			entryFields3.push_back("3");
+			entryFields3.push_back("Dinosaurs");
+			entryFields3.push_back("\"palermo\"");
+			t.addEntry(entryFields3);
+
+			// build condition strings
+			string condString1 = "team == Dinosaurs";
+			string condString2 = "index < 3";
+			string condString3 = "name == \"palermo\"";
+
+			// parse them into condition vectors
+			vector<string> condVec1 = p.readInputLine(condString1);
+			vector<string> condVec2 = p.readInputLine(condString2);
+			vector<string> condVec3 = p.readInputLine(condString3);
+
+			// pass them to Table::findCondition()
+			// this function returns vector<int> => indices of the valid entries
+			vector<int> validEntries1 = t.findCondition(condVec1);
+			vector<int> validEntries2 = t.findCondition(condVec2);
+			vector<int> validEntries3 = t.findCondition(condVec3);
+
+			// ensure the correct number of entries were retrieved
+			Assert::AreEqual(2, (int)validEntries1.size());
+			Assert::AreEqual(2, (int)validEntries2.size());
+			Assert::AreEqual(1, (int)validEntries3.size());
+
+			// ensure the correct indices (from original) were collected
+			Assert::AreEqual(1, validEntries1.at(0)); // "team == Dinosaurs"
+			Assert::AreEqual(2, validEntries1.at(1));
+
+			Assert::AreEqual(1, validEntries2.at(0)); // "index < 3"
+			Assert::AreEqual(2, validEntries2.at(1));
+
+			Assert::AreEqual(2, validEntries1.at(0)); // "name == \"palermo\""
+
+
+
+		}
 	};
 }
