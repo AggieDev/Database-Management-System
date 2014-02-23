@@ -66,7 +66,7 @@ public:
 	// read from input, starting at inputIndex, assign it to word,
 	// and return the number of characters read
 	int readType(std::string& word, std::string input, int inputIndex);
-	int readOp(std::string& word, std::string input, int inputIndex);
+	int readOp(std::string& op, std::string input, int inputIndex);
 	int readLiteral(std::string& word, std::string input, unsigned int inputIndex);
 	int readIdentifier(std::string& word, std::string, int inputIndex);
 	int readInteger(std::string& word, std::string input, int inputIndex);

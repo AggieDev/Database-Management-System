@@ -137,90 +137,57 @@ void Database::printTables()
 		_tables.at(i).printTable();
 }
 
-Table Database::selectEliutt(vector<string> attributes, Table fromTable, vector<string> _where)
+Table Database::select(vector<string> condition, Table fromTable)
 {
 	Table* result;
-	Table* selectedTable = NULL;
+	Table* selectedTable = &fromTable;
+	
+	// eliminate parenthesis if present
+	if (condition.at(0) == "(")
+	{
+		condition.erase(condition.begin());
+	}
+	if (condition.at(condition.size() - 1) == ")")
+	{
+		condition.erase(condition.begin() + condition.size() - 1);
+	}
 
-	selectedTable = &fromTable;
-	/*for (unsigned int i = 0; i < _tables.size(); i++)
-	{
-		if (_tables[i].getName() == fromTable)
-			selectedTable = &_tables[i];
+	if (condition.size() != 3)
+	{	// check that condition vector is correct size
+		throw new exception("Invalid condition vector in Database::select");
 	}
-	if(selectedTable == NULL)
+
+	vector<int> validEntries = selectedTable->findCondition(condition);
+
+	result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
+	for(unsigned int i = 0; i < validEntries.size(); i++)
 	{
-		string error = "Error: Table " + fromTable + " does not exist.";
-		throw error;
-	}*/
-	unsigned int count = 0;
-	vector<char> colTypes;
-	for (unsigned int i = 0; i < attributes.size(); i++)
-	{
-		for (unsigned int j = 0; j < selectedTable->getColNames().size(); j++)
-		{
-			if(attributes[i] == selectedTable->getColNames()[j])
-			{
-				colTypes.push_back(selectedTable->getColTypes()[j]);
-				count++;
-				break;
-			}
-		}
+		result->addEntry(selectedTable->getEntries()[validEntries[i]]);
 	}
-    if(attributes[0]=="*")count++;
-	if(count < attributes.size()) //check if all attributes were found
-	{
-		string error = "Not all attributes were found in table " + selectedTable->getName();
-		throw error;
-	}
-	vector<int> validEntries = selectedTable->findCondition(_where);
-    
-    
-    
-	if(attributes[0] == "*")
-	{
-		result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
-		for(unsigned int i = 0; i < validEntries.size(); i++)
-		{
-			result->addEntry(selectedTable->getEntries()[validEntries[i]]);
-		}
-	}
-	
-	
-	
-	
-	else
-	{
-		vector<int> columnsToSelect;
-		for (unsigned int i = 0; i < attributes.size(); i++)
-		{
-			for (unsigned int j = 0; j < selectedTable->getColNames().size(); j++)
-			{
-				if(attributes[i] == selectedTable->getColNames()[j])
-					columnsToSelect.push_back(j);
-			}
-		}
-		result = new Table("Result",attributes,colTypes);
-		for (unsigned int i = 0; i < validEntries.size(); i++) //error here
-		{
-			vector<string> fields;
-			for (unsigned int j = 0; j < columnsToSelect.size(); j++)
-			{
-				fields.push_back(selectedTable->getEntries()[validEntries[i]][columnsToSelect[j]]);
-			}
-			result->addEntry(fields);
-		}
-	}
-    
+	//else
+	//{
+	//	vector<int> columnsToSelect;
+	//	for (unsigned int i = 0; i < attributes.size(); i++)
+	//	{
+	//		for (unsigned int j = 0; j < selectedTable->getColNames().size(); j++)
+	//		{
+	//			if(attributes[i] == selectedTable->getColNames()[j])
+	//				columnsToSelect.push_back(j);
+	//		}
+	//	}
+	//	result = new Table("Result",attributes,colTypes);
+	//	for (unsigned int i = 0; i < validEntries.size(); i++) //error here
+	//	{
+	//		vector<string> fields;
+	//		for (unsigned int j = 0; j < columnsToSelect.size(); j++)
+	//		{
+	//			fields.push_back(selectedTable->getEntries()[validEntries[i]][columnsToSelect[j]]);
+	//		}
+	//		result->addEntry(fields);
+	//	}
+	//}
+ //   
 	return *result;
-
-}
-
-Table Database::select(vector<string> condition, Table table)
-{
-	vector<string> attributes;
-	attributes.push_back("*");
-	return Database::selectEliutt(attributes, table, condition);
 
 }
 

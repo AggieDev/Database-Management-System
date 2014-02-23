@@ -110,7 +110,11 @@ namespace ParserTest
 			vector<string> columns;
 			columns.push_back("index");
 			columns.push_back("team");
-			Table t = Table("baseball_players", columns, 2);
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t = Table("baseball_players", columns, colTypes);
 
 			vector<string> entryFields1;
 			entryFields1.push_back("1");
@@ -152,15 +156,19 @@ namespace ParserTest
 		TEST_METHOD(TestReadOp)
 		{
 			Parser p = Parser();
-			string s = "012345 <= 98765";
-
-			string op;
+			string oneCharOp = "012345>";
+			string twoCharOp = "012345 <= 98765";
+			string op1, op2;
 
 			// readOp should set op's value to the string "<=", and count 2 characters
-			int charsRead = p.readOp(op, s, 7);
+			int oneCharRead = p.readOp(op1, oneCharOp, 6);
+			int twoCharsRead = p.readOp(op2, twoCharOp, 7);
+			
 
-			Assert::AreEqual(2, charsRead);
-			Assert::AreEqual(string("<="), op);
+			Assert::AreEqual(1, oneCharRead);
+			Assert::AreEqual(string(">"), op1);
+			Assert::AreEqual(2, twoCharsRead);
+			Assert::AreEqual(string("<="), op2);
 		}
 		TEST_METHOD(TestDatabaseSelect)
 		{
