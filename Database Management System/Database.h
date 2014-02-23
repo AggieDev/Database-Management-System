@@ -38,9 +38,9 @@ public:
 
 
 
-	static Table Project(vector<string> attributes, string fromTable);
+	//static Table ProjectOld(vector<string> attributes, Table fromTable);
     //atributes = {"id","name","age"} or {"*"}
-	static Table Project(vector<string> attributes, Table* fromTable);
+	static Table Project(vector<string> attributes, Table fromTable);
     
     
 	static Table productTable(Table t1, Table t2);

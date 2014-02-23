@@ -207,19 +207,63 @@ namespace ParserTest
 			selectWhere.push_back("20.5"); //right
 			Database::addTable(table);
 
-			table.printTable();
+		
 
 			Table results = Database::select(selectWhere,table);
 
 			Table tabletest("Testing", attributes, attTypes);
 			tabletest.addEntry(entry2);
-
-
 			
 			Assert::AreEqual(results.hasEntry(entry2),0);
 			Assert::AreEqual((int)results.getEntries().size(), 1);
 		}
+		TEST_METHOD(TestDatabaseProject)
+		{
+			// Trying to test the database project function
+			Parser p = Parser();
+			vector<string> attributes;
+			vector<char> attTypes;
+			attributes.push_back("FirstName");
+			attTypes.push_back('s');
+			attributes.push_back("LastName");
+			attTypes.push_back('s');
+			attributes.push_back("Age");
+			attTypes.push_back('i');
+			attributes.push_back("Price");
+			attTypes.push_back('f');
+			Table table("Test", attributes, attTypes);
 
+			vector<string> entry1;
+			entry1.push_back("Eli");
+			entry1.push_back("Riv");
+			entry1.push_back("1");
+			entry1.push_back("45");
+
+			vector<string> entry2;
+			entry2.push_back("pat");
+			entry2.push_back("green");
+			entry2.push_back("32");
+			entry2.push_back("50.25");
+
+			table.addEntry(entry1);
+			table.addEntry(entry2);
+			Database::addTable(table);
+			
+			
+			vector<string> projectAttr;
+			//projectAttr.push_back("*");
+			projectAttr.push_back("FirstName");
+			projectAttr.push_back("LastName");
+			projectAttr.push_back("Price");
+
+			Table results = Database::Project(projectAttr, table);
+
+			Table tabletest("Testing", attributes, attTypes);
+			tabletest.addEntry(entry2);
+
+			Assert::AreEqual(results.hasEntry(entry2), 0);
+			Assert::AreEqual((int)results.getEntries().size(), 1);
+		}
 	
 
 	};
