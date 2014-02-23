@@ -52,8 +52,6 @@ public:
 	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
 
 
-
-
 	// read from input, starting at inputIndex, assign it to word,
 	// and return the number of characters read
 	int readType(std::string& word, std::string input, int inputIndex);

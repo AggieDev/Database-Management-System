@@ -145,31 +145,26 @@ vector<string> Parser::readInputLine(string inputLine)
 			i++;
 		}
 		
-		else // if alpha, digit, quotation, operator, or attribute
-		{ // determine what the following token is going to be
-			bool isInteger = isdigit(c) != 0;
-			bool isLiteral = (c == '\"');
-			bool isIdentifier = isalpha(c) || (c == '_');
-			bool isOperator = isOp(c);
-		
-				// the appropriate function reads a certain number of characters
+		else // if alpha, digit, quotation, operator, or attribute;
+		{	 // determine what the following token is going to be.
+			 // the appropriate function returns the number of characters read
 			int charactersRead = 0;
-			if (isInteger) // Patrick
+			if (isdigit(c) != 0) // Patrick
 			{ 
 				charactersRead = readInteger(word, inputLine, i);
 				inputVector.push_back(word);
 			}
-			else if (isLiteral)			// Elliut
+			else if (c == '\"')			// Elliut
 			{
                 charactersRead = readLiteral(word, inputLine, i);
                 inputVector.push_back(word);
 			}
-			else if (isIdentifier)		// Garrett
+			else if (isalpha(c) || (c == '_'))		// Garrett
 			{
 				charactersRead = readIdentifier(word, inputLine, i);
 				inputVector.push_back(word);
 			}
-			else if (isOperator)		// Elliut
+			else if (isOp(c))		// Elliut
 			{ // this will also include the '<-' needed for a query, and +,-,* for set manipulation
                 charactersRead = readOp(word,inputLine, i);
                 inputVector.push_back(word);
@@ -303,7 +298,7 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 	{ // otherwise, both operands should be of the simple form:
 		// operand ::= literal | attribute-name
 		if (operand1Vec.size() == 1 && operand2Vec.size() == 1)
-		{ // simple case where operandVec is single operand
+		{	// simple case where operandVec is single operand
 			//NOTE: Database::select() does not work yet
 			// the following line will depend on this Database function working:
 			//			Table Database::select(vector<string> condition, Table t)
@@ -517,7 +512,6 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	{ // projection
         return projection(expr);// Elliut
 	}
-
 	else if (first == "rename")
 	{ // renaming
         //return rename(expr);// Elliut
@@ -543,7 +537,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 		return evaluateAtomicExpression(expr);
 	}
 
-	return NULL;
+	return Table();
 }
 //Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
 //{ // parse the given conditions and modify the Table t appropriately
