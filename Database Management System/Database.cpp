@@ -193,19 +193,8 @@ Table Database::select(vector<string> condition, Table fromTable)
 
 }
 
-<<<<<<< HEAD
-Table Database::select(vector<string> condition, Table table)
-{
-	vector<string> attributes;
-	attributes.push_back("*");
-	return Database::selectEliutt(attributes, table, condition);
-
-}
 
 Table Database::Project(vector<string> attributes, Table fromTable)
-=======
-Table Database::Project(vector<string> attributes, string fromTable)
->>>>>>> origin/master
 {
 	Table* result;
 	Table* selectedTable = NULL;

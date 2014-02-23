@@ -31,7 +31,7 @@ public:
 	Table deletion(std::vector<std::string> input);
 
 	Table projection(std::vector<std::string>input);
-	// Table rename(std::vector<std::string>input);
+	Table rename(std::vector<std::string>input);
 
 	void ShowCmd(std::vector<std::string>input);
 	//bool CreateCmd(std::vector<std::string>input);

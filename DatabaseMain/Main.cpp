@@ -168,9 +168,9 @@ try {
 
 	table.printTable();
 
-	Table results = Database::Project(projectAttr, "Test");
+	//Table results = Database::Project(projectAttr, "Test");
 
-	results.printTable();
+//	results.printTable();
 
 }
 catch (string error)

@@ -513,10 +513,10 @@ Table Parser::projection(vector<string> input)
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
     /*------Fix----*/
-	Table projectionTable = Database::Project(attributesList, &fromTable);
+	Table projectionTable = Database::Project(attributesList, fromTable);
 	return projectionTable;
 }
-/*Table Parser::rename(vector<string> input)
+Table Parser::rename(vector<string> input)
 {
 	// rename a table according
 	// renaming::= rename ( attribute-list ) atomic-expr
@@ -524,8 +524,8 @@ Table Parser::projection(vector<string> input)
 	bool selectKeyword = (input.at(0) == "rename");
 	if (!selectKeyword)
 	{
-	throw new exception("Invalid renaming call");
-	return NULL;
+		throw new exception("Invalid renaming call");
+		return NULL;
 	}
 	bool properOpenParenthesis = input.at(1) == "(";
 	bool properCloseParenthesis = false;
@@ -539,27 +539,24 @@ Table Parser::projection(vector<string> input)
 		string temp = input.at(i);
 		if (temp == ")")
 		{ // done adding to attributesList phrase if parenthesis are closed
-		properCloseParenthesis = true;
+			properCloseParenthesis = true;
 		}
 		else if (!properCloseParenthesis)
 		{ // continue appending to attributesList phrase
-		attributesList.push_back(input.at(i));
+			attributesList.push_back(input.at(i));
 		}
 		else
 		{ // add to third part of rename; the atomic-expr
-		valuesForAtomicExpression.push_back(input.at(i));
+			valuesForAtomicExpression.push_back(input.at(i));
 		}
 	}
 
 
 	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
-	
-	// get the rename table 
-	// rename is in table.cpp
-	Table renameTable = Database::getTable("Hello")->rename(attributesList);
+	Table renameTable = Database::rename_table(&fromTable, attributesList);
 
 	return renameTable;
-}*/
+}
 
 
 
