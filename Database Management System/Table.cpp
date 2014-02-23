@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
@@ -353,4 +355,5 @@ vector<int> Table::findCondition(vector<string> whereOps)
 	return results;
 
 }
+
 

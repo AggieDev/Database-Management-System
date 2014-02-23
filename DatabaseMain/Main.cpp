@@ -118,9 +118,9 @@ try {
 
 	table.printTable();
 
-	Table results = Database::select(selectAttr, "Testing", selectWhere);
+//	Table results = Database::select(selectAttr, "Testing", selectWhere);
 
-	results.printTable();
+	//results.printTable();
 
 }
 catch (string error)
@@ -182,11 +182,12 @@ catch (string error)
 void testSetUnion()
 {
 	//create and occupy 2 tables with data
+	cout << "\n=======Testing Union Table=======\n\n";
 	vector<string> columnNames;
 	columnNames.push_back("Names");
 	columnNames.push_back("Ages");
-	Table first = Table("DiffTest1", columnNames, 2);
-	Table second = Table("DiffTest2", columnNames, 2);
+	Table first = Table("UnionTest1", columnNames, 2);
+	Table second = Table("UnionTest2", columnNames, 2);
 
 	testOccupyTables(first, second);
 

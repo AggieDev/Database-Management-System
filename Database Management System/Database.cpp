@@ -86,8 +86,9 @@ Table Database::setunion(Table t1, Table t2)
 	vector<string> columnNames;
 	columnNames.push_back("Names");
 	columnNames.push_back("Ages");
-	Table union_table = Table(t1.getName() + " difference " + t2.getName(), columnNames, 2);													//copy first table
-	union_table.setName(t1.getName() + " difference " + t2.getName());	//set name back 
+
+	Table union_table = Table(t1.getName() + " Union " + t2.getName(), columnNames, 2);													//copy first table
+	union_table.setName(t1.getName() + " Union " + t2.getName());	//set name back 
 
 	for (unsigned int i = 0; i < t1.getEntries().size(); i++)
 	{
@@ -136,11 +137,13 @@ void Database::printTables()
 		_tables.at(i).printTable();
 }
 
-Table Database::select(vector<string> attributes, string fromTable, vector<string> _where)
+Table Database::selectEliutt(vector<string> attributes, Table fromTable, vector<string> _where)
 {
 	Table* result;
 	Table* selectedTable = NULL;
-	for (unsigned int i = 0; i < _tables.size(); i++)
+
+	selectedTable = &fromTable;
+	/*for (unsigned int i = 0; i < _tables.size(); i++)
 	{
 		if (_tables[i].getName() == fromTable)
 			selectedTable = &_tables[i];
@@ -149,7 +152,7 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 	{
 		string error = "Error: Table " + fromTable + " does not exist.";
 		throw error;
-	}
+	}*/
 	unsigned int count = 0;
 	vector<char> colTypes;
 	for (unsigned int i = 0; i < attributes.size(); i++)
@@ -182,6 +185,10 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 			result->addEntry(selectedTable->getEntries()[validEntries[i]]);
 		}
 	}
+	
+	
+	
+	
 	else
 	{
 		vector<int> columnsToSelect;
@@ -206,6 +213,14 @@ Table Database::select(vector<string> attributes, string fromTable, vector<strin
 	}
     
 	return *result;
+
+}
+
+Table Database::select(vector<string> condition, Table table)
+{
+	vector<string> attributes;
+	attributes.push_back("*");
+	return Database::selectEliutt(attributes, table, condition);
 
 }
 
