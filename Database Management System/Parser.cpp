@@ -315,12 +315,8 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 			//			Table Database::select(vector<string> condition, Table t)
 			// then this following should work as well
 			
-			
-<<<<<<< HEAD
-			//return Database::select(conditionVec, table);
-=======
+
 			return Database::select(conditionVec, table);
->>>>>>> origin/patrick-branch
 
 		}
 		else
@@ -453,11 +449,7 @@ vector<string> Parser::evaluateAttributeList(vector<string>attributes)
 //	return false;
 //}
 Table Parser::evaluateAtomicExpression(vector<string> input)
-<<<<<<< HEAD
-{ // parse the given input and set the Table t appropriately
-=======
 { // parse the given input and return the appropriate Table
->>>>>>> origin/patrick-branch
 
 	Table newTable = Table();
 	if (input.size() == 1)

@@ -86,10 +86,7 @@ Table Database::setunion(Table t1, Table t2)
 	vector<string> columnNames;
 	columnNames.push_back("Names");
 	columnNames.push_back("Ages");
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/patrick-branch
 	Table union_table = Table(t1.getName() + " Union " + t2.getName(), columnNames, 2);													//copy first table
 	union_table.setName(t1.getName() + " Union " + t2.getName());	//set name back 
 
@@ -140,27 +137,7 @@ void Database::printTables()
 		_tables.at(i).printTable();
 }
 
-<<<<<<< HEAD
-Table Database::selectEliutt(vector<string> attributes, Table fromTable, vector<string> _where)
-{
-	Table* result;
-	Table* selectedTable = NULL;
 
-	selectedTable = &fromTable;
-	/*for (unsigned int i = 0; i < _tables.size(); i++)
-	{
-		if (_tables[i].getName() == fromTable)
-			selectedTable = &_tables[i];
-	}
-	if(selectedTable == NULL)
-	{
-		string error = "Error: Table " + fromTable + " does not exist.";
-		throw error;
-	}*/
-	unsigned int count = 0;
-	vector<char> colTypes;
-	for (unsigned int i = 0; i < attributes.size(); i++)
-=======
 Table Database::select(vector<string> condition, Table fromTable)
 {
 	Table* result;
@@ -168,7 +145,7 @@ Table Database::select(vector<string> condition, Table fromTable)
 	
 	// eliminate parenthesis if present
 	if (condition.at(0) == "(")
->>>>>>> origin/patrick-branch
+
 	{
 		condition.erase(condition.begin());
 	}
@@ -181,19 +158,11 @@ Table Database::select(vector<string> condition, Table fromTable)
 	{	// check that condition vector is correct size
 		throw new exception("Invalid condition vector in Database::select");
 	}
-<<<<<<< HEAD
-	
-	
-	
-	
-	else
-=======
 
 	vector<int> validEntries = selectedTable->findCondition(condition);
 
 	result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
 	for(unsigned int i = 0; i < validEntries.size(); i++)
->>>>>>> origin/patrick-branch
 	{
 		result->addEntry(selectedTable->getEntries()[validEntries[i]]);
 	}
@@ -221,14 +190,6 @@ Table Database::select(vector<string> condition, Table fromTable)
 	//}
  //   
 	return *result;
-
-}
-
-Table Database::select(vector<string> condition, Table table)
-{
-	vector<string> attributes;
-	attributes.push_back("*");
-	return Database::selectEliutt(attributes, table, condition);
 
 }
 
