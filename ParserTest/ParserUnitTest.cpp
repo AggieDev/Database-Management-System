@@ -323,18 +323,108 @@ namespace ParserTest
 			Table resultTable = p.projection(projectionExprVector);
 
 			Assert::AreEqual(2, resultTable.getNumCols());
+			Assert::AreEqual(resultTable.getColNames().at(0), string("index"));
+			Assert::AreEqual(resultTable.getColNames().at(1), string("team"));
 			//Assert::AreEqual(string("2"), resultTable.getEntries().at(0).fields.at(0));
 
 		}
-		TEST_METHOD(TestDatabasRename)
+		TEST_METHOD(TestDatabaseRename)
 		{
 			Parser p = Parser();
 			
+			vector<string> attributes;
+			vector<char> attTypes;
+			attributes.push_back("FirstName");
+			attTypes.push_back('s');
+			attributes.push_back("LastName");
+			attTypes.push_back('s');
+			attributes.push_back("Age");
+			attTypes.push_back('i');
+			attributes.push_back("Price");
+			attTypes.push_back('f');
+			Table table("Test", attributes, attTypes);
+
+			vector<string> entry1;
+			entry1.push_back("Eli");
+			entry1.push_back("Riv");
+			entry1.push_back("1");
+			entry1.push_back("45");
+
+			vector<string> entry2;
+			entry2.push_back("pat");
+			entry2.push_back("green");
+			entry2.push_back("32");
+			entry2.push_back("50.25");
+
+			table.addEntry(entry1);
+			table.addEntry(entry2);
+			Database::addTable(table);
 
 
+			vector<string> renamedAttr;
+			renamedAttr.push_back("First");
+			renamedAttr.push_back("Last");
+			renamedAttr.push_back("birth");
+			renamedAttr.push_back("money");
+			
+
+			Table results = Database::rename_table(&table,renamedAttr);
+
+			Table tabletest("Testing", attributes, attTypes);
+			tabletest.addEntry(entry1);
+			tabletest.addEntry(entry2);
 
 
-			//Assert::AreEqual(2, resultTable.getNumCols());
+			Assert::AreEqual(results.getColNames().at(0), string("First"));
+			Assert::AreEqual(results.getColNames().at(1), string("Last"));
+			Assert::AreEqual(results.getColNames().at(2), string("birth"));
+			Assert::AreEqual(results.getColNames().at(3), string("money"));
+
+		}
+		TEST_METHOD(TestRenameCall)
+		{ // test atomic expression if it is of the more complicated expression
+			//		atomic-expr ::= ( expr )
+			Parser p = Parser();
+
+			vector<string> columns;
+			columns.push_back("index");
+			columns.push_back("team");
+			columns.push_back("name");
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t = Table("baseball_players", columns, colTypes);
+
+			vector<string> entryFields1;
+			entryFields1.push_back("1");
+			entryFields1.push_back("Elephants");
+			entryFields1.push_back("jose");
+			vector<string> entryFields2;
+			entryFields2.push_back("2");
+			entryFields2.push_back("Dinosaurs");
+			entryFields2.push_back("hernandez");
+			vector<string> entryFields3;
+			entryFields3.push_back("3");
+			entryFields3.push_back("Giraffes");
+			entryFields3.push_back("palermo");
+
+			t.addEntry(entryFields1);
+			t.addEntry(entryFields2);
+			t.addEntry(entryFields3);
+			Database::addTable(t);
+
+			
+			string expressionString = "rename (id,teamname,playername) baseball_players;";
+			vector<string> renameExprVector = p.readInputLine(expressionString);
+			Table resultTable = p.rename(renameExprVector);
+
+			Assert::AreEqual(resultTable.getColNames().at(0), string("id"));
+			Assert::AreEqual(resultTable.getColNames().at(1), string("teamname"));
+			Assert::AreEqual(resultTable.getColNames().at(2), string("playername"));
+			
+
 		}
 
 	};
