@@ -124,64 +124,65 @@ vector<string> Parser::readInputLine(string inputLine)
 	
 	// strings to represent: identifiers, types, operators, parenthesis, *, and <-
 	vector<string> inputVector;
-	
-	string word = "";
-	unsigned int i = 0;
-	while(i < inputLine.length())
-	{
-		char c = inputLine[i];
-		if (c == '(' || c == ')')
-		{ // individual chars that get own spot in vector
-			stringstream ss;
-			string singleCharString;
-			ss << c;
-			ss >> singleCharString;
-			inputVector.push_back(singleCharString);
-			i++;
-		}
-		else if (isDelimiter(c))
-		{ // if a space or comma, ignore and move onto next char
-			// does same for a semi-colon, but when that comes, the loop will exit
-			i++;
-		}
-		
-		else // if alpha, digit, quotation, operator, or attribute
-		{ // determine what the following token is going to be
-			bool isInteger = isdigit(c) != 0;
-			bool isLiteral = (c == '\"');
-			bool isIdentifier = isalpha(c) || (c == '_');
-			bool isOperator = isOp(c);
-		
-				// the appropriate function reads a certain number of characters
-			int charactersRead = 0;
-			if (isInteger) // Patrick
-			{ 
-				charactersRead = readInteger(word, inputLine, i);
-				inputVector.push_back(word);
-			}
-			else if (isLiteral)			// Elliut
-			{
-                charactersRead = readLiteral(word, inputLine, i);
-                inputVector.push_back(word);
-			}
-			else if (isIdentifier)		// Garrett
-			{
-				charactersRead = readIdentifier(word, inputLine, i);
-				inputVector.push_back(word);
-			}
-			else if (isOperator)		// Elliut
-			{ // this will also include the '<-' needed for a query, and +,-,* for set manipulation
-                charactersRead = readOp(word,inputLine, i);
-                inputVector.push_back(word);
-			}
-            //else if ()
-			else { throw new exception("token type was not identified"); }
 
-			// advance the inputLine index by that many characters
-			i += charactersRead; // TODO: check that this went right
+	try
+	{
+		string word = "";
+		unsigned int i = 0;
+		while (i < inputLine.length())
+		{
+			char c = inputLine[i];
+			if (c == '(' || c == ')')
+			{ // individual chars that get own spot in vector
+				stringstream ss;
+				string singleCharString;
+				ss << c;
+				ss >> singleCharString;
+				inputVector.push_back(singleCharString);
+				i++;
+			}
+			else if (isDelimiter(c))
+			{ // if a space or comma, ignore and move onto next char
+				// does same for a semi-colon, but when that comes, the loop will exit
+				i++;
+			}
+
+			else // if alpha, digit, quotation, operator, or attribute;
+			{	 // determine what the following token is going to be.
+				// the appropriate function returns the number of characters read
+				int charactersRead = 0;
+				if (isdigit(c) != 0) // Patrick
+				{
+					charactersRead = readInteger(word, inputLine, i);
+					inputVector.push_back(word);
+				}
+				else if (c == '\"')			// Elliut
+				{
+					charactersRead = readLiteral(word, inputLine, i);
+					inputVector.push_back(word);
+				}
+				else if (isalpha(c) || (c == '_'))		// Garrett
+				{
+					charactersRead = readIdentifier(word, inputLine, i);
+					inputVector.push_back(word);
+				}
+				else if (isOp(c))		// Elliut
+				{ // this will also include the '<-' needed for a query, and +,-,* for set manipulation
+					charactersRead = readOp(word, inputLine, i);
+					inputVector.push_back(word);
+				}
+				//else if ()
+				else { throw new exception("token type was not identified"); }
+
+				// advance the inputLine index by that many characters
+				i += charactersRead; // TODO: check that this went right
+			}
 		}
 	}
-
+	catch (exception e)
+	{
+		cout << "exception caught in readInputLine\n";
+	}
 	return inputVector;
 }
 bool Parser::isOp(char c)
@@ -285,6 +286,11 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 			readOp(op, val, 0);
 			opFound = true;
 		}
+		else if (val == "(" || val == ")")
+		{ // don't include parenthesis in condition vector
+			// this basically assumes it is a simple condition; (operand op operand)
+			continue;
+		}
 		else if (!opFound)
 		{ // still appending to first operand vector
 			operand1Vec.push_back(val);
@@ -303,14 +309,18 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 	{ // otherwise, both operands should be of the simple form:
 		// operand ::= literal | attribute-name
 		if (operand1Vec.size() == 1 && operand2Vec.size() == 1)
-		{ // simple case where operandVec is single operand
+		{	// simple case where operandVec is single operand
 			//NOTE: Database::select() does not work yet
 			// the following line will depend on this Database function working:
 			//			Table Database::select(vector<string> condition, Table t)
 			// then this following should work as well
 			
 			
+<<<<<<< HEAD
 			//return Database::select(conditionVec, table);
+=======
+			return Database::select(conditionVec, table);
+>>>>>>> origin/patrick-branch
 
 		}
 		else
@@ -443,7 +453,11 @@ vector<string> Parser::evaluateAttributeList(vector<string>attributes)
 //	return false;
 //}
 Table Parser::evaluateAtomicExpression(vector<string> input)
+<<<<<<< HEAD
 { // parse the given input and set the Table t appropriately
+=======
+{ // parse the given input and return the appropriate Table
+>>>>>>> origin/patrick-branch
 
 	Table newTable = Table();
 	if (input.size() == 1)
@@ -614,7 +628,6 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	{ // projection
         return projection(expr);// Elliut
 	}
-
 	else if (first == "rename")
 	{ // renaming
 //        return rename(expr);// Elliut
@@ -640,7 +653,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 		return evaluateAtomicExpression(expr);
 	}
 
-	return NULL;
+	return Table();
 }
 
 bool Parser::insertCmd(vector<string> input)
@@ -807,26 +820,31 @@ int Parser::readType(string& word, string input, int inputIndex)
 	}
 	return (myIndex - inputIndex); // return how many characters were read
 }
-int Parser::readOp(string& word, string input, int inputIndex)
+int Parser::readOp(string& op, string input, int inputIndex)
 { // will read a one or two char operand from input, starting at inputIndex
-	// valid operands are: <,<=,>,>=,<-,==,!=,*
+	// valid operands are: <,<=,>,>=,<-,==,!=
 
-	int myIndex = inputIndex;
-	char c = input.at(myIndex);
-	if (!isOp(c))
+	char c1 = input.at(inputIndex);
+	
+	if (!isOp(c1))
 	{
 		throw new exception("Invalid call to readOp");
 	}
-    
-	string myWord = "";
-    while(isOp(c))
-    {
-        myWord += c;
-        c = input.at(++myIndex);
-    }
-    word = myWord;
-    return (myIndex - inputIndex); // return how many characters were read
-    
+
+	string myOp = "";
+	myOp += c1;
+
+	if (inputIndex + 1 < input.size())
+	{ // look at next char if not at end of string
+		char c2 = input.at(inputIndex + 1);
+		if (isOp(c2))
+		{
+			myOp += c2;
+		}
+	}
+
+	op = myOp;
+    return myOp.size(); // return how many characters were read
 }
 int Parser::readLiteral(string& word, string input, unsigned int inputIndex)
 {

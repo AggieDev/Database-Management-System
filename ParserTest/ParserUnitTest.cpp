@@ -110,7 +110,11 @@ namespace ParserTest
 			vector<string> columns;
 			columns.push_back("index");
 			columns.push_back("team");
-			Table t = Table("baseball_players", columns, 2);
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t = Table("baseball_players", columns, colTypes);
 
 			vector<string> entryFields1;
 			entryFields1.push_back("1");
@@ -152,15 +156,19 @@ namespace ParserTest
 		TEST_METHOD(TestReadOp)
 		{
 			Parser p = Parser();
-			string s = "012345 <= 98765";
-
-			string op;
+			string oneCharOp = "012345>";
+			string twoCharOp = "012345 <= 98765";
+			string op1, op2;
 
 			// readOp should set op's value to the string "<=", and count 2 characters
-			int charsRead = p.readOp(op, s, 7);
+			int oneCharRead = p.readOp(op1, oneCharOp, 6);
+			int twoCharsRead = p.readOp(op2, twoCharOp, 7);
+			
 
-			Assert::AreEqual(2, charsRead);
-			Assert::AreEqual(string("<="), op);
+			Assert::AreEqual(1, oneCharRead);
+			Assert::AreEqual(string(">"), op1);
+			Assert::AreEqual(2, twoCharsRead);
+			Assert::AreEqual(string("<="), op2);
 		}
 		TEST_METHOD(TestDatabaseSelect)
 		{
@@ -219,6 +227,65 @@ namespace ParserTest
 			Assert::AreEqual(results.hasEntry(entry2),0);
 			Assert::AreEqual((int)results.getEntries().size(), 1);
 		}
+		TEST_METHOD(TestDatabaseSelect)
+		{
+			// Trying to test the database select function
+			// also learning to use unittesting
+
+			Parser p = Parser();
+
+			vector<string> attributes;
+			vector<char> attTypes;
+			attributes.push_back("FirstName");
+			attTypes.push_back('s');
+			attributes.push_back("LastName");
+			attTypes.push_back('s');
+			attributes.push_back("Age");
+			attTypes.push_back('i');
+			attributes.push_back("Price");
+			attTypes.push_back('f');
+
+			Table table("Testing", attributes, attTypes);
+
+			vector<string> entry1;
+			entry1.push_back("Eliutt");
+			entry1.push_back("Rivera");
+			entry1.push_back("20");
+			entry1.push_back("20.50");
+			vector<string> entry2;
+			entry2.push_back("Bob");
+			entry2.push_back("Sagget");
+			entry2.push_back("40");
+			entry2.push_back("50.25");
+			table.addEntry(entry1);
+			table.addEntry(entry2);
+
+			vector<string> selectAttr;
+			//selectAttr.push_back("*");
+			//selectAttr.push_back("LastName");
+			//selectAttr.push_back("Age");
+			//selectAttr.push_back("Price");
+
+			vector<string> selectWhere;
+			selectWhere.push_back("Price"); //left
+			selectWhere.push_back("!="); //center
+			selectWhere.push_back("20.5"); //right
+			Database::addTable(table);
+
+			table.printTable();
+
+			Table results = Database::select(selectWhere,table);
+
+			Table tabletest("Testing", attributes, attTypes);
+			tabletest.addEntry(entry2);
+
+
+			
+			Assert::AreEqual(results.hasEntry(entry2),0);
+			Assert::AreEqual((int)results.getEntries().size(), 1);
+		}
+
+	
 
 	
 

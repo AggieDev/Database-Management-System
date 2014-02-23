@@ -29,12 +29,21 @@ public:
 	// single table manipulation functions
 	Table selection(std::vector<std::string> input);
 	Table deletion(std::vector<std::string> input);
+<<<<<<< HEAD
     Table projection(std::vector<std::string>input);
    // Table rename(std::vector<std::string>input);
 
     void ShowCmd(std::vector<std::string>input);
     //bool CreateCmd(std::vector<std::string>input);
    // bool UpdateCmd(std::vector<std::string>input);
+=======
+	Table projection(std::vector<std::string>input);
+	// Table rename(std::vector<std::string>input);
+
+	void ShowCmd(std::vector<std::string>input);
+	//bool CreateCmd(std::vector<std::string>input);
+	// bool UpdateCmd(std::vector<std::string>input);
+>>>>>>> origin/patrick-branch
 
 
 	// parse the given input and set the Table t appropriately
@@ -45,17 +54,24 @@ public:
 	// call command function based on user input, return true on success
 	bool insertCmd(std::vector<std::string> inputLine);
 	bool exitCmd(std::vector<std::string> inputLine);
+<<<<<<< HEAD
    // bool showCmd(std::vector<std::string>input);
     bool createCmd(std::vector<std::string>input);
     bool updateCmd(std::vector<std::string>input);
+=======
+	// bool showCmd(std::vector<std::string>input);
+	bool createCmd(std::vector<std::string>input);
+	bool updateCmd(std::vector<std::string>input);
 
-	
+>>>>>>> origin/patrick-branch
+
 	// evaluates an expr and appropriately calls select, project, rename, atomic-expr,
 	// or a dual-table manipulation function, delegated in parseExpression
 	Table getTableFromExpression(std::vector<std::string> expr);
 
 	// evaluate the union, difference, product, or natural-join
 	//Table parseExpression(std::vector<std::string>, std::string);
+<<<<<<< HEAD
 	
 	Table evaluateAtomicExpression(std::vector<std::string> input);
 	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
@@ -63,27 +79,42 @@ public:
 	std::vector<std::string> evaluateOperand(std::vector<std::string> input);
 
 
+=======
+
+	Table evaluateAtomicExpression(std::vector<std::string> input);
+	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
+
+	//vector<string> evaluateAttributeList(vector<string>attributes);
+	std::vector<std::string> evaluateOperand(std::vector<std::string> input);
+>>>>>>> origin/patrick-branch
 
 	// read from input, starting at inputIndex, assign it to word,
 	// and return the number of characters read
 	int readType(std::string& word, std::string input, int inputIndex);
-    int readOp(std::string& word, std::string input, int inputIndex);
+	int readOp(std::string& op, std::string input, int inputIndex);
 	int readLiteral(std::string& word, std::string input, unsigned int inputIndex);
-	int readIdentifier(std::string& word, std::string , int inputIndex);
+	int readIdentifier(std::string& word, std::string, int inputIndex);
 	int readInteger(std::string& word, std::string input, int inputIndex);
 
 	// any of <,>,=,!,+,-,*
 	bool isOp(char c);
 	// can be space, open/close parenthesis, semi-colon
-	bool isDelimiter(char c); 
+	bool isDelimiter(char c);
 	// INTEGER or VARCHAR(integer)
 	bool isType(std::string s);
 	// word(s) in quotes
 	bool isLiteral(std::string s);
 
+<<<<<<< HEAD
 
 
 
 	
 };
+=======
+>>>>>>> origin/patrick-branch
 
+
+
+
+};
