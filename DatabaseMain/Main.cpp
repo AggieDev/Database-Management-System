@@ -118,9 +118,9 @@ try {
 
 	table.printTable();
 
-	Table results = Database::select(selectAttr, "Testing", selectWhere);
+//	Table results = Database::select(selectAttr, "Testing", selectWhere);
 
-	results.printTable();
+	//results.printTable();
 
 }
 catch (string error)

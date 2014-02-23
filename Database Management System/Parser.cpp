@@ -107,16 +107,16 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 	}
 	else if (inputVector.at(0) == "SHOW")
 	{
-        showCmd(inputVector);
+        ShowCmd(inputVector);
 	}
 
 	else if (inputVector.at(0) == "CREATE" && inputVector.at(1) == "TABLE")
 	{
-        createCmd(inputVector);
+       // createCmd(inputVector);
 	}
 	else if (inputVector.at(0) == "UPDATE")
 	{
-        updateCmd(inputVector);
+       // updateCmd(inputVector);
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -310,7 +310,7 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 			// then this following should work as well
 			
 			
-			// return Database::select(conditionVec, table);
+			//return Database::select(conditionVec, table);
 
 		}
 		else
@@ -323,13 +323,13 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 	return Table();
 }
 /*----------Eli---*/
-/*vector <string> Parser::Operand(vector<string> input)
+/*vector <string> Parser::evaluateOperand(vector<string> input)
 { // parse the given input and set the attribute appropriately
 
 	vector<string> identifier;
 	
-		if (isLiteral(input.size()))
-		{ // operand ::= literal "..."
+	if (isLiteral(input))
+	{ // operand ::= literal "..."
 
 			// erase parenthesis if present
 			vector<string> inputCopy = input;
@@ -355,6 +355,8 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 	return identifier;
 }*/
 
+/*
+//might not even be needed
 vector<string> Parser::evaluateAttributeList(vector<string>attributes)
 {
 	vector<string> input = attributes;
@@ -376,7 +378,7 @@ vector<string> Parser::evaluateAttributeList(vector<string>attributes)
 	}
 
 	return result;
-}
+}*/
 
 //Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
 //{ // parse the given conditions and modify the Table t appropriately
@@ -505,10 +507,10 @@ Table Parser::projection(vector<string> input)
 	// this will generate a table (existing one, or combination of two, etc)
 	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
     /*------Fix----*/
-	Table projectionTable = Database::Project(evaluateAttributeList(attributesList), &fromTable);
+	Table projectionTable = Database::Project(attributesList, &fromTable);
 	return projectionTable;
 }
-Table Parser::rename(vector<string> input)
+/*Table Parser::rename(vector<string> input)
 {
 	// rename a table according
 	// renaming::= rename ( attribute-list ) atomic-expr
@@ -538,18 +540,20 @@ Table Parser::rename(vector<string> input)
 		attributesList.push_back(input.at(i));
 		}
 		else
-		{ // add to third part of selection phrase; the atomic-expr
+		{ // add to third part of rename; the atomic-expr
 		valuesForAtomicExpression.push_back(input.at(i));
 		}
 	}
 
-	// this will generate a table (existing one, or combination of two, etc)
+
 	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
+	
+	// get the rename table 
+	// rename is in table.cpp
+	Table renameTable = Database::getTable("Hello")->rename(attributesList);
 
-	Table renameTable = Database::getTable(input)->rename(attributesList, &fromTable);
-
-	return newTable;
-}
+	return renameTable;
+}*/
 
 
 
@@ -613,7 +617,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 
 	else if (first == "rename")
 	{ // renaming
-        return rename(expr);// Elliut
+//        return rename(expr);// Elliut
 	}
 	else if (find(expr.begin(), expr.end(), "+") != expr.end())
 	{ // union ::= atomic-expr + atomic-expr

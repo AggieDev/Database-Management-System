@@ -30,11 +30,11 @@ public:
 	Table selection(std::vector<std::string> input);
 	Table deletion(std::vector<std::string> input);
     Table projection(std::vector<std::string>input);
-    //Table rename(std::vector<std::string>input);
+   // Table rename(std::vector<std::string>input);
 
     void ShowCmd(std::vector<std::string>input);
-    bool CreateCmd(std::vector<std::string>input);
-    bool UpdateCmd(std::vector<std::string>input);
+    //bool CreateCmd(std::vector<std::string>input);
+   // bool UpdateCmd(std::vector<std::string>input);
 
 
 	// parse the given input and set the Table t appropriately
@@ -45,7 +45,7 @@ public:
 	// call command function based on user input, return true on success
 	bool insertCmd(std::vector<std::string> inputLine);
 	bool exitCmd(std::vector<std::string> inputLine);
-    bool showCmd(std::vector<std::string>input);
+   // bool showCmd(std::vector<std::string>input);
     bool createCmd(std::vector<std::string>input);
     bool updateCmd(std::vector<std::string>input);
 
@@ -59,7 +59,8 @@ public:
 	
 	Table evaluateAtomicExpression(std::vector<std::string> input);
 	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
-	vector<string> evaluateAttributeList(vector<string>attributes);
+	//vector<string> evaluateAttributeList(vector<string>attributes);
+	std::vector<std::string> evaluateOperand(std::vector<std::string> input);
 
 
 

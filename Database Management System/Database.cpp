@@ -184,6 +184,10 @@ Table Database::selectEliutt(vector<string> attributes, Table fromTable, vector<
 			result->addEntry(selectedTable->getEntries()[validEntries[i]]);
 		}
 	}
+	
+	
+	
+	
 	else
 	{
 		vector<int> columnsToSelect;
