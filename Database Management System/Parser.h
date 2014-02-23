@@ -59,6 +59,7 @@ public:
 	
 	Table evaluateAtomicExpression(std::vector<std::string> input);
 	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
+
 	//vector<string> evaluateAttributeList(vector<string>attributes);
 	std::vector<std::string> evaluateOperand(std::vector<std::string> input);
 
