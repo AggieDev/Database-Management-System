@@ -339,9 +339,9 @@ namespace ParserTest
 			attributes.push_back("LastName");
 			attTypes.push_back('s');
 			attributes.push_back("Age");
-			attTypes.push_back('i');
+			attTypes.push_back('s');
 			attributes.push_back("Price");
-			attTypes.push_back('f');
+			attTypes.push_back('s');
 			Table table("Test", attributes, attTypes);
 
 			vector<string> entry1;
@@ -419,7 +419,7 @@ namespace ParserTest
 			string expressionString = "rename (id,teamname,playername) baseball_players;";
 			vector<string> renameExprVector = p.readInputLine(expressionString);
 			Table resultTable = p.rename(renameExprVector);
-
+			
 			Assert::AreEqual(resultTable.getColNames().at(0), string("id"));
 			Assert::AreEqual(resultTable.getColNames().at(1), string("teamname"));
 			Assert::AreEqual(resultTable.getColNames().at(2), string("playername"));

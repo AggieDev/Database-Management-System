@@ -34,8 +34,7 @@ public:
 	Table rename(std::vector<std::string>input);
 
 	void ShowCmd(std::vector<std::string>input);
-	//bool CreateCmd(std::vector<std::string>input);
-	// bool UpdateCmd(std::vector<std::string>input);
+	
 
 
 
@@ -48,7 +47,7 @@ public:
 	bool insertCmd(std::vector<std::string> inputLine);
 	bool exitCmd(std::vector<std::string> inputLine);
 
-	// bool showCmd(std::vector<std::string>input);
+	
 	bool createCmd(std::vector<std::string>input);
 	bool updateCmd(std::vector<std::string>input);
 
@@ -67,7 +66,11 @@ public:
 
 	//vector<string> evaluateAttributeList(vector<string>attributes);
 	std::vector<std::string> evaluateOperand(std::vector<std::string> input);
-
+	
+	
+	// read the entire vector of input, then set the attribute names and column types
+	void evaluateTypeAttributeList(std::vector<std::string> input, std::vector<std::string>*attributes,std::vector<char>*types);
+	
 
 	// read from input, starting at inputIndex, assign it to word,
 	// and return the number of characters read

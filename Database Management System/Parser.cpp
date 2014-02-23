@@ -619,7 +619,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	}
 	else if (first == "rename")
 	{ // renaming
-//        return rename(expr);// Elliut
+        return rename(expr);// Elliut
 	}
 	else if (find(expr.begin(), expr.end(), "+") != expr.end())
 	{ // union ::= atomic-expr + atomic-expr
@@ -704,19 +704,15 @@ void Parser::ShowCmd(vector<string> input)
 	Table* t = Database::getTableByReference(relationName);
     
 
-
-
-
-
-
-
     bool properOpenParenthesis = input.at(3) == "(";
- //   bool properCloseParenthesis = input.at(input.size() - 1) == ")";
+    bool properCloseParenthesis = input.at(input.size() - 1) == ")";
 	
-    vector<string> attributeType;
-    while ()
+    vector<string> attributeTypeList;
+    
+	
+	while ()
 	{ // create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
-		vector<string> attributeType;
+		
 
 		//for (unsigned int i = 4; i < ; i++)
 		//{ // fill expression vector with the values following
@@ -731,6 +727,7 @@ void Parser::ShowCmd(vector<string> input)
 			t->addEntry(newValues.getEntries().at(i));
 		}
 		return true;
+	
 	}
 	return false;
 
