@@ -527,7 +527,7 @@ namespace ParserTest
 
 			// ensure the correct number of entries were retrieved
 			Assert::AreEqual(2, (int)validEntries1.size());
-			Assert::AreEqual(2, (int)validEntries2.size());
+			Assert::AreEqual(1, (int)validEntries2.size());
 			Assert::AreEqual(1, (int)validEntries3.size());
 
 			// ensure the correct indices (from original) were collected

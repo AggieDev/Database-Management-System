@@ -734,80 +734,99 @@ void Parser::ShowCmd(vector<string> input)
     t.printTable();
 
 }
-/*bool Parser::createCmd(vector<string> input)
-{
-    string relationName = input.at(2);	// name of Table in the Database
-
+bool Parser::createCmd(vector<string> input)
+{// create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
+   
+	string relationName = input.at(2);	// name of Table in the Database
 	Table* t = Database::getTableByReference(relationName);
-    
-
     bool properOpenParenthesis = input.at(3) == "(";
-    bool properCloseParenthesis = input.at(input.size() - 1) == ")";
-	
-    vector<string> attributeTypeList;
-    
-	
-	while ()
-	{ // create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
-		
+	bool properCloseParenthesis = input.at(input.size() - 1) == ")";
+	bool complete = false;
+	if (complete)
+	{
 
-		//for (unsigned int i = 4; i < ; i++)
-		//{ // fill expression vector with the values following
-			//attributeType.push_back(input.at(i));
-		//}
+		for (int i = 3; i < input.size(); i++)
+		{
 
-    
-        
-		Table newValues = getTableFromExpression(attributeType);
-		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
-		{ // add every entry of the table of new values to the table referenced by relationName
-			t->addEntry(newValues.getEntries().at(i));
+			if (properOpenParenthesis)
+			{	
+				for (unsigned int i = 4; i < input.size(); i++)
+				{
+					if (input.at(i) == ")" && input.at(i+1) =="PRIMARY")
+					{
+						break;
+					}
+					else
+					{
+						// fill attributeTypedList vector with the values following , '(',
+						vector<string> attributeTypeList;
+						attributeTypeList.push_back(input.at(i));
+						//evaluateTypeAttributeList(attributeTypeList);
+					}
+				}
+			}
+
+			if (input.at(i) == "KEY" && properCloseParenthesis)
+			{
+				vector<string> attributeList;
+				int referencePoint = i + 1;
+				for (unsigned int i = referencePoint; i < input.size() - 1; i++)
+				{ // fill attributeList vector with the values following the word, 'KEY', should be one or more attribute-names
+					attributeList.push_back(input.at(i));
+				}
+				//Table t = Database::getTable(relationName);
+				complete = true;
+			}
+
 		}
 		return true;
-	
 	}
+
 	return false;
 
-}*/
-/*bool Parser::updateCmd(vector<string> input)
+}
+bool Parser::updateCmd(vector<string> input)
 {
     string relationName = input.at(1);	// name of Table in the Database
 	Table* t = Database::getTableByReference(relationName);
-    
-	if (input.at(5) == "RELATION")
-	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
-		vector<string> expression;
-		for (unsigned int i = 6; i < input.size(); i++)
-		{ // fill expression vector with the values following the word, 'RELATION'
-			expression.push_back(input.at(i));
-		}
-		Table newValues = getTableFromExpression(expression);
-		for (unsigned int i = 0; i < newValues.getEntries().size(); i++)
-		{ // add every entry of the table of new values to the table referenced by relationName
-			t->addEntry(newValues.getEntries().at(i));
-		}
-		return true;
-	}
-	else
+	bool Set = input.at(2) == "SET";
+
+	for (int i = 2; i < input.size(); i++)
 	{
-        
-		bool properOpenParenthesis = input.at(5) == "(";
-		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
-		if (properOpenParenthesis && properCloseParenthesis)
-		{ // ensure parenthesis are appropriately placed
-			vector<string> fields;
-			for (unsigned int i = 6; i < input.size() - 1; i++)
-			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
-				fields.push_back(input.at(i));
+
+		if (Set)
+		{
+			vector<string> setAttribute;
+			if (input.at(i+1) == "WHERE")
+			{
+				break;
 			}
-			Table t = Database::getTable(relationName);
-			t.addEntry(fields);
+			else
+			{
+				for (int i = 3; i < input.size(); i++)
+				{
+					setAttribute.push_back(input.at(i));
+				}
+			}
+		}
+
+
+		if (input.at(i) == "WHERE")
+		{
+			vector<string>whereCondition;
+
+			for (unsigned int i = 0; i < input.size() - 1;i++)
+			{
+				whereCondition.push_back(input.at(i));
+			}
+
 			return true;
 		}
+
 	}
 	return false;
 
-}*/
+}
 bool Parser::isType(string s)
 { // return true if the given string is a type, defined as:
 	// type ::= VARCHAR ( integer ) | INTEGER
