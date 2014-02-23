@@ -426,6 +426,52 @@ namespace ParserTest
 			
 
 		}
+		TEST_METHOD(TestRemoveParenthesis)
+		{
+			vector<string> noParen;
+			noParen.push_back("a");
+			noParen.push_back("short");
+			noParen.push_back("sentence");
+			vector<string> withParen;
+			withParen.push_back("(");
+			withParen.push_back("I");
+			withParen.push_back("have");
+			withParen.push_back("parenthesis");
+			withParen.push_back(")");
+			
+			Parser p = Parser();
+			p.removeParenthesis(&noParen);
+			p.removeParenthesis(&withParen);
 
+			Assert::AreEqual(string("a"), noParen.at(0));
+			Assert::AreEqual(string("short"), noParen.at(1));
+			Assert::AreEqual(string("sentence"), noParen.at(2));
+
+			Assert::AreEqual(string("I"), withParen.at(0));
+			Assert::AreEqual(string("have"), withParen.at(1));
+			Assert::AreEqual(string("parenthesis"), withParen.at(2));
+		}
+		TEST_METHOD(TestEvaluateTypeAttributeList)
+		{ // a typed attribute list describes how a table will be organized (needed for create-cmd)
+			Parser p = Parser();
+
+			string attrListString = "(name VARCHAR(20), kind VARCHAR(8), years INTEGER)";
+			vector<string> attrListVec = p.readInputLine(attrListString);
+
+			vector<string> attributes;
+			vector<char> colTypes;
+
+			p.evaluateTypeAttributeList(attrListVec, &attributes, &colTypes);
+
+			// attributes and colTypes vectors should have been updated according to the attr-list
+			Assert::AreEqual(string("name"), attributes.at(0));
+			Assert::AreEqual(string("kind"), attributes.at(1));
+			Assert::AreEqual(string("years"), attributes.at(2));
+
+			Assert::AreEqual('s', colTypes.at(0));
+			Assert::AreEqual('s', colTypes.at(1));
+			Assert::AreEqual('i', colTypes.at(2));
+			
+		}
 	};
 }

@@ -63,19 +63,17 @@ public:
 
 	Table evaluateAtomicExpression(std::vector<std::string> input);
 	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
-
-	//vector<string> evaluateAttributeList(vector<string>attributes);
-	std::vector<std::string> evaluateOperand(std::vector<std::string> input);
-	
 	
 	// read the entire vector of input, then set the attribute names and column types
-	void evaluateTypeAttributeList(std::vector<std::string> input, std::vector<std::string>*attributes,std::vector<char>*types);
+	void evaluateTypeAttributeList(std::vector<std::string> input, std::vector<std::string>*attributes, std::vector<char>*types);
+	//vector<string> evaluateAttributeList(vector<string>attributes);
+	std::vector<std::string> evaluateOperand(std::vector<std::string> input);	
 	
 
 	// read from input, starting at inputIndex, assign it to word,
 	// and return the number of characters read
 	int readType(std::string& word, std::string input, int inputIndex);
-	int readOp(std::string& op, std::string input, int inputIndex);
+	int readOp(std::string& op, std::string input, unsigned int inputIndex);
 	int readLiteral(std::string& word, std::string input, unsigned int inputIndex);
 	int readIdentifier(std::string& word, std::string, int inputIndex);
 	int readInteger(std::string& word, std::string input, int inputIndex);
@@ -88,5 +86,8 @@ public:
 	bool isType(std::string s);
 	// word(s) in quotes
 	bool isLiteral(std::string s);
+
+	// utility functions
+	void removeParenthesis(std::vector<std::string>* vec);
 
 };

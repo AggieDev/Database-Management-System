@@ -462,19 +462,56 @@ Table Parser::evaluateAtomicExpression(vector<string> input)
 		vector<string> inputCopy = input;
 
 		// erase parenthesis if present
-		if (inputCopy.at(0) == "(")
-		{
-			inputCopy.erase(inputCopy.begin());
-		}
-		if (inputCopy.at(inputCopy.size() - 1) == ")")
-		{
-			inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
-		}
+		removeParenthesis(&input);
 		newTable = getTableFromExpression(inputCopy);
 	}
 
 	// the table will be empty if invalid expression was provided
 	return newTable;
+}
+void Parser::evaluateTypeAttributeList(vector<string> input, vector<string>* attributes, vector<char>* types)
+{ 	// parse the entire vector of input, set the attribute names and column types 
+	removeParenthesis(&input);
+
+	attributes->clear();
+	types->clear();
+	for (unsigned int i = 0; i < input.size(); i++)
+	{ // populate attribute-names and column types using input vector
+
+		string element = input.at(i);
+
+		if (isType(element))
+		{
+			if (element.compare("INTEGER") == 0)
+			{
+				types->push_back('i');
+			}
+			else if (element.compare("VARCHAR") == 0)
+			{
+				types->push_back('s');
+				i += 3; // assume ["(", "<integer>", ")"] are next three, ignore 'em for now
+			}
+		}
+		else // if is attribute/column name
+		{
+			attributes->push_back(element);
+		}
+	}
+	if (attributes->size() != types->size())
+	{
+		throw new exception("Error occurred in evaluateTypeAttributeList\n");
+	}
+}
+void Parser::removeParenthesis(vector<string>* vec)
+{ // if first and last elements are parenthesis, remove
+	if (vec->at(0) == "(")
+	{
+		vec->erase(vec->begin());
+	}
+	if (vec->at(vec->size() - 1) == ")")
+	{
+		vec->erase(vec->begin() + vec->size() - 1);
+	}
 }
 Table Parser::projection(vector<string> input)
 { // project from a table according
@@ -806,7 +843,7 @@ int Parser::readType(string& word, string input, int inputIndex)
 	}
 	return (myIndex - inputIndex); // return how many characters were read
 }
-int Parser::readOp(string& op, string input, int inputIndex)
+int Parser::readOp(string& op, string input, unsigned int inputIndex)
 { // will read a one or two char operand from input, starting at inputIndex
 	// valid operands are: <,<=,>,>=,<-,==,!=
 
