@@ -51,5 +51,8 @@ public:
 	static Table getTable(string relationName);
 	static Table* getTableByReference(string relationName);
 	static Table rename_table(Table* fromTable, vector<string> new_attributes);
+
+	//returns -1 if not found, index of table if found
+	static int tableExists(string);
 };
 

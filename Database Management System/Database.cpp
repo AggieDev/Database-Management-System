@@ -293,3 +293,14 @@ Table* Database::getTableByReference(string relationName)
 	}
 	return NULL;
 }
+
+int Database::tableExists(string tableName)
+{
+	//check each entry
+	for (unsigned int i = 0; i < _tables.size(); i++)
+	{
+		if (tableName.compare(_tables.at(i).getName()))
+			return i;
+	}
+	return -1;
+}

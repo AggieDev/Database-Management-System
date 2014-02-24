@@ -203,6 +203,7 @@ int main(int argc, const char* argv[])
 {
 	cout << "DBMS started.\n";
 
+	/*
 	testDifferenceTable();
 	testProductTable();
 	try
@@ -223,7 +224,7 @@ int main(int argc, const char* argv[])
 	{
 		cout << error << endl;
 	}
-	testSetUnion();
+	testSetUnion();*/
 
 	Application application = Application();
 	application.launch();
