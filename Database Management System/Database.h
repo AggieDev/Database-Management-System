@@ -17,27 +17,42 @@ public:
 	static Table differenceTable(Table t1, Table t2);
 	static Table setunion(Table t1, Table t2);
 	//relational functions
-	static Table select(vector<string> attributes, string fromTable, vector<string> _where);
+
 	//atributes = {"id","name","age"} or {"*"}
 	//_where = {"age","<","10"} parse the where operations
 
 	
 	// This select method should return a new table that is a subset of the provided table,
 	// where every full Entry is included that satisfies the condition vector
+<<<<<<< HEAD
 	// for now, expect calls from Parser::evaluateCondtion to pass a vector where condition.size()==3
 	//	and the contents are [operand1, operator, operand2]
+=======
+
+	// for now, expect calls from Parser::evaluateCondtion to pass a vector where condition.size()==3
+	//	and the contents are [operand1, operator, operand2]
+
+>>>>>>> origin/master
 	//  operand ::= attribute-name | literal
 	//			where attribute-name is an identifier
 	//			  and literal is a word(s) surround in quotes
 	//		a literal in our DML would look like "red" or "Dinosaur"
 	//		but when it gets parsed, an equivalent c++ string looks like "\"red\"" or "\"Dinosaur\""
 	static Table select(vector<string> condition, Table table);
+<<<<<<< HEAD
 
 
 
 	static Table Project(vector<string> attributes, string fromTable);
+=======
+	
+
+
+
+	//static Table ProjectOld(vector<string> attributes, Table fromTable);
+>>>>>>> origin/master
     //atributes = {"id","name","age"} or {"*"}
-	static Table Project(vector<string> attributes, Table* fromTable);
+	static Table Project(vector<string> attributes, Table fromTable);
     
     
 	static Table productTable(Table t1, Table t2);

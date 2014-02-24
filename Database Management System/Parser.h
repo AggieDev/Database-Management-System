@@ -29,6 +29,7 @@ public:
 	// single table manipulation functions
 	Table selection(std::vector<std::string> input);
 	Table deletion(std::vector<std::string> input);
+<<<<<<< HEAD
     Table projection(std::vector<std::string>input);
     //Table rename(std::vector<std::string>input);
 	
@@ -41,11 +42,33 @@ public:
     bool updateCmd(std::vector<std::string>input);
 
 	
+=======
+
+	Table projection(std::vector<std::string>input);
+	Table rename(std::vector<std::string>input);
+
+	
+	// parse the given input and set the Table t appropriately
+	Table interpretAtomicExpression(std::vector<std::string> input);
+	Table parseExpression(std::vector<std::string>, string);
+
+
+	// call command function based on user input, return true on success
+	bool insertCmd(std::vector<std::string> inputLine);
+	bool exitCmd(std::vector<std::string> inputLine);
+	void ShowCmd(std::vector<std::string>input);
+	bool createCmd(std::vector<std::string>input);
+	bool updateCmd(std::vector<std::string>input);
+
+
+
+>>>>>>> origin/master
 	// evaluates an expr and appropriately calls select, project, rename, atomic-expr,
 	// or a dual-table manipulation function, delegated in parseExpression
 	Table getTableFromExpression(std::vector<std::string> expr);
 
 	// evaluate the union, difference, product, or natural-join
+<<<<<<< HEAD
 	Table parseExpression(std::vector<std::string>, std::string);
 	
 	Table evaluateAtomicExpression(std::vector<std::string> input);
@@ -53,24 +76,53 @@ public:
 
 
 
+=======
+	//Table parseExpression(std::vector<std::string>, std::string);
+
+
+	Table evaluateAtomicExpression(std::vector<std::string> input);
+	Table evaluateCondition(std::vector<std::string> conditionVec, Table table);
+	
+	// read the entire vector of input, then set the attribute names and column types
+	void evaluateTypeAttributeList(std::vector<std::string> input, std::vector<std::string>*attributes, std::vector<char>*types);
+	//vector<string> evaluateAttributeList(vector<string>attributes);
+	std::vector<std::string> evaluateOperand(std::vector<std::string> input);	
+	
+>>>>>>> origin/master
 
 	// read from input, starting at inputIndex, assign it to word,
 	// and return the number of characters read
 	int readType(std::string& word, std::string input, int inputIndex);
+<<<<<<< HEAD
     int readOp(std::string& word, std::string input, int inputIndex);
 	int readLiteral(std::string& word, std::string input, unsigned int inputIndex);
 	int readIdentifier(std::string& word, std::string , int inputIndex);
+=======
+	int readOp(std::string& op, std::string input, unsigned int inputIndex);
+	int readLiteral(std::string& word, std::string input, unsigned int inputIndex);
+	int readIdentifier(std::string& word, std::string, int inputIndex);
+>>>>>>> origin/master
 	int readInteger(std::string& word, std::string input, int inputIndex);
 
 	// any of <,>,=,!,+,-,*
 	bool isOp(char c);
 	// can be space, open/close parenthesis, semi-colon
+<<<<<<< HEAD
 	bool isDelimiter(char c); 
+=======
+	bool isDelimiter(char c);
+>>>>>>> origin/master
 	// INTEGER or VARCHAR(integer)
 	bool isType(std::string s);
 	// word(s) in quotes
 	bool isLiteral(std::string s);
 
+<<<<<<< HEAD
 	
 };
+=======
+	// utility functions
+	void removeParenthesis(std::vector<std::string>* vec);
+>>>>>>> origin/master
 
+};
