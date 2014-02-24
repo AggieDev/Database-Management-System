@@ -1,7 +1,9 @@
-High Level Entities - Description (from bottom to top)
+﻿High Level Entities - Description (from bottom to top)
 
 
-Database: Represents a collection of files (.txt, .csv, .xml,…) that each identify a relation table. A table can identify attributes for a specific entity and/or relationships between many entities.
+Database: a static class (only one instance is allowed) to store all Tuples/tables for our pet store. It is made of a vector of Tables
+
+Represents a collection of files (.txt, .csv, .xml,…) that each identify a relation table. A table can identify attributes for a specific entity and/or relationships between many entities.
 
 
 Data Manipulation Language (DML): Language to respond to database queries. These consist of: open, close, write, exit, show, create table, insert into, update, delete, select, project, +, -, and *. More generally, the implemented functions   (for which a CLI will be provided) will allow us to update the database for long-term usage.
