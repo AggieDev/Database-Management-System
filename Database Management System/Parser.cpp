@@ -59,6 +59,7 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 			expression.push_back(inputVector.at(i));
 		}
 		getTableFromExpression(expression);
+// TODO: query needs to assign the resulting table to the provided relation-name
 	}
 	
 	if (inputVector.at(0) == "INSERT" && inputVector.at(1) == "INTO")
@@ -328,126 +329,6 @@ Table Parser::evaluateCondition(vector<string> conditionVec, Table table)
 
 	return Table();
 }
-/*----------Eli---*/
-/*vector <string> Parser::evaluateOperand(vector<string> input)
-{ // parse the given input and set the attribute appropriately
-
-	vector<string> identifier;
-	
-	if (isLiteral(input))
-	{ // operand ::= literal "..."
-
-			// erase parenthesis if present
-			vector<string> inputCopy = input;
-			if (inputCopy.at(0) == '\"')
-			{
-				inputCopy.erase(inputCopy.begin());
-			}
-			if (inputCopy.at(inputCopy.size() - 1) == '\"')
-			{
-				inputCopy.erase(inputCopy.begin() + inputCopy.size() - 1);
-			}
-
-			identifier = inputCopy;
-	}
-
-	else
-	{ // operand ::= attribute-name
-
-		string attributeName = input.at(0);
-		identifier = attributeName;
-	}
-
-	return identifier;
-}*/
-
-/*
-//might not even be needed
-vector<string> Parser::evaluateAttributeList(vector<string>attributes)
-{
-	vector<string> input = attributes;
-	vector<string> result;
-	
-	result.push_back(input.at(0));
-
-	for (int i = 1; i < input.size(); i++)
-	{
-		if(isDelimiter(input.at(i)))
-		{
-			i++;
-		}
-
-		else
-		{
-			result.push_back(input.at(i)); 
-		}
-	}
-
-	return result;
-}*/
-
-//Table Parser::modifyTableForCondition(vector<string> conditions, Table t)
-//{ // parse the given conditions and modify the Table t appropriately
-//
-//	Table newTable = Table();
-//
-//	vector<Entry> entries = t.getEntries();
-//
-//	for (int i = 0; i < entries.size(); i++)
-//	{ // place every valid entry into the new table
-//		if (checkConditions(conditions, t, entries.at(i)))
-//		{ // check the conditions on each entry
-//			Entry validEntry = entries.at(i);
-//			newTable.addEntry(validEntry);
-//		}
-//	}
-//
-//	return newTable;
-//}
-//bool Parser::checkConditions(vector<string> tokensForCondition, Table t, Entry entry)
-//{
-//	for (int i = 0; i < tokensForCondition.size() - 2; )
-//	{ // for every group of three (columnName, operator, operand)
-//		// call the individual satisfiesComparison method
-//
-//	}
-//
-//	return true;
-//}
-//bool Parser::satisfiesComparison(Table t, Entry entry, string columnName, string op, string operand2)
-//{ 	// return true if this individual comparison is satisfied
-//
-//	// operand1 needs to be a value from the table for the given entry,
-//	// at the column identified by columnName
-//
-//
-//	if (op == "==")
-//	{
-//		return operand1 == operand2;
-//	}
-//	else if (op == "!=")
-//	{
-//		return operand1 != operand2;
-//	}
-//	else if (op == "<")
-//	{
-//		return operand1 < operand2;
-//	}
-//	else if (op == "<=")
-//	{
-//		return operand1 <= operand2;
-//	}
-//	else if (op == ">")
-//	{
-//		return operand1 > operand2;
-//	}
-//	else if (op == ">=")
-//	{
-//		return operand1 >= operand2;
-//	}
-//
-//	return false;
-//}
 Table Parser::evaluateAtomicExpression(vector<string> input)
 { // parse the given input and return the appropriate Table
 
@@ -745,7 +626,7 @@ bool Parser::createCmd(vector<string> input)
 	if (complete)
 	{
 
-		for (int i = 3; i < input.size(); i++)
+		for (unsigned int i = 3; i < input.size(); i++)
 		{
 
 			if (properOpenParenthesis)
@@ -791,7 +672,7 @@ bool Parser::updateCmd(vector<string> input)
 	Table* t = Database::getTableByReference(relationName);
 	bool Set = input.at(2) == "SET";
 
-	for (int i = 2; i < input.size(); i++)
+	for (unsigned int i = 2; i < input.size(); i++)
 	{
 
 		if (Set)
@@ -803,7 +684,7 @@ bool Parser::updateCmd(vector<string> input)
 			}
 			else
 			{
-				for (int i = 3; i < input.size(); i++)
+				for (unsigned int i = 3; i < input.size(); i++)
 				{
 					setAttribute.push_back(input.at(i));
 				}
@@ -840,12 +721,17 @@ bool Parser::isLiteral(string s)
 int Parser::readInteger(string& word, string input, int inputIndex)
 { // read an integer from input, starting at inputIndex, assign it to word
 	string myWord = "";
-	int myIndex = inputIndex;
+	unsigned int myIndex = inputIndex;
 	char nextDigit = input.at(myIndex);
 	while (isdigit(nextDigit))
 	{
 		myWord += nextDigit;
-		nextDigit = input.at(++myIndex);
+		myIndex++;
+		if (myIndex >= input.length())
+		{
+			break;
+		}
+		nextDigit = input.at(myIndex);
 	}
 	word = myWord;
 	return (myIndex - inputIndex); // return how many characters were read
@@ -860,7 +746,7 @@ int Parser::readType(string& word, string input, int inputIndex)
 		myIndex += tempWord.length();
 		word = tempWord;
 	}
-	return (myIndex - inputIndex); // return how many characters were read
+	return (myIndex - inputIndex + 1); // return how many characters were read
 }
 int Parser::readOp(string& op, string input, unsigned int inputIndex)
 { // will read a one or two char operand from input, starting at inputIndex
@@ -877,7 +763,7 @@ int Parser::readOp(string& op, string input, unsigned int inputIndex)
 	myOp += c1;
 
 	if (inputIndex + 1 < input.size())
-	{ // look at next char if not at end of string
+	{ // look at next char if not past end of string
 		char c2 = input.at(inputIndex + 1);
 		if (isOp(c2))
 		{
@@ -911,13 +797,16 @@ int Parser::readIdentifier(string& word, string input, int inputIndex)
 {
 	unsigned int myIndex = inputIndex;
 	string myWord = "";
-	char character = input.at(myIndex);
-
-	do
+	
+	for (; myIndex < input.size(); myIndex++)
 	{
-		myWord.push_back(character);
-		character = input.at(++myIndex);
-	} while ((isalpha(character) || isdigit(character) || character == '_') && myIndex < input.size());
+		char c = input.at(myIndex);
+		if (isalpha(c) || isdigit(c) || c == '_')
+		{
+			myWord += c;
+		}
+		else break;
+	}
 	word = myWord;
 	return (myIndex - inputIndex);
 }

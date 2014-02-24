@@ -18,6 +18,7 @@ namespace ParserTest
 			// return number of characters read
 			string word = "old value";
 			string input = "Read only five digits, 12345 is the integer to be read";
+			
 			int inputIndex = 23;
 			
 			Parser p = Parser();
@@ -27,6 +28,11 @@ namespace ParserTest
 			Assert::AreNotEqual(string("old value"), word);
 			Assert::AreEqual(5, count);
 			Assert::AreEqual(23, inputIndex);
+
+			string inputNumAtEnd = "Some text 9876";
+			inputIndex = 10;
+			count = p.readInteger(word, inputNumAtEnd, inputIndex);
+			Assert::AreEqual(string("9876"), word);
 		}
 		TEST_METHOD(TestReadInputLineWithIntegers)
 		{ // An input line with multiple integers should be read into a vector where each integer has a spot
@@ -140,35 +146,63 @@ namespace ParserTest
 			Assert::AreEqual(string("2"), resultTable.getEntries().at(0).fields.at(0));
 
 		}
-		TEST_METHOD(TestReadLiteral)
+		TEST_METHOD(TestReadLiteralAndIdentifier)
 		{
 			Parser p = Parser();
+			string word;
 			string myLiteral = "0123456789\"literal with spaces\" and the rest of my line";
-			string wordToBeSet;
-
-			// should read all characters in the literal; 21
-			int litStartIndex = 10;
-			int charsRead = p.readLiteral(wordToBeSet, myLiteral, litStartIndex);
+			string litAtEnd = "0123 \"Literal\"";
+			
+			// should read all characters in first literal; 21
+			int startIndex = 10;
+			int charsRead = p.readLiteral(word, myLiteral, startIndex);
 
 			Assert::AreEqual(21, charsRead);
-			Assert::AreEqual(wordToBeSet, string("\"literal with spaces\""));
+			Assert::AreEqual(word, string("\"literal with spaces\""));
+
+			// try with second literal
+			startIndex = 5;
+			charsRead = p.readLiteral(word, litAtEnd, startIndex);
+			Assert::AreEqual(9, charsRead);
+			Assert::AreEqual(string("\"Literal\""), word);
+
+			// Test readIdentifier here also (very similar)
+			string someID = "0123 iden_345_ier hello";
+			startIndex = 5;
+			charsRead = p.readIdentifier(word, someID, startIndex);
+			Assert::AreEqual(12, charsRead);
+			Assert::AreEqual(string("iden_345_ier"), word);
+
+			someID = "012345 ident_12";
+			startIndex = 7;
+			charsRead = p.readIdentifier(word, someID, startIndex);
+			Assert::AreEqual(8, charsRead);
+			Assert::AreEqual(string("ident_12"), word);
+
+
+
+
 		}
 		TEST_METHOD(TestReadOp)
 		{
 			Parser p = Parser();
 			string oneCharOp = "012345>";
 			string twoCharOp = "012345 <= 98765";
-			string op1, op2;
+			string opAtEnd = "01234>=";
+			string op1, op2, op3;
 
 			// readOp should set op's value to the string "<=", and count 2 characters
 			int oneCharRead = p.readOp(op1, oneCharOp, 6);
 			int twoCharsRead = p.readOp(op2, twoCharOp, 7);
+			int twoCharsAtEnd = p.readOp(op3, opAtEnd, 5);
 			
 
 			Assert::AreEqual(1, oneCharRead);
 			Assert::AreEqual(string(">"), op1);
 			Assert::AreEqual(2, twoCharsRead);
 			Assert::AreEqual(string("<="), op2);
+			Assert::AreEqual(2, twoCharsAtEnd);
+			Assert::AreEqual(string(">="), op3);
 		}
 		
 		TEST_METHOD(TestDatabaseSelect)
@@ -527,17 +561,38 @@ namespace ParserTest
 
 			// ensure the correct number of entries were retrieved
 			Assert::AreEqual(2, (int)validEntries1.size());
-			Assert::AreEqual(1, (int)validEntries2.size());
+			Assert::AreEqual(2, (int)validEntries2.size());
 			Assert::AreEqual(1, (int)validEntries3.size());
 
 			// ensure the correct indices (from original) were collected
 			Assert::AreEqual(1, validEntries1.at(0)); // "team == Dinosaurs"
 			Assert::AreEqual(2, validEntries1.at(1));
 
-			Assert::AreEqual(1, validEntries2.at(0)); // "index < 3"
-			Assert::AreEqual(2, validEntries2.at(1));
+			Assert::AreEqual(0, validEntries2.at(0)); // "index < 3"
+			Assert::AreEqual(1, validEntries2.at(1));
 
-			Assert::AreEqual(2, validEntries1.at(0)); // "name == \"palermo\""
+			Assert::AreEqual(2, validEntries3.at(0)); // "name == \"palermo\""
+		}
+		TEST_METHOD(TestTableStringOperatorCompare)
+		{	// creating an operator from a string representation
+			Table t = Table();
+			bool shouldBeTrue, shouldBeFalse;
+
+			shouldBeTrue = t.stringOperatorCompare("TeSt1", "==", "TeSt1");
+			shouldBeFalse = t.stringOperatorCompare("TeSt1", "!=", "TeSt1");
+			Assert::AreEqual(true, shouldBeTrue);
+			Assert::AreEqual(false, shouldBeFalse);
+
+			shouldBeTrue = t.stringOperatorCompare("45", "<", "412345");
+			shouldBeFalse = t.stringOperatorCompare("124", ">", "124");
+			Assert::AreEqual(true, shouldBeTrue);
+			Assert::AreEqual(false, shouldBeFalse);
+
+			shouldBeTrue = t.stringOperatorCompare("45", "<=", "45");
+			shouldBeFalse = t.stringOperatorCompare("123", ">=", "124");
+			Assert::AreEqual(true, shouldBeTrue);
+			Assert::AreEqual(false, shouldBeFalse);
+
 
 
 
