@@ -51,7 +51,7 @@ public:
 	void dropTable();
 	bool update(string key, string newVal, int keyCol = 0, int valCol = 1);
 
-	vector<int> findCondition(vector<string> whereOps); //returns index of entries that fulfill the condition
+	vector<int> findCondition(vector<string> condition); //returns index of entries that fulfill the condition
 
 	bool deleteEntryRow(unsigned int row);
 	bool deleteEntry(string key, int keyCol = 0);
@@ -61,4 +61,7 @@ public:
 	void open_file(std::string relation_name);
 	void close_file(string relationName);
 	void write_to_file(string relationName);
+
+	// Utilities
+	bool stringOperatorCompare(string operand1, string op, string operand2);
 };
