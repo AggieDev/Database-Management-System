@@ -64,7 +64,7 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 	}
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
 	{	// delete from a table
-		deletion(inputVector);
+		deleteCmd(inputVector);
 	}
 	else if (inputVector.at(0) == "OPEN")
 	{	// open file and then create a table based on the information in the file
@@ -147,7 +147,6 @@ vector<string> Parser::readInputLine(string inputLine)
 					charactersRead = readOp(word, inputLine, i);
 					inputVector.push_back(word);
 				}
-				//else if ()
 				else { throw new exception("token type was not identified"); }
 
 				// advance the inputLine index by that many characters
@@ -172,35 +171,41 @@ bool Parser::isDelimiter(char c)
 	return (c == ' ') || (c == ',') || (c == ';');
 }
 
-Table Parser::deletion(vector<string> input)
-{
+bool Parser::deleteCmd(vector<string> input)
+{	// delete-cmd ::= DELETE FROM relation-name WHERE condition
+
 	bool deleteKeyword = (input.at(0) == "DELETE") && (input.at(1) == "FROM");
 	if (!deleteKeyword)
 	{
 		throw new exception("Invalid deletion call");
-		return NULL;
+		return false;
 	}
-	string relationName = input.at(1);
+	string relationName = input.at(2);
 	
-	// badEntries are every entry in the table that meets the condition,
+	// badEntries is every entry in the table that meets the condition,
 	// the resulting table will have its original minus the badEntries.
 	// This is done using Database::differenceTable()
-	Table badEntries = Table();
-	Table* t = Database::getTableByReference(relationName);
-	vector<Entry> entries = t->getEntries();
+	Table* originalTable = Database::getTableByReference(relationName);
+	vector<Entry> entries = originalTable->getEntries();
 
-	// run selection() to get the table of entries that satisfy 
-	// the condition and will be eliminated
-	input.erase(input.begin());
+	// restructure vector for select-cmd, then run selection to get the 
+	// table of entries that satisfy the condition (they will be eliminated)
+	input.erase(input.begin() + 1, input.begin() + 4);
 	input.at(0) = "select";
-	badEntries = selection(input);
-
-	// update the appropriate table by reference
-	Table temp = Database::differenceTable(badEntries, *t);
-	t = &temp; 
+	input.push_back(relationName);
+	Table badTable = selection(input);
+	vector<Entry> badEntries = badTable.getEntries();
 	
-	// and return the same one stored as a temp
-	return temp;
+	// update the original table by reference
+	for (unsigned int i = 0; i < badEntries.size(); i++)
+	{
+		Entry badEntry = badEntries.at(i);
+		if (originalTable->hasEntry(badEntry) != -1)
+		{	// if a bad entry (one that met condition) is found, delete from original
+			originalTable->deleteEntry(badEntry.fields.at(0), 0);
+		}
+	}
+	return true;
 }
 
 Table Parser::selection(vector<string> input)

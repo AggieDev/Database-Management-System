@@ -641,6 +641,35 @@ namespace ParserTest
 			Assert::AreEqual(string("Aggies"), entry.fields.at(1));
 			Assert::AreEqual(string("\"Timothy S\""), entry.fields.at(2));
 		}
+		TEST_METHOD(TestDeleteCmd)
+		{	// delete-cmd ::= DELETE FROM relation-name WHERE condition
+
+			makeSampleTables();
+			Parser p = Parser();
+			string myDeleteCmd = "DELETE FROM baseball_players WHERE (index <= 3);";
+			vector<string> inputVec = p.readInputLine(myDeleteCmd);
+			// check size of original
+			Table originalTable = Database::getTable("baseball_players");
+			Assert::AreEqual(5, (int)originalTable.getEntries().size());
+			
+			// delete an entry
+			p.deleteCmd(inputVec);
+			// check that size decreased
+			Table alteredTable = Database::getTable("baseball_players");
+			Assert::AreEqual(2, (int)alteredTable.getEntries().size());
+
+			// check the proper entries are still present
+			Entry entry1 = alteredTable.getEntries().at(0);
+			Entry entry2 = alteredTable.getEntries().at(1);
+
+			Assert::AreEqual(string("4"), entry1.fields.at(0));
+			Assert::AreEqual(string("SanFran"), entry1.fields.at(1));
+			Assert::AreEqual(string("\"Bob Saget\""), entry1.fields.at(2));
+
+			Assert::AreEqual(string("5"), entry2.fields.at(0));
+			Assert::AreEqual(string("America"), entry2.fields.at(1));
+			Assert::AreEqual(string("\"Slim Shady\""), entry2.fields.at(2));
+		}
 		void makeSampleTables()
 		{	// create a sample table
 			vector<string> columns;
