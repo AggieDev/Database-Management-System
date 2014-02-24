@@ -8,7 +8,7 @@
 using namespace std;
 
 Parser::Parser()
-{ // default constructor, if no database reference is provided, make an empty one
+{
 }
 
 Parser::~Parser()
@@ -37,14 +37,10 @@ void Parser::readFile(string fileName)
 void Parser::evaluateInputVector(vector<string> inputVector)
 { // conditional statements to match the input line to specific function calls
 	// NOTE: Individual members in this vector are all strings but will be one of -
-	//		- identifier(basically an individual word, ie INSERT, pets-table-name, etc)
-	//		  -> type; represented the same as identifier, but is either VARCHAR or INTEGER
+	//		- identifier (an individual word)
 	//		- number (as a string, like "22")
-	//		- operator (!=, ==, <, <-, etc) so this includes the query command
+	//		- operator (!=, ==, <, <-, etc)
 	//		- relevant symbols (parenthesis, +, -, *)
-	//		  -> parenthesis will tell you to keep collecting subsequent strings in the 
-	//			 list for, say, CREATE TABLE with arbitrarily many columns possible
-	//		  -> set manipulation (union, difference, product)
 
 
 	if (inputVector.at(1) == "<-") // Query
@@ -63,61 +59,40 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 	}
 	
 	if (inputVector.at(0) == "INSERT" && inputVector.at(1) == "INTO")
-	{
+	{	// insert into a table
 		insertCmd(inputVector);
 	}
-	else if (inputVector.at(0) == "select")
-	{
-		selection(inputVector);
-	}
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
-	{
+	{	// delete from a table
 		deletion(inputVector);
 	}
 	else if (inputVector.at(0) == "OPEN")
-	{
-		//open file and then create a table based on the information in the file?
-		/*ifstream input_file;
-		string file_name = inputVector.at(1);
-		file_name += ".db";
-		input_file.open(file_name);
-		if (input_file.is_open())
-		{
-			while (!input_file.eof())
-			{
-
-			}
-		}*/
+	{	// open file and then create a table based on the information in the file
 		Database::getTable(inputVector.at(1)).open_file(inputVector.at(1));
 	}
 	else if (inputVector.at(0) == "CLOSE")
-	{
-		//close the file
+	{	// close the file
 		Database::getTable(inputVector.at(1)).close_file(inputVector.at(1));
-
 	}
 	else if (inputVector.at(0) == "WRITE")
-	{
-		//write to file
+	{	// write to file
 		Database::getTable(inputVector.at(1)).write_to_file(inputVector.at(1));
 	}
 	else if (inputVector.at(0) == "EXIT")
-	{
+	{	// exit the database application
         exitCmd(inputVector);
-
 	}
 	else if (inputVector.at(0) == "SHOW")
-	{
+	{	// show a table
         ShowCmd(inputVector);
 	}
-
 	else if (inputVector.at(0) == "CREATE" && inputVector.at(1) == "TABLE")
-	{
-        createCmd(inputVector);
+	{	// create a new table
+		createCmd(inputVector);
 	}
 	else if (inputVector.at(0) == "UPDATE")
-	{
-        updateCmd(inputVector);
+	{	// update values in a table
+		updateCmd(inputVector);
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -152,22 +127,22 @@ vector<string> Parser::readInputLine(string inputLine)
 			{	 // determine what the following token is going to be.
 				// the appropriate function returns the number of characters read
 				int charactersRead = 0;
-				if (isdigit(c) != 0) // Patrick
+				if (isdigit(c) != 0)
 				{
 					charactersRead = readInteger(word, inputLine, i);
 					inputVector.push_back(word);
 				}
-				else if (c == '\"')			// Elliut
+				else if (c == '\"')
 				{
 					charactersRead = readLiteral(word, inputLine, i);
 					inputVector.push_back(word);
 				}
-				else if (isalpha(c) || (c == '_'))		// Garrett
+				else if (isalpha(c) || (c == '_'))
 				{
 					charactersRead = readIdentifier(word, inputLine, i);
 					inputVector.push_back(word);
 				}
-				else if (isOp(c))		// Elliut
+				else if (isOp(c))
 				{ // this will also include the '<-' needed for a query, and +,-,* for set manipulation
 					charactersRead = readOp(word, inputLine, i);
 					inputVector.push_back(word);
@@ -758,7 +733,7 @@ int Parser::readLiteral(string& word, string input, unsigned int inputIndex)
 {
     string myWord = "";
 	unsigned int myIndex = inputIndex;
-	if (input.find("\"") == myIndex)
+	if (input.at(myIndex) == '\"')
 	{ // if theres an opening quote
 		for (; myIndex < input.size(); myIndex++)
 		{
