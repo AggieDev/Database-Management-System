@@ -431,7 +431,7 @@ void Application::selectPrompt()
 			break;
 	}
 
-	//first table name
+	//table selecting from
 	while (true)
 	{
 		cout << "\nType a table name to select from. Tables to choose from:\n";
@@ -462,12 +462,100 @@ void Application::selectPrompt()
 
 void Application::renamePrompt()
 {
+	string newTable;
+	string tableFrom;
+	vector<string> newColNames;
 
+	//new table name
+	while (true)
+	{
+		cout << "Insert a name for the new table to be created: ";
+		getline(cin, newTable);
+		if (newTable.size() == 0)
+			cout << "Please insert a table name.\n\n";
+		else
+			break;
+	}
+
+	//table selecting from
+	while (true)
+	{
+		cout << "\nType a table name to select from. Tables to choose from:\n";
+		for (int i = 0; i < Database::getTables().size(); i++)
+			cout << Database::getTables().at(i).getName() << "\n";
+		cout << "\n";
+		getline(cin, tableFrom);
+		if (tableFrom.size() == 0 || Database::tableExists(tableFrom) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
+		else
+			break;
+	}
+
+	cout << "Enter new column names for each of the following columns:\n";
+	Table table = Database::getTable(tableFrom);
+	for (int i = 0; i < table.getColNames().size(); i++)
+	{
+		string input;
+		cout << table.getColNames().at(i) << ": ";
+		getline(cin, input);
+		newColNames.push_back(input);
+	}
+
+	cout << renameTable(newTable, tableFrom, newColNames);
 }
 
 void Application::projectPrompt()
 {
+	string newTable;
+	string tableFrom;
+	vector<string> colNames;
 
+	//new table name
+	while (true)
+	{
+		cout << "Insert a name for the new table to be created: ";
+		getline(cin, newTable);
+		if (newTable.size() == 0)
+			cout << "Please insert a table name.\n\n";
+		else
+			break;
+	}
+
+	//table selecting from
+	while (true)
+	{
+		cout << "\nType a table name to select from. Tables to choose from:\n";
+		for (int i = 0; i < Database::getTables().size(); i++)
+			cout << Database::getTables().at(i).getName() << "\n";
+		cout << "\n";
+		getline(cin, tableFrom);
+		if (tableFrom.size() == 0 || Database::tableExists(tableFrom) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
+		else
+			break;
+	}
+
+	cout << "Type Y or N, Y if you want the column name project, N if you dont:\n";
+	Table table = Database::getTable(tableFrom);
+	for (int i = 0; i < table.getColNames().size(); i++)
+	{
+		string input;
+		cout << table.getColNames().at(i) << ": ";
+		getline(cin, input);
+
+		if (input.compare("Y") != 0 && input.compare("N") != 0)		//if not Y or N
+		{
+			cout << "Type either Y or N.\n";
+			i--;
+		}
+		else if (input.compare("Y") == 0)
+			colNames.push_back(table.getColNames().at(i));
+	}
+
+	if (colNames.size() < 1)
+		cout << "You must choose at least one column to project.\n";
+	else
+		cout << tableProjection(newTable, tableFrom, colNames);
 }
 
 void Application::writePrompt()
@@ -596,7 +684,14 @@ string Application::tableSelect(string newTable, string tableFrom, string column
 	return newTable + " <- select (" + columnName + " " + condition + ") " + tableFrom + ";";
 }
 
-string Application::tableProjection()
+string Application::tableProjection(string newTableName, string tableName, vector<string> newAttributes)
 {
-	return "";
+	string returnString = newTableName + " <- project (";
+	for (int i = 0; i < newAttributes.size(); i++)
+		returnString += newAttributes.at(i) + ", ";
+	//remove last comma and space
+	returnString = returnString.substr(0, returnString.size() - 2);
+	returnString += ") " + tableName + ";";
+
+	return returnString;
 }

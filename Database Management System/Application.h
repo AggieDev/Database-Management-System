@@ -20,7 +20,7 @@ class Application
 	string renameTable(string, string, vector<string>);
 	string writeTable(string tableName);
 	string openTable(string tableName);
-	string tableProjection();
+	string tableProjection(string, string, vector<string>);
 
 	//menu functions
 	string mainMenu();	//first prompt
