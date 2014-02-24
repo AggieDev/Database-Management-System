@@ -36,7 +36,7 @@ namespace ParserTest
 			vector<string> inputVector = p.readInputLine(sampleInput);
 			Assert::AreEqual(2, (int)inputVector.size()); // should have these contents: [ 123 , 789 ]
 		}
-		TEST_METHOD(TestInterpretAtomicExpression_RelationName)
+		TEST_METHOD(TestEvaluateAtomicExpression_RelationName)
 		{ // test atomic expression if it is of the simple form:
 			//		atomic-expr ::= relation-name
 			
@@ -51,12 +51,12 @@ namespace ParserTest
 			AtomicExpression_RelationName.push_back("dbTableName");
 
 			// get a table using the parser's interpret atomic expression function
-			Table interpretedTable = p.interpretAtomicExpression(AtomicExpression_RelationName);
+			Table interpretedTable = p.evaluateAtomicExpression(AtomicExpression_RelationName);
 
 			// the table retrieved should be the one we added to the database
 			Assert::AreEqual(string("dbTableName"), interpretedTable.getName());
 		}
-		TEST_METHOD(TestInterpretAtomicExpression_Union)
+		TEST_METHOD(TestEvaluateAtomicExpression_Union)
 		{ // test atomic expression if it is of the simple form:
 			//		atomic-expr ::= relation-name
 
@@ -91,7 +91,7 @@ namespace ParserTest
 			AtomicExpression_UnionName.push_back("table2");
 
 			// get a table using the parser's interpret atomic expression function
-			Table interpretedTable = p.interpretAtomicExpression(AtomicExpression_UnionName);
+			Table interpretedTable = p.evaluateAtomicExpression(AtomicExpression_UnionName);
 			cout << "manual union table then interpreted table:\n=================\n\n";
 			unionTable.printTable();
 			interpretedTable.printTable();
@@ -148,6 +148,19 @@ namespace ParserTest
 
 			Assert::AreEqual(21, charsRead);
 			Assert::AreEqual(wordToBeSet, string("\"literal with spaces\""));
+		}
+		TEST_METHOD(TestReadOp)
+		{
+			Parser p = Parser();
+			string s = "012345 <= 98765";
+
+			string op;
+
+			// readOp should set op's value to the string "<=", and count 2 characters
+			int charsRead = p.readOp(op, s, 7);
+
+			Assert::AreEqual(2, charsRead);
+			Assert::AreEqual(string("<="), op);
 		}
 
 	};
