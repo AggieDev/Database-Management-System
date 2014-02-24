@@ -112,11 +112,11 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 
 	else if (inputVector.at(0) == "CREATE" && inputVector.at(1) == "TABLE")
 	{
-       // createCmd(inputVector);
+        createCmd(inputVector);
 	}
 	else if (inputVector.at(0) == "UPDATE")
 	{
-       // updateCmd(inputVector);
+        updateCmd(inputVector);
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -502,6 +502,10 @@ void Parser::evaluateTypeAttributeList(vector<string> input, vector<string>* att
 		throw new exception("Error occurred in evaluateTypeAttributeList\n");
 	}
 }
+void Parser::evaluateSetAttribute(vector<string> input)
+{//read the entire vector of input, then sets the entries in the attribute name equal to literal
+
+}
 void Parser::removeParenthesis(vector<string>* vec)
 { // if first and last elements are parenthesis, remove
 	if (vec->at(0) == "(")
@@ -734,58 +738,46 @@ void Parser::ShowCmd(vector<string> input)
     t.printTable();
 
 }
-bool Parser::createCmd(vector<string> input)
+
+Table Parser::createCmd(vector<string> input)
 {// create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
    
 	string relationName = input.at(2);	// name of Table in the Database
-	Table* t = Database::getTableByReference(relationName);
-    bool properOpenParenthesis = input.at(3) == "(";
-	bool properCloseParenthesis = input.at(input.size() - 1) == ")";
-	bool complete = false;
-	if (complete)
-	{
+	
 
-		for (int i = 3; i < input.size(); i++)
+	bool properOpenParenthesis = input.at(3) == "(";
+	
+
+	vector<string> attributeTypeList;
+	vector<string>attributeList;
+	vector<char>attributeType;
+	if (properOpenParenthesis)
+	{	
+				
+		for (unsigned int i = 4; i < input.size(); i++)
 		{
 
-			if (properOpenParenthesis)
-			{	
-				for (unsigned int i = 4; i < input.size(); i++)
-				{
-					if (input.at(i) == ")" && input.at(i+1) =="PRIMARY")
-					{
-						break;
-					}
-					else
-					{
-						// fill attributeTypedList vector with the values following , '(',
-						vector<string> attributeTypeList;
-						attributeTypeList.push_back(input.at(i));
-						//evaluateTypeAttributeList(attributeTypeList);
-					}
-				}
-			}
-
-			if (input.at(i) == "KEY" && properCloseParenthesis)
+			if (input.at(i) == "PRIMARY")
 			{
-				vector<string> attributeList;
-				int referencePoint = i + 1;
-				for (unsigned int i = referencePoint; i < input.size() - 1; i++)
-				{ // fill attributeList vector with the values following the word, 'KEY', should be one or more attribute-names
-					attributeList.push_back(input.at(i));
-				}
-				//Table t = Database::getTable(relationName);
-				complete = true;
+				// fill attributeTypedList vector with the values following , '('
+				break;
+			}
+			else
+			{
+				attributeTypeList.push_back(input.at(i));
 			}
 
 		}
-		return true;
+		
 	}
-
-	return false;
+	evaluateTypeAttributeList(attributeTypeList, &attributeList, &attributeType);
+	
+	Table newTable(relationName, attributeList, attributeType);
+	Database::addTable(newTable);
+	return newTable;
 
 }
-bool Parser::updateCmd(vector<string> input)
+void Parser::updateCmd(vector<string> input)
 {
     string relationName = input.at(1);	// name of Table in the Database
 	Table* t = Database::getTableByReference(relationName);
@@ -793,38 +785,27 @@ bool Parser::updateCmd(vector<string> input)
 
 	for (int i = 2; i < input.size(); i++)
 	{
+		vector<string> setAttribute;
 
 		if (Set)
 		{
-			vector<string> setAttribute;
-			if (input.at(i+1) == "WHERE")
+			for (int i = 3; i < input.size(); i++)
 			{
-				break;
-			}
-			else
-			{
-				for (int i = 3; i < input.size(); i++)
-				{
-					setAttribute.push_back(input.at(i));
-				}
+				setAttribute.push_back(input.at(i));
 			}
 		}
-
+		evaluateSetAttribute(setAttribute);
 
 		if (input.at(i) == "WHERE")
 		{
-			vector<string>whereCondition;
+			vector<string> whereCondition;
 
-			for (unsigned int i = 0; i < input.size() - 1;i++)
+			for (unsigned int i = 0; i < input.size() - 1; i++)
 			{
 				whereCondition.push_back(input.at(i));
 			}
-
-			return true;
 		}
-
 	}
-	return false;
 
 }
 bool Parser::isType(string s)
