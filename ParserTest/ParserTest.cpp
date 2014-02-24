@@ -78,11 +78,11 @@ namespace ParserTest
 
 			// first make a database that has the table we are looking for
 			Parser p = Parser();
-			vector<string> expr;
+			/*vector<string> expr;
 			Table t1 = Table("table1");
 			Table t2 = Table("table2");
 			Database::addTable(t1);
-			Database::addTable(t2);
+			Database::addTable(t2);*/
 
 			vector<string> columnNames;
 			columnNames.push_back("Names");
@@ -113,10 +113,10 @@ namespace ParserTest
 			interpretedTable.printTable();
 
 			// the table retrieved should be the one we added to the database
-			//Assert::AreEqual(unionTable.getColNames().size(), interpretedTable.getColNames().size());
-			//Assert::AreEqual(unionTable.getColTypes().size(), interpretedTable.getColTypes().size());
-			//Assert::AreEqual(unionTable.getNumCols(), interpretedTable.getNumCols());
-			//Assert::AreEqual(unionTable.getEntries().size(), interpretedTable.getEntries().size());
+			Assert::AreEqual(unionTable.getColNames().size(), interpretedTable.getColNames().size());
+			Assert::AreEqual(unionTable.getColTypes().size(), interpretedTable.getColTypes().size());
+			Assert::AreEqual(unionTable.getNumCols(), interpretedTable.getNumCols());
+			Assert::AreEqual(unionTable.getEntries().size(), interpretedTable.getEntries().size());
 		}
 		TEST_METHOD(TestSelectionCall)
 		{ // test atomic expression if it is of the more complicated expression
@@ -397,43 +397,17 @@ namespace ParserTest
 			//		atomic-expr ::= ( expr )
 			Parser p = Parser();
 
-			vector<string> columns;
-			columns.push_back("index");
-			columns.push_back("team");
-			columns.push_back("name");
-			vector<char> colTypes;
-			colTypes.push_back('s');
-			colTypes.push_back('s');
-			colTypes.push_back('s');
-
-			Table t = Table("baseball_players", columns, colTypes);
-
-			vector<string> entryFields1;
-			entryFields1.push_back("1");
-			entryFields1.push_back("Elephants");
-			entryFields1.push_back("jose");
-			vector<string> entryFields2;
-			entryFields2.push_back("2");
-			entryFields2.push_back("Dinosaurs");
-			entryFields2.push_back("hernandez");
-			vector<string> entryFields3;
-			entryFields3.push_back("3");
-			entryFields3.push_back("Giraffes");
-			entryFields3.push_back("palermo");
-
-			t.addEntry(entryFields1);
-			t.addEntry(entryFields2);
-			t.addEntry(entryFields3);
-			Database::addTable(t);
-
-			
+			makeSampleTables();
+						
 			string expressionString = "rename (id,teamname,playername) baseball_players;";
 			vector<string> renameExprVector = p.readInputLine(expressionString);
-			Table resultTable = p.rename(renameExprVector);
-			
-			Assert::AreEqual(resultTable.getColNames().at(0), string("id"));
-			Assert::AreEqual(resultTable.getColNames().at(1), string("teamname"));
-			Assert::AreEqual(resultTable.getColNames().at(2), string("playername"));
+			p.rename(renameExprVector);
+			Table resultTable = Database::getTable("baseball_players");
+
+			Assert::AreEqual(3, (int)resultTable.getColNames().size());
+			Assert::AreEqual(string("id"), resultTable.getColNames().at(0));
+			Assert::AreEqual(string("teamname"), resultTable.getColNames().at(1));
+			Assert::AreEqual(string("playername"), resultTable.getColNames().at(2));
 			
 
 		}
@@ -714,7 +688,7 @@ namespace ParserTest
 			entryFields5.push_back("America");
 			entryFields5.push_back("\"Slim Shady\"");
 			t1.addEntry(entryFields5);
-
+			
 			Database::addTable(t1);
 			Database::addTable(t2);
 		}

@@ -453,19 +453,18 @@ Table Parser::rename(vector<string> input)
 		}
 	}
 
-
-	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
-	Table renameTable = Database::rename_table(&fromTable, attributesList);
-
-	return renameTable;
+	if (valuesForAtomicExpression.size() > 1)
+	{
+		throw new exception("Error in rename: expected atomic expression for table name");
+		return false;
+	}
+	string tableName = valuesForAtomicExpression.at(0);
+	Table* fromTable = Database::getTableByReference(tableName);
+	Database::rename_table(fromTable, attributesList);
+	return Database::getTable(tableName);
 }
-
-
-
-
-//returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
-{
+{	//returns the union, difference, etc. table based on arthOperator
 	//gets index of set manipulation operator: +,-,*, or JOIN
 	int index = distance(expr.begin(), find(expr.begin(), expr.end(), arthOperator));
 	cout << "Index that " << arthOperator << " is at in expression: " << index << "\n";

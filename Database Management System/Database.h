@@ -11,7 +11,6 @@ private:
 
 public:
 	//database is global (static)
-
 	static void printTables();
 	static void addTable(Table t){ _tables.push_back(t); }
 	static Table differenceTable(Table t1, Table t2);
