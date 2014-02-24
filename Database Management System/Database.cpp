@@ -215,23 +215,6 @@ Table Database::Project(vector<string> attributes, Table fromTable)
 			}
 		}
 	}
-    
-    /*if(attributes[0]=="*")count++;
-    
-	if(count < attributes.size()) //check if all attributes were found
-	{
-		string error = "Not all attributes were found in table " + selectedTable->getName();
-		throw error;
-	}
-        
-	if(attributes[0] == "*")
-	{
-		result = new Table("Result",selectedTable->getColNames(),selectedTable->getColTypes());
-		for (unsigned int i = 0; i < selectedTable->getEntries().size(); i++)
-		{
-			result->addEntry(selectedTable->getEntries()[i]);
-		}
-	}*/
 	
 		vector<int> columnsToSelect;
 		for (unsigned int i = 0; i < attributes.size(); i++)
@@ -259,17 +242,11 @@ Table Database::Project(vector<string> attributes, Table fromTable)
 	return *result;
 
 }
-
-
 Table Database::rename_table(Table* fromTable, vector<string> new_attributes)
 {
-	Table* rename_table = fromTable;
-	rename_table->rename(new_attributes);
-	return *rename_table;
+	fromTable->rename(new_attributes);
+	return *fromTable;
 }
-
-
-
 Table Database::getTable(string relationName)
 { // return pointer to the correct table, so it can be modified
 	for (unsigned int i = 0; i < _tables.size(); i++)

@@ -78,11 +78,11 @@ namespace ParserTest
 
 			// first make a database that has the table we are looking for
 			Parser p = Parser();
-			vector<string> expr;
+			/*vector<string> expr;
 			Table t1 = Table("table1");
 			Table t2 = Table("table2");
 			Database::addTable(t1);
-			Database::addTable(t2);
+			Database::addTable(t2);*/
 
 			vector<string> columnNames;
 			columnNames.push_back("Names");
@@ -113,10 +113,10 @@ namespace ParserTest
 			interpretedTable.printTable();
 
 			// the table retrieved should be the one we added to the database
-			//Assert::AreEqual(unionTable.getColNames().size(), interpretedTable.getColNames().size());
-			//Assert::AreEqual(unionTable.getColTypes().size(), interpretedTable.getColTypes().size());
-			//Assert::AreEqual(unionTable.getNumCols(), interpretedTable.getNumCols());
-			//Assert::AreEqual(unionTable.getEntries().size(), interpretedTable.getEntries().size());
+			Assert::AreEqual(unionTable.getColNames().size(), interpretedTable.getColNames().size());
+			Assert::AreEqual(unionTable.getColTypes().size(), interpretedTable.getColTypes().size());
+			Assert::AreEqual(unionTable.getNumCols(), interpretedTable.getNumCols());
+			Assert::AreEqual(unionTable.getEntries().size(), interpretedTable.getEntries().size());
 		}
 		TEST_METHOD(TestSelectionCall)
 		{ // test atomic expression if it is of the more complicated expression
@@ -317,50 +317,26 @@ namespace ParserTest
 			//		atomic-expr ::= ( expr )
 			Parser p = Parser();
 
-			vector<string> columns;
-			columns.push_back("index");
-			columns.push_back("team");
-			columns.push_back("name");
-			vector<char> colTypes;
-			colTypes.push_back('s');
-			colTypes.push_back('s');
-			colTypes.push_back('s');
+			makeSampleTables();
 
-			Table t = Table("baseball_players", columns, colTypes);
-
-			vector<string> entryFields1;
-			entryFields1.push_back("1");
-			entryFields1.push_back("Elephants");
-			entryFields1.push_back("jose");
-			vector<string> entryFields2;
-			entryFields2.push_back("2");
-			entryFields2.push_back("Dinosaurs");
-			entryFields2.push_back("hernandez");
-			vector<string> entryFields3;
-			entryFields3.push_back("3");
-			entryFields3.push_back("Giraffes");
-			entryFields3.push_back("palermo");
-
-			t.addEntry(entryFields1);
-			t.addEntry(entryFields2);
-			t.addEntry(entryFields3);
-			Database::addTable(t);
-			
-			
-			/*vector<string> projectAttr;
-			projectAttr.push_back("FirstName");
-			projectAttr.push_back("LastName");
-			projectAttr.push_back("Price");*/
 
 			// this should get a table of a singleton entry (2, Dinosaurs)
-			string expressionString = "project (index,team) baseball_players;";
+			string expressionString = "project (team, name) baseball_players;";
 			vector<string> projectionExprVector = p.readInputLine(expressionString);
 			Table resultTable = p.projection(projectionExprVector);
 
+			// check resultTable's size and column names
+			Assert::AreEqual(5,(int)resultTable.getEntries().size());
 			Assert::AreEqual(2, resultTable.getNumCols());
-			Assert::AreEqual(resultTable.getColNames().at(0), string("index"));
-			Assert::AreEqual(resultTable.getColNames().at(1), string("team"));
-			//Assert::AreEqual(string("2"), resultTable.getEntries().at(0).fields.at(0));
+			Assert::AreEqual(resultTable.getColNames().at(0), string("team"));
+			Assert::AreEqual(resultTable.getColNames().at(1), string("name"));
+			
+			// check a few entry fields
+			Assert::AreEqual(string("Elephants"), resultTable.getEntries().at(0).fields.at(0));
+			Assert::AreEqual(string("SanFran"), resultTable.getEntries().at(3).fields.at(0));
+
+			Assert::AreEqual(string("\"hernandez\""), resultTable.getEntries().at(1).fields.at(1));
+			Assert::AreEqual(string("\"Slim Shady\""), resultTable.getEntries().at(4).fields.at(1));
 
 		}
 		TEST_METHOD(TestDatabaseRename)
@@ -421,43 +397,17 @@ namespace ParserTest
 			//		atomic-expr ::= ( expr )
 			Parser p = Parser();
 
-			vector<string> columns;
-			columns.push_back("index");
-			columns.push_back("team");
-			columns.push_back("name");
-			vector<char> colTypes;
-			colTypes.push_back('s');
-			colTypes.push_back('s');
-			colTypes.push_back('s');
-
-			Table t = Table("baseball_players", columns, colTypes);
-
-			vector<string> entryFields1;
-			entryFields1.push_back("1");
-			entryFields1.push_back("Elephants");
-			entryFields1.push_back("jose");
-			vector<string> entryFields2;
-			entryFields2.push_back("2");
-			entryFields2.push_back("Dinosaurs");
-			entryFields2.push_back("hernandez");
-			vector<string> entryFields3;
-			entryFields3.push_back("3");
-			entryFields3.push_back("Giraffes");
-			entryFields3.push_back("palermo");
-
-			t.addEntry(entryFields1);
-			t.addEntry(entryFields2);
-			t.addEntry(entryFields3);
-			Database::addTable(t);
-
-			
+			makeSampleTables();
+						
 			string expressionString = "rename (id,teamname,playername) baseball_players;";
 			vector<string> renameExprVector = p.readInputLine(expressionString);
-			Table resultTable = p.rename(renameExprVector);
-			
-			Assert::AreEqual(resultTable.getColNames().at(0), string("id"));
-			Assert::AreEqual(resultTable.getColNames().at(1), string("teamname"));
-			Assert::AreEqual(resultTable.getColNames().at(2), string("playername"));
+			p.rename(renameExprVector);
+			Table resultTable = Database::getTable("baseball_players");
+
+			Assert::AreEqual(3, (int)resultTable.getColNames().size());
+			Assert::AreEqual(string("id"), resultTable.getColNames().at(0));
+			Assert::AreEqual(string("teamname"), resultTable.getColNames().at(1));
+			Assert::AreEqual(string("playername"), resultTable.getColNames().at(2));
 			
 
 		}
@@ -615,6 +565,132 @@ namespace ParserTest
 			shouldBeFalse = t.stringOperatorCompare("123", ">=", "124");
 			Assert::AreEqual(true, shouldBeTrue);
 			Assert::AreEqual(false, shouldBeFalse);
+		}
+		TEST_METHOD(TestInsertCmd_Option1)
+		{	// insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
+			
+			makeSampleTables(); // see utility function below
+			Parser p = Parser();
+			string myInsertCmd = "INSERT INTO empty_table VALUES FROM RELATION (select (index >= 3) baseball_players);";
+			vector<string> inputVec = p.readInputLine(myInsertCmd);
+
+			Table alteredTable = Database::getTable("empty_table");
+			Assert::AreEqual(0, (int)alteredTable.getEntries().size());
+
+			bool insertSuccess = p.insertCmd(inputVec);
+			Assert::AreEqual(true, insertSuccess);
+
+			alteredTable = Database::getTable("empty_table");
+			Assert::AreEqual(3, (int)alteredTable.getEntries().size());
+			
+			string firstIndex = alteredTable.getEntries().at(0).fields.at(0);
+			Assert::AreEqual(string("3"), firstIndex);
+
+			string secondTeam = alteredTable.getEntries().at(1).fields.at(1);
+			Assert::AreEqual(string("SanFran"), secondTeam);
+
+			string thirdName = alteredTable.getEntries().at(2).fields.at(2);
+			Assert::AreEqual(string("\"Slim Shady\""), thirdName);
+
+		}
+		TEST_METHOD(TestInsertCmd_Option2)
+		{	// insert-cmd ::= INSERT INTO relation-name VALUES FROM(literal {, literal })
+			
+			makeSampleTables(); // see utility function below
+			Parser p = Parser();
+			string myInsertCmd = "INSERT INTO baseball_players VALUES FROM (6, Aggies, \"Timothy S\");";
+			vector<string> inputVec = p.readInputLine(myInsertCmd);
+			// check size of original
+			Table originalTable = Database::getTable("baseball_players");
+			Assert::AreEqual(5, (int)originalTable.getEntries().size());
+			// insert the new entry
+			bool insertSuccess = p.insertCmd(inputVec);
+			Assert::AreEqual(true, insertSuccess);
+			// check that size increased
+			Table alteredTable = Database::getTable("baseball_players");
+			Assert::AreEqual(6, (int)alteredTable.getEntries().size());
+			// check the proper entry was added at the end
+			Entry entry = alteredTable.getEntries().at(5);
+			Assert::AreEqual(string("6"), entry.fields.at(0));
+			Assert::AreEqual(string("Aggies"), entry.fields.at(1));
+			Assert::AreEqual(string("\"Timothy S\""), entry.fields.at(2));
+		}
+		TEST_METHOD(TestDeleteCmd)
+		{	// delete-cmd ::= DELETE FROM relation-name WHERE condition
+
+			makeSampleTables();
+			Parser p = Parser();
+			string myDeleteCmd = "DELETE FROM baseball_players WHERE (index <= 3);";
+			vector<string> inputVec = p.readInputLine(myDeleteCmd);
+			// check size of original
+			Table originalTable = Database::getTable("baseball_players");
+			Assert::AreEqual(5, (int)originalTable.getEntries().size());
+			
+			// delete an entry
+			p.deleteCmd(inputVec);
+			// check that size decreased
+			Table alteredTable = Database::getTable("baseball_players");
+			Assert::AreEqual(2, (int)alteredTable.getEntries().size());
+
+			// check the proper entries are still present
+			Entry entry1 = alteredTable.getEntries().at(0);
+			Entry entry2 = alteredTable.getEntries().at(1);
+
+			Assert::AreEqual(string("4"), entry1.fields.at(0));
+			Assert::AreEqual(string("SanFran"), entry1.fields.at(1));
+			Assert::AreEqual(string("\"Bob Saget\""), entry1.fields.at(2));
+
+			Assert::AreEqual(string("5"), entry2.fields.at(0));
+			Assert::AreEqual(string("America"), entry2.fields.at(1));
+			Assert::AreEqual(string("\"Slim Shady\""), entry2.fields.at(2));
+		}
+		void makeSampleTables()
+		{	// create a sample table
+			vector<string> columns;
+			columns.push_back("index");
+			columns.push_back("team");
+			columns.push_back("name");
+
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t1 = Table("baseball_players", columns, colTypes);
+			Table t2 = Table("empty_table", columns, colTypes);
+
+			vector<string> entryFields1;
+			entryFields1.push_back("1");
+			entryFields1.push_back("Elephants");
+			entryFields1.push_back("\"jose\"");
+			t1.addEntry(entryFields1);
+
+			vector<string> entryFields2;
+			entryFields2.push_back("2");
+			entryFields2.push_back("Dinosaurs");
+			entryFields2.push_back("\"hernandez\"");
+			t1.addEntry(entryFields2);
+
+			vector<string> entryFields3;
+			entryFields3.push_back("3");
+			entryFields3.push_back("Dinosaurs");
+			entryFields3.push_back("\"palermo\"");
+			t1.addEntry(entryFields3);
+
+			vector<string> entryFields4;
+			entryFields4.push_back("4");
+			entryFields4.push_back("SanFran");
+			entryFields4.push_back("\"Bob Saget\"");
+			t1.addEntry(entryFields4);
+
+			vector<string> entryFields5;
+			entryFields5.push_back("5");
+			entryFields5.push_back("America");
+			entryFields5.push_back("\"Slim Shady\"");
+			t1.addEntry(entryFields5);
+			
+			Database::addTable(t1);
+			Database::addTable(t2);
 		}
 	};
 }

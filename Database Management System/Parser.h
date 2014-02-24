@@ -28,8 +28,6 @@ public:
 
 	// single table manipulation functions
 	Table selection(std::vector<std::string> input);
-	Table deletion(std::vector<std::string> input);
-
 	Table projection(std::vector<std::string>input);
 	Table rename(std::vector<std::string>input);
 
@@ -41,6 +39,7 @@ public:
 
 	// call command function based on user input, return true on success
 	bool insertCmd(std::vector<std::string> inputLine);
+	bool deleteCmd(std::vector<std::string> input);
 	bool exitCmd(std::vector<std::string> inputLine);
 	void ShowCmd(std::vector<std::string>input);
 	Table createCmd(std::vector<std::string>input);

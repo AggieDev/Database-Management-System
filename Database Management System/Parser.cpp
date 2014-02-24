@@ -64,7 +64,7 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 	}
 	else if (inputVector.at(0) == "DELETE" && inputVector.at(1) == "FROM")
 	{	// delete from a table
-		deletion(inputVector);
+		deleteCmd(inputVector);
 	}
 	else if (inputVector.at(0) == "OPEN")
 	{	// open file and then create a table based on the information in the file
@@ -147,7 +147,6 @@ vector<string> Parser::readInputLine(string inputLine)
 					charactersRead = readOp(word, inputLine, i);
 					inputVector.push_back(word);
 				}
-				//else if ()
 				else { throw new exception("token type was not identified"); }
 
 				// advance the inputLine index by that many characters
@@ -172,35 +171,41 @@ bool Parser::isDelimiter(char c)
 	return (c == ' ') || (c == ',') || (c == ';');
 }
 
-Table Parser::deletion(vector<string> input)
-{
+bool Parser::deleteCmd(vector<string> input)
+{	// delete-cmd ::= DELETE FROM relation-name WHERE condition
+
 	bool deleteKeyword = (input.at(0) == "DELETE") && (input.at(1) == "FROM");
 	if (!deleteKeyword)
 	{
 		throw new exception("Invalid deletion call");
-		return NULL;
+		return false;
 	}
-	string relationName = input.at(1);
+	string relationName = input.at(2);
 	
-	// badEntries are every entry in the table that meets the condition,
+	// badEntries is every entry in the table that meets the condition,
 	// the resulting table will have its original minus the badEntries.
 	// This is done using Database::differenceTable()
-	Table badEntries = Table();
-	Table* t = Database::getTableByReference(relationName);
-	vector<Entry> entries = t->getEntries();
+	Table* originalTable = Database::getTableByReference(relationName);
+	vector<Entry> entries = originalTable->getEntries();
 
-	// run selection() to get the table of entries that satisfy 
-	// the condition and will be eliminated
-	input.erase(input.begin());
+	// restructure vector for select-cmd, then run selection to get the 
+	// table of entries that satisfy the condition (they will be eliminated)
+	input.erase(input.begin() + 1, input.begin() + 4);
 	input.at(0) = "select";
-	badEntries = selection(input);
-
-	// update the appropriate table by reference
-	Table temp = Database::differenceTable(badEntries, *t);
-	t = &temp; 
+	input.push_back(relationName);
+	Table badTable = selection(input);
+	vector<Entry> badEntries = badTable.getEntries();
 	
-	// and return the same one stored as a temp
-	return temp;
+	// update the original table by reference
+	for (unsigned int i = 0; i < badEntries.size(); i++)
+	{
+		Entry badEntry = badEntries.at(i);
+		if (originalTable->hasEntry(badEntry) != -1)
+		{	// if a bad entry (one that met condition) is found, delete from original
+			originalTable->deleteEntry(badEntry.fields.at(0), 0);
+		}
+	}
+	return true;
 }
 
 Table Parser::selection(vector<string> input)
@@ -448,19 +453,18 @@ Table Parser::rename(vector<string> input)
 		}
 	}
 
-
-	Table fromTable = evaluateAtomicExpression(valuesForAtomicExpression);
-	Table renameTable = Database::rename_table(&fromTable, attributesList);
-
-	return renameTable;
+	if (valuesForAtomicExpression.size() > 1)
+	{
+		throw new exception("Error in rename: expected atomic expression for table name");
+		return false;
+	}
+	string tableName = valuesForAtomicExpression.at(0);
+	Table* fromTable = Database::getTableByReference(tableName);
+	Database::rename_table(fromTable, attributesList);
+	return Database::getTable(tableName);
 }
-
-
-
-
-//returns the union, difference, etc. table based on arthOperator
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
-{
+{	//returns the union, difference, etc. table based on arthOperator
 	//gets index of set manipulation operator: +,-,*, or JOIN
 	int index = distance(expr.begin(), find(expr.begin(), expr.end(), arthOperator));
 	cout << "Index that " << arthOperator << " is at in expression: " << index << "\n";
@@ -504,6 +508,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	// expr ::= atomic-expr | selection | projection | renaming 
 	//						| union | difference | product | natural-join
 
+	removeParenthesis(&expr);
 	string first = expr.at(0);
 	
 	if (first == "select")
@@ -547,7 +552,10 @@ bool Parser::insertCmd(vector<string> input)
 
 	string relationName = input.at(2);	// name of Table in the Database
 	Table* t = Database::getTableByReference(relationName);
-
+	if (t == NULL)
+	{	// table was not found
+		throw new exception("Error in Parser::insertCmd: table not found in database");
+	}
 	if (input.at(5) == "RELATION")
 	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
 		vector<string> expression;
@@ -569,13 +577,12 @@ bool Parser::insertCmd(vector<string> input)
 		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
 		if (properOpenParenthesis && properCloseParenthesis)
 		{ // ensure parenthesis are appropriately placed
-			vector<string> fields;
+			vector<string> newFields;
 			for (unsigned int i = 6; i < input.size() - 1; i++)
-			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
-				fields.push_back(input.at(i));
+			{ // fill fields vector with the declared values
+				newFields.push_back(input.at(i));
 			}
-			Table t = Database::getTable(relationName);
-			t.addEntry(fields);
+			t->addEntry(newFields);
 			return true;
 		}
 	}
