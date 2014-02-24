@@ -88,19 +88,11 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 	}
 	else if (inputVector.at(0) == "CREATE" && inputVector.at(1) == "TABLE")
 	{	// create a new table
-<<<<<<< HEAD
         createCmd(inputVector);
 	}
 	else if (inputVector.at(0) == "UPDATE")
 	{	// update values in a table
         updateCmd(inputVector);
-=======
-		createCmd(inputVector);
-	}
-	else if (inputVector.at(0) == "UPDATE")
-	{	// update values in a table
-		updateCmd(inputVector);
->>>>>>> 6a182be4473e4c98f6945448b0b58b7234a0fc34
 	}
 }
 vector<string> Parser::readInputLine(string inputLine)
@@ -652,7 +644,7 @@ void Parser::updateCmd(vector<string> input)
 
 		if (Set)
 		{
-			for (int i = 3; i < input.size(); i++)
+			for (unsigned int i = 3; i < input.size(); i++)
 			{
 				setAttribute.push_back(input.at(i));
 			}
