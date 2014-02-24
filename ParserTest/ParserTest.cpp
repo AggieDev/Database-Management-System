@@ -508,6 +508,22 @@ namespace ParserTest
 			Assert::AreEqual('i', colTypes.at(2));
 			
 		}
+		TEST_METHOD(TestCreateCommand)
+		{ // a typed attribute list describes how a table will be organized (needed for create-cmd)
+			Parser p = Parser();
+			
+
+			string attrListString = "CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY(name, kind)";
+			vector<string> attrListVec = p.readInputLine(attrListString);
+			
+			Table test = p.createCmd(attrListVec);
+			
+			Assert::AreEqual(string("name"), test.getColNames().at(0));
+			Assert::AreEqual(string("kind"), test.getColNames().at(1));
+			Assert::AreEqual(string("years"), test.getColNames().at(2));
+
+		}
+
 		TEST_METHOD(TestFindCondition)
 		{	// check Table::findCondition(vector<string> whereOps)
 			// whereOps.size() == 3 and of form operand1 op operand2
