@@ -276,7 +276,7 @@ int Database::tableExists(string tableName)
 	//check each entry
 	for (unsigned int i = 0; i < _tables.size(); i++)
 	{
-		if (tableName.compare(_tables.at(i).getName()))
+		if (tableName.compare(_tables.at(i).getName()) == 0)
 			return i;
 	}
 	return -1;

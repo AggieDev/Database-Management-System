@@ -219,8 +219,8 @@ void Application::unionPrompt()
 			cout << Database::getTables().at(i).getName() << "\n";
 		cout << "\n";
 		getline(cin, firstTable);
-		if (firstTable.size() == 0)
-			cout << "Please insert a table name.\n\n";
+		if (firstTable.size() == 0 || Database::tableExists(firstTable) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
 		else
 			break;
 	}
@@ -233,8 +233,8 @@ void Application::unionPrompt()
 			cout << Database::getTables().at(i).getName() << "\n";
 		cout << "\n";
 		getline(cin, secondTable);
-		if (secondTable.size() == 0)
-			cout << "Please insert a table name.\n\n";
+		if (secondTable.size() == 0 || Database::tableExists(secondTable) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
 		else
 			break;
 	}
@@ -267,8 +267,8 @@ void Application::differencePrompt()
 			cout << Database::getTables().at(i).getName() << "\n";
 		cout << "\n";
 		getline(cin, firstTable);
-		if (firstTable.size() == 0)
-			cout << "Please insert a table name.\n\n";
+		if (firstTable.size() == 0 || Database::tableExists(firstTable) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
 		else
 			break;
 	}
@@ -281,8 +281,8 @@ void Application::differencePrompt()
 			cout << Database::getTables().at(i).getName() << "\n";
 		cout << "\n";
 		getline(cin, secondTable);
-		if (secondTable.size() == 0)
-			cout << "Please insert a table name.\n\n";
+		if (secondTable.size() == 0 || Database::tableExists(secondTable) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
 		else
 			break;
 	}
@@ -315,8 +315,8 @@ void Application::productPrompt()
 			cout << Database::getTables().at(i).getName() << "\n";
 		cout << "\n";
 		getline(cin, firstTable);
-		if (firstTable.size() == 0)
-			cout << "Please insert a table name.\n\n";
+		if (firstTable.size() == 0 || Database::tableExists(firstTable) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
 		else
 			break;
 	}
@@ -329,8 +329,8 @@ void Application::productPrompt()
 			cout << Database::getTables().at(i).getName() << "\n";
 		cout << "\n";
 		getline(cin, secondTable);
-		if (secondTable.size() == 0)
-			cout << "Please insert a table name.\n\n";
+		if (secondTable.size() == 0 || Database::tableExists(secondTable) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
 		else
 			break;
 	}
@@ -357,7 +357,7 @@ void Application::updatePrompt()
 	{
 		Table table = Database::getTable(tableName);
 
-		cout << "Type a column to be manipulated: \n";
+		cout << "\nType a column to be manipulated: \n";
 		for (int i = 0; i < table.getColNames().size(); i++)
 			cout << table.getColNames().at(i) << "\n";
 		cout << "\n";
@@ -397,7 +397,7 @@ void Application::deletePrompt()
 	{
 		Table table = Database::getTable(tableName);
 
-		cout << "Type a column that has the condition to delete from: \n";
+		cout << "\nType a column that has the condition to delete from: \n";
 		for (int i = 0; i < table.getColNames().size(); i++)
 			cout << table.getColNames().at(i) << "\n";
 		cout << "\n";
@@ -415,7 +415,49 @@ void Application::deletePrompt()
 
 void Application::selectPrompt()
 {
+	string newTable;
+	string tableFrom;
+	string columnName;
+	string condition;
 
+	//new table name
+	while (true)
+	{
+		cout << "Insert a name for the new table to be created: ";
+		getline(cin, newTable);
+		if (newTable.size() == 0)
+			cout << "Please insert a table name.\n\n";
+		else
+			break;
+	}
+
+	//first table name
+	while (true)
+	{
+		cout << "\nType a table name to select from. Tables to choose from:\n";
+		for (int i = 0; i < Database::getTables().size(); i++)
+			cout << Database::getTables().at(i).getName() << "\n";
+		cout << "\n";
+		getline(cin, tableFrom);
+		if (tableFrom.size() == 0 || Database::tableExists(tableFrom) == -1)	//empty name or table doesnt exits
+			cout << "Please insert a valid table name.\n\n";
+		else
+			break;
+	}
+
+	Table table = Database::getTable(tableFrom);
+
+	cout << "\nType a column that has the condition to select from: \n";
+	for (int i = 0; i < table.getColNames().size(); i++)
+		cout << table.getColNames().at(i) << "\n";
+	cout << "\n";
+
+	getline(cin, columnName);
+
+	cout << "What is the condition of " << columnName << " where you want the entry selected? (Example: '< 0' without quotes)\n";
+	getline(cin, condition);
+
+	cout << tableSelect(newTable, tableFrom, columnName, condition);
 }
 
 void Application::renamePrompt()
@@ -549,9 +591,9 @@ string Application::deleteFromTable(string tableName, string colName, string con
 	return "DELETE FROM " + tableName + " WHERE (" + colName + " " + condition + ");";
 }
 
-string Application::tableSelect(string tableName)
+string Application::tableSelect(string newTable, string tableFrom, string columnName, string condition)
 {
-	return "";
+	return newTable + " <- select (" + columnName + " " + condition + ") " + tableFrom + ";";
 }
 
 string Application::tableProjection()

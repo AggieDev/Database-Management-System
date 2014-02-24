@@ -16,7 +16,7 @@ class Application
 	string productTable(string, string, string);
 	string updateTable(string, string, string, string);
 	string deleteFromTable(string, string, string);
-	string tableSelect(string tableName);
+	string tableSelect(string, string, string, string);
 	string renameTable(string, string, vector<string>);
 	string writeTable(string tableName);
 	string openTable(string tableName);
