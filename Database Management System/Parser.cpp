@@ -504,6 +504,7 @@ Table Parser::getTableFromExpression(vector<string> expr)
 	// expr ::= atomic-expr | selection | projection | renaming 
 	//						| union | difference | product | natural-join
 
+	removeParenthesis(&expr);
 	string first = expr.at(0);
 	
 	if (first == "select")
@@ -547,7 +548,10 @@ bool Parser::insertCmd(vector<string> input)
 
 	string relationName = input.at(2);	// name of Table in the Database
 	Table* t = Database::getTableByReference(relationName);
-
+	if (t == NULL)
+	{	// table was not found
+		throw new exception("Error in Parser::insertCmd: table not found in database");
+	}
 	if (input.at(5) == "RELATION")
 	{ // insert-cmd ::= INSERT INTO relation-name VALUES FROM RELATION expr
 		vector<string> expression;
@@ -569,13 +573,12 @@ bool Parser::insertCmd(vector<string> input)
 		bool properCloseParenthesis = input.at(input.size() - 1) == ")";
 		if (properOpenParenthesis && properCloseParenthesis)
 		{ // ensure parenthesis are appropriately placed
-			vector<string> fields;
+			vector<string> newFields;
 			for (unsigned int i = 6; i < input.size() - 1; i++)
-			{ // fill expression vector with the values following the word, 'RELATION', should be one or more literals
-				fields.push_back(input.at(i));
+			{ // fill fields vector with the declared values
+				newFields.push_back(input.at(i));
 			}
-			Table t = Database::getTable(relationName);
-			t.addEntry(fields);
+			t->addEntry(newFields);
 			return true;
 		}
 	}
