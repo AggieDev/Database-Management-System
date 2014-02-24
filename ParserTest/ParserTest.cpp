@@ -34,13 +34,23 @@ namespace ParserTest
 			count = p.readInteger(word, inputNumAtEnd, inputIndex);
 			Assert::AreEqual(string("9876"), word);
 		}
-		TEST_METHOD(TestReadInputLineWithIntegers)
+		TEST_METHOD(TestReadInputLine)
 		{ // An input line with multiple integers should be read into a vector where each integer has a spot
 			Parser p = Parser();
-			//string sampleInput = "CREATE TABLE baseball_players (fname VARCHAR(20), lname VARCHAR(30), team VARCHAR(20), homeruns INTEGER, salary INTEGER) PRIMARY KEY (fname, lname);";
-			string sampleInput = "123, 789;";
-			vector<string> inputVector = p.readInputLine(sampleInput);
-			Assert::AreEqual(2, (int)inputVector.size()); // should have these contents: [ 123 , 789 ]
+			string sampleInput1 = "CREATE TABLE baseball_players (fname VARCHAR(20), lname VARCHAR(30), team VARCHAR(20), homeruns INTEGER, salary INTEGER) PRIMARY KEY (fname, lname);";
+			string sampleInput2 = "INSERT INTO animals VALUES FROM (\"Joe bob\", \"bird\", 2);";
+			string sampleInput3 = "product_test <- shapes * colors;";
+			string sampleInput4 = "SHOW no_such_relation;";
+			
+			vector<string> inputVector1 = p.readInputLine(sampleInput1);
+			vector<string> inputVector2 = p.readInputLine(sampleInput2);
+			vector<string> inputVector3 = p.readInputLine(sampleInput3);
+			vector<string> inputVector4 = p.readInputLine(sampleInput4);
+			
+			Assert::AreEqual(30, (int)inputVector1.size());
+			Assert::AreEqual(10, (int)inputVector2.size());
+			Assert::AreEqual(5, (int)inputVector3.size());
+			Assert::AreEqual(2, (int)inputVector4.size());
 		}
 		TEST_METHOD(TestEvaluateAtomicExpression_RelationName)
 		{ // test atomic expression if it is of the simple form:
@@ -138,7 +148,7 @@ namespace ParserTest
 			Database::addTable(t);
 
 			// this should get a table of a singleton entry (2, Dinosaurs)
-			string expressionString = "select (team == \"Dinosaurs\") baseball_players;";
+			string expressionString = "select (team == Dinosaurs) baseball_players;";
 			vector<string> selectionExprVector = p.readInputLine(expressionString);
 			Table resultTable = p.selection(selectionExprVector);
 
@@ -206,12 +216,11 @@ namespace ParserTest
 		}
 		
 		TEST_METHOD(TestDatabaseSelect)
-		{
-			// Trying to test the database select function
-			// also learning to use unittesting
+		{	// Test the database select function
 
 			Parser p = Parser();
 
+			// Build a Sample Table
 			vector<string> attributes;
 			vector<char> attTypes;
 			attributes.push_back("FirstName");
@@ -229,36 +238,33 @@ namespace ParserTest
 			entry1.push_back("Eliutt");
 			entry1.push_back("Rivera");
 			entry1.push_back("20");
-			entry1.push_back("20.50");
+			entry1.push_back("205");
+
+			// only this entry should be in results table
 			vector<string> entry2;
 			entry2.push_back("Bob");
 			entry2.push_back("Sagget");
 			entry2.push_back("40");
-			entry2.push_back("50.25");
+			entry2.push_back("5025");
+
 			table.addEntry(entry1);
 			table.addEntry(entry2);
-
-			vector<string> selectAttr;
-			//selectAttr.push_back("*");
-			//selectAttr.push_back("LastName");
-			//selectAttr.push_back("Age");
-			//selectAttr.push_back("Price");
-
-			vector<string> selectWhere;
-			selectWhere.push_back("Price"); //left
-			selectWhere.push_back("!="); //center
-			selectWhere.push_back("20.5"); //right
+			
 			Database::addTable(table);
 
-		
+			// Condition
+			vector<string> condition;
+			condition.push_back("Price"); //left
+			condition.push_back("!="); //center
+			condition.push_back("205"); //right
 
-			Table results = Database::select(selectWhere,table);
+			Table results = Database::select(condition, table);
 
 			Table tabletest("Testing", attributes, attTypes);
 			tabletest.addEntry(entry2);
 			
-			Assert::AreEqual(results.hasEntry(entry2),0);
-			Assert::AreEqual((int)results.getEntries().size(), 1);
+			Assert::AreEqual(0, results.hasEntry(entry2));
+			Assert::AreEqual(1, (int)results.getEntries().size());
 		}
 		TEST_METHOD(TestDatabaseProject)
 		{
@@ -292,22 +298,17 @@ namespace ParserTest
 			table.addEntry(entry2);
 			Database::addTable(table);
 			
-			
 			vector<string> projectAttr;
-			//projectAttr.push_back("*");
 			projectAttr.push_back("FirstName");
 			projectAttr.push_back("LastName");
 			projectAttr.push_back("Price");
 
 			Table results = Database::Project(projectAttr, table);
 
-			Table tabletest("Testing", attributes, attTypes);
-			tabletest.addEntry(entry1);
-			tabletest.addEntry(entry2);
-
-
-			Assert::AreEqual(results.getNumCols(), 3);
-			//Assert::AreEqual((int)results.getEntries().size(), 1);
+			Assert::AreEqual(3, results.getNumCols());
+			Assert::AreEqual(string("FirstName"), results.getColNames().at(0));
+			Assert::AreEqual(string("LastName"), results.getColNames().at(1));
+			Assert::AreEqual(string("Price"), results.getColNames().at(2));
 		}
 	
 
@@ -547,22 +548,26 @@ namespace ParserTest
 			string condString1 = "team == Dinosaurs";
 			string condString2 = "index < 3";
 			string condString3 = "name == \"palermo\"";
+			string condString4 = "team != Dinosaurs";
 
 			// parse them into condition vectors
 			vector<string> condVec1 = p.readInputLine(condString1);
 			vector<string> condVec2 = p.readInputLine(condString2);
 			vector<string> condVec3 = p.readInputLine(condString3);
+			vector<string> condVec4 = p.readInputLine(condString4);
 
 			// pass them to Table::findCondition()
 			// this function returns vector<int> => indices of the valid entries
 			vector<int> validEntries1 = t.findCondition(condVec1);
 			vector<int> validEntries2 = t.findCondition(condVec2);
 			vector<int> validEntries3 = t.findCondition(condVec3);
+			vector<int> validEntries4 = t.findCondition(condVec4);
 
 			// ensure the correct number of entries were retrieved
 			Assert::AreEqual(2, (int)validEntries1.size());
 			Assert::AreEqual(2, (int)validEntries2.size());
 			Assert::AreEqual(1, (int)validEntries3.size());
+			Assert::AreEqual(1, (int)validEntries4.size());
 
 			// ensure the correct indices (from original) were collected
 			Assert::AreEqual(1, validEntries1.at(0)); // "team == Dinosaurs"
@@ -572,6 +577,8 @@ namespace ParserTest
 			Assert::AreEqual(1, validEntries2.at(1));
 
 			Assert::AreEqual(2, validEntries3.at(0)); // "name == \"palermo\""
+
+			Assert::AreEqual(0, validEntries4.at(0)); // "team != Dinosaurs"
 		}
 		TEST_METHOD(TestTableStringOperatorCompare)
 		{	// creating an operator from a string representation
@@ -592,10 +599,6 @@ namespace ParserTest
 			shouldBeFalse = t.stringOperatorCompare("123", ">=", "124");
 			Assert::AreEqual(true, shouldBeTrue);
 			Assert::AreEqual(false, shouldBeFalse);
-
-
-
-
 		}
 	};
 }

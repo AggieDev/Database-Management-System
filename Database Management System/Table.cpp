@@ -50,7 +50,7 @@ void Table::printTable()
 }
 
 int Table::hasEntry(Entry e)
-{
+{	// returns the index of the valid entry of the table
 	//check each entry
 	for (unsigned int i = 0; i < _entries.size(); i++)
 	{
@@ -64,7 +64,9 @@ int Table::hasEntry(Entry e)
 		}
 		//if this last checked entry is a match, return that the entry exists
 		if (match)
+		{
 			return i;
+		}
 	}
 	return -1;
 }
