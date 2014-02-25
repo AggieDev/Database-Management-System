@@ -41,7 +41,7 @@ class Application
 	void writePrompt();
 	void openPrompt();
 	void projectPrompt();
-
+	
 
 public:
 	Application();

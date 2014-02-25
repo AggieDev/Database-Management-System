@@ -144,7 +144,6 @@ void Application::createPrompt()
 	cout << createTable(tableName, columns, types);
 	parser.evaluateInputVector(parser.readInputLine(createTable(tableName, columns, types)));
 	Database::printTables();
-	//Database::addTable(Table(tableName, columns));			//used for testing certain functions
 }
 
 void Application::insertPrompt()
