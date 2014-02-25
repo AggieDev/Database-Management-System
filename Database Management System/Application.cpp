@@ -159,7 +159,7 @@ void Application::insertPrompt()
 			break;
 	}
 
-	if (!Database::tableExists(tableName))
+	if (Database::tableExists(tableName) == -1)
 		cout << "Table " << tableName << " doesn't exist.\n\n";
 	else
 	{
@@ -360,7 +360,7 @@ void Application::updatePrompt()
 			break;
 	}
 
-	if (!Database::tableExists(tableName))
+	if (Database::tableExists(tableName) == -1)
 		cout << "Table " << tableName << " doesn't exist.\n\n";
 	else
 	{
@@ -401,7 +401,7 @@ void Application::deletePrompt()
 			break;
 	}
 
-	if (!Database::tableExists(tableName))
+	if (Database::tableExists(tableName) == -1)
 		cout << "Table " << tableName << " doesn't exist.\n\n";
 	else
 	{
@@ -587,7 +587,7 @@ void Application::writePrompt()
 			break;
 	}
 
-	if (Database::tableExists(tableName))
+	if (Database::tableExists(tableName) != -1)
 	{
 		cout << writeTable(tableName);
 		parser.evaluateInputVector(parser.readInputLine(writeTable(tableName)));
@@ -609,7 +609,7 @@ void Application::openPrompt()
 			break;
 	}
 
-	if (Database::tableExists(tableName))
+	if (Database::tableExists(tableName) != -1)
 	{
 		cout << openTable(tableName);
 		parser.evaluateInputVector(parser.readInputLine(openTable(tableName)));

@@ -458,10 +458,16 @@ Table Parser::rename(vector<string> input)
 		throw new exception("Error in rename: expected atomic expression for table name");
 		return false;
 	}
-	string tableName = valuesForAtomicExpression.at(0);
+	/*
 	Table* fromTable = Database::getTableByReference(tableName);
 	Database::rename_table(fromTable, attributesList);
-	return Database::getTable(tableName);
+	return Database::getTable(tableName); string tableName = valuesForAtomicExpression.at(0);
+	*/
+	
+	string tableName = valuesForAtomicExpression.at(0);
+	Table originalTable = Database::getTable(tableName);
+	originalTable.rename(attributesList);
+	return originalTable;
 }
 Table Parser::parseExpression(vector <string> expr, string arthOperator)
 {	//returns the union, difference, etc. table based on arthOperator
