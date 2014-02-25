@@ -8,18 +8,37 @@ class Application
 	//keep application functions private, that way all events can happen through
 	//the application class itself and not main 
 	//each of these returns a query to be executed
-	string createTable(string tableName, vector<string>, vector<char>);
-	string insertIntoTable(string tableName, Entry& e);
+	string createTable(string tableName, vector<string>, vector<string>);
+	string insertIntoTable(string tableName, vector<string>);
 	string showTable(string tableName);	//will change how this works if using GUI
 	string unionTable(string, string, string);
 	string differenceTable(string, string, string);
 	string productTable(string, string, string);
-	string updateTable(string, string, string, int, int);
-	string deleteFromTable(string tableName);
+	string updateTable(string, string, string, string);
+	string deleteFromTable(string, string, string);
 	string tableSelect(string tableName);
 	string renameTable(string, string, vector<string>);
-	string writeTable(string tableName);	//does this mean write to file?
+	string writeTable(string tableName);
+	string openTable(string tableName);
 	string tableProjection();
+
+	//menu functions
+	string mainMenu();	//first prompt
+	void printTableList();
+	void createPrompt();
+	void insertPrompt();
+	void showPrompt();
+	void unionPrompt();
+	void differencePrompt();
+	void productPrompt();
+	void updatePrompt();
+	void deletePrompt();
+	void selectPrompt();
+	void renamePrompt();
+	void writePrompt();
+	void openPrompt();
+	void projectPrompt();
+
 
 public:
 	Application();
