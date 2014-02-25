@@ -34,6 +34,24 @@ void Parser::readFile(string fileName)
 	}
 }
 
+Table Parser::readquery(vector<string> inputVector)
+{
+	Table query_table;
+	std::vector<string> expr;
+	if (inputVector.at(1) == "<-");
+	{
+		for (int i = 2; i < inputVector.size(); i++)
+		{
+			expr.push_back(inputVector.at(i));
+		}
+		query_table = getTableFromExpression(expr);
+		query_table.setName(inputVector.at(0));
+	}
+	Database::addTable(query_table);
+	return query_table;
+}
+
+
 void Parser::evaluateInputVector(vector<string> inputVector)
 { // conditional statements to match the input line to specific function calls
 	// NOTE: Individual members in this vector are all strings but will be one of -

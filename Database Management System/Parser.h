@@ -18,7 +18,7 @@ public:
 
 	// read a file containing DML commands
 	void readFile(std::string fileName);
-
+	Table readquery(std::vector<string> inputVec);
 	// use this function with readInputLine's returned vector 
 	// to call the correct database/table functions
 	void evaluateInputVector(std::vector<std::string> inputVector);

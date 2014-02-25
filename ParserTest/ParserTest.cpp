@@ -2,6 +2,8 @@
 #include "CppUnitTest.h"
 #include "Parser.h"
 
+#include <fstream>
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
@@ -611,6 +613,152 @@ namespace ParserTest
 			Assert::AreEqual(string("6"), entry.fields.at(0));
 			Assert::AreEqual(string("Aggies"), entry.fields.at(1));
 			Assert::AreEqual(string("\"Timothy S\""), entry.fields.at(2));
+		}
+		TEST_METHOD(Write_File)
+		{
+			Parser p = Parser();
+			vector<string> columns;
+			columns.push_back("index");
+			columns.push_back("team");
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t = Table("baseball_players", columns, colTypes);
+
+			vector<string> entryFields1;
+			entryFields1.push_back("1");
+			entryFields1.push_back("Elephants");
+			vector<string> entryFields2;
+			entryFields2.push_back("2");
+			entryFields2.push_back("Dinosaurs");
+			vector<string> entryFields3;
+			entryFields3.push_back("3");
+			entryFields3.push_back("Giraffes");
+
+			t.addEntry(entryFields1);
+			t.addEntry(entryFields2);
+			t.addEntry(entryFields3);
+			Database::addTable(t);
+			std::string myCmd = "WRITE baseball_players";
+			vector<string> inputVec = p.readInputLine(myCmd);
+			string fileName = "baseball_players.db";
+			fstream test_file(fileName.c_str());
+			test_file.open(fileName.c_str());
+			p.evaluateInputVector(inputVec);
+			test_file.close();
+		}
+		TEST_METHOD(Open_File)
+		{
+			//open - cmd :: == OPEN relation - name
+			Parser p = Parser();
+			vector<string> columns;
+			columns.push_back("index");
+			columns.push_back("team");
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t = Table("baseball_players", columns, colTypes);
+
+			vector<string> entryFields1;
+			entryFields1.push_back("1");
+			entryFields1.push_back("Elephants");
+			vector<string> entryFields2;
+			entryFields2.push_back("2");
+			entryFields2.push_back("Dinosaurs");
+			vector<string> entryFields3;
+			entryFields3.push_back("3");
+			entryFields3.push_back("Giraffes");
+
+			t.addEntry(entryFields1);
+			t.addEntry(entryFields2);
+			t.addEntry(entryFields3);
+			Database::addTable(t);
+			string myCmd = "OPEN baseball_players";
+			vector<string> inputVec = p.readInputLine(myCmd);
+			p.evaluateInputVector(inputVec);
+		/*	vector<string> new_entry;
+			new_entry.push_back("THIS");
+			new_entry.push_back("IS");
+			new_entry.push_back("A");
+			new_entry.push_back("BITCH");
+			t.addEntry(new_entry);
+			string myCmd2 = "WRITE baseball_players";
+			vector<string> input2 = p.readInputLine(myCmd2);
+			p.evaluateInputVector(input2);*/
+				
+		}
+		TEST_METHOD(Close_File)
+		{
+			//close - cmd :: == CLOSE relation - name
+			Parser p = Parser();
+			vector<string> columns;
+			columns.push_back("index");
+			columns.push_back("team");
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t = Table("baseball_players", columns, colTypes);
+
+			vector<string> entryFields1;
+			entryFields1.push_back("1");
+			entryFields1.push_back("Elephants");
+			vector<string> entryFields2;
+			entryFields2.push_back("2");
+			entryFields2.push_back("Dinosaurs");
+			vector<string> entryFields3;
+			entryFields3.push_back("3");
+			entryFields3.push_back("Giraffes");
+
+			t.addEntry(entryFields1);
+			t.addEntry(entryFields2);
+			t.addEntry(entryFields3);
+			Database::addTable(t);
+			string fileName = "baseball_players.db";
+			fstream table_file(fileName);
+			table_file.open(fileName);
+			string myCmd = "CLOSE baseball_players";
+			vector<string> inputVec = p.readInputLine(myCmd);
+			p.evaluateInputVector(inputVec);
+		}
+		TEST_METHOD(TestQuery)
+		{
+			//query ::= relation-name <- expr ;
+			Parser p = Parser();
+			vector<string> columns;
+			columns.push_back("index");
+			columns.push_back("team");
+			vector<char> colTypes;
+			colTypes.push_back('s');
+			colTypes.push_back('s');
+
+			Table t = Table("baseball_players", columns, colTypes);
+
+			vector<string> entryFields1;
+			entryFields1.push_back("1");
+			entryFields1.push_back("Elephants");
+			vector<string> entryFields2;
+			entryFields2.push_back("2");
+			entryFields2.push_back("Dinosaurs");
+			vector<string> entryFields3;
+			entryFields3.push_back("3");
+			entryFields3.push_back("Giraffes");
+
+			t.addEntry(entryFields1);
+			t.addEntry(entryFields2);
+			t.addEntry(entryFields3);
+			Database::addTable(t);
+
+			string myInsertCmd = "QTable <- select (team == Dinosaurs) baseball_players;";
+			vector<string> inputVec = p.readInputLine(myInsertCmd);
+			Table test_table = p.readquery(inputVec);
+			
+			Assert::AreEqual(string("QTable"), test_table.getName());
+			Assert::AreEqual(1, (int)test_table.getEntries().size());
+			Assert::AreEqual(string("2"), test_table.getEntries().at(0).fields.at(0));
+			Assert::AreNotEqual(-1, Database::tableExists("QTable"));
 		}
 		TEST_METHOD(TestDeleteCmd)
 		{	// delete-cmd ::= DELETE FROM relation-name WHERE condition

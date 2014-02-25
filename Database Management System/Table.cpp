@@ -187,9 +187,9 @@ void Table::open_file(std::string table_name)
 		getline(table_file, numCols);
 		setNumCols(std::stoi(numCols));
 
-		string colTypes;
-		getline(table_file, colTypes);
-		for (unsigned int i = 0; i < colTypes.size(); i++)
+		string file_colTypes;
+		getline(table_file, file_colTypes);
+		for (unsigned int i = 0; i < file_colTypes.length(); i++)
 		{
 			char c = colTypes[i];
 			if (c != ',' && (c == 's' || c == 'f' || c == 'i'))
@@ -224,7 +224,7 @@ void Table::setColTypes(std::string type_string)
 void Table::close_file(string relationName)
 { // close file associated with this table, if open
 	string fileName = relationName.append(".db");
-	fstream table_file(fileName);
+	fstream table_file(fileName.c_str());
 	if (table_file.is_open())
 	{
 		table_file.close();
@@ -235,7 +235,8 @@ void Table::close_file(string relationName)
 void Table::write_to_file(string relationName)
 { // write this table to a file
 	string fileName = relationName.append(".db");
-	fstream table_file(fileName);
+	ofstream table_file;
+	table_file.open(fileName.c_str());
 	if (table_file.is_open())
 	{
 		table_file << _name << "\n";
