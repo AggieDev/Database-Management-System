@@ -70,6 +70,7 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 
 		// readQuery(inputVector);
 		vector<string> expression;
+
 		for (unsigned int i = 2; i < inputVector.size(); i++)
 		{
 			expression.push_back(inputVector.at(i));
