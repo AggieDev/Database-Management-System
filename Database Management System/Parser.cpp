@@ -74,7 +74,9 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 		{
 			expression.push_back(inputVector.at(i));
 		}
-		getTableFromExpression(expression);
+		Table newTable = getTableFromExpression(expression);
+		newTable.setName(inputVector.at(0));
+		Database::addTable(newTable);
 // TODO: query needs to assign the resulting table to the provided relation-name
 	}
 	
