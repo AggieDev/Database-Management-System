@@ -11,7 +11,7 @@ namespace ParserTest
 	TEST_CLASS(ApplicationTest)
 	{
 	public:
-		
+
 		TEST_METHOD(TestCreateTable)
 		{	// test createTable, take string and vectors and output DML String
 			Application a = Application();
