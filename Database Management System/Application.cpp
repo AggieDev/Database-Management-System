@@ -141,7 +141,6 @@ void Application::createPrompt()
 	for (int i = 0; i < columns.size(); i++)
 		types.push_back("VARCHAR(20)");
 
-	cout << createTable(tableName, columns, types);
 	parser.evaluateInputVector(parser.readInputLine(createTable(tableName, columns, types)));
 	Database::printTables();
 }
@@ -173,7 +172,6 @@ void Application::insertPrompt()
 
 			values.push_back(input);
 		}
-		cout << insertIntoTable(tableName, values);
 		parser.evaluateInputVector(parser.readInputLine(insertIntoTable(tableName, values)));
 	}
 }
@@ -193,7 +191,6 @@ void Application::showPrompt()
 
 	if (Database::tableExists(tableName) != -1)
 	{
-		cout << showTable(tableName);
 		parser.evaluateInputVector(parser.readInputLine(showTable(tableName)));
 	}
 	else
@@ -245,7 +242,6 @@ void Application::unionPrompt()
 			break;
 	}
 
-	cout << unionTable(newTable, firstTable, secondTable);
 	parser.evaluateInputVector(parser.readInputLine(unionTable(newTable, firstTable, secondTable)));
 }
 
@@ -293,8 +289,6 @@ void Application::differencePrompt()
 		else
 			break;
 	}
-
-	cout << differenceTable(newTable, firstTable, secondTable);
 	parser.evaluateInputVector(parser.readInputLine(differenceTable(newTable, firstTable, secondTable)));
 }
 
@@ -343,7 +337,6 @@ void Application::productPrompt()
 			break;
 	}
 
-	cout << productTable(newTable, firstTable, secondTable);
 	parser.evaluateInputVector(parser.readInputLine(productTable(newTable, firstTable, secondTable)));
 }
 
@@ -382,7 +375,6 @@ void Application::updatePrompt()
 		cout << "What is the condition where you want " << columnName << " set to " << value << "? (Example: '< 0' without quotes)\n";
 		getline(cin, condition);
 
-		cout << updateTable(tableName, columnName, value, condition);
 		parser.evaluateInputVector(parser.readInputLine(updateTable(tableName, columnName, value, condition)));
 	}
 		
@@ -419,7 +411,6 @@ void Application::deletePrompt()
 		cout << "What is the condition of " << columnName << " where you want the entry deleted? (Example: '< 0' without quotes)\n";
 		getline(cin, condition);
 
-		cout << deleteFromTable(tableName, columnName, condition);
 		parser.evaluateInputVector(parser.readInputLine(deleteFromTable(tableName, columnName, condition)));
 	}
 }
@@ -468,7 +459,6 @@ void Application::selectPrompt()
 	cout << "What is the condition of " << columnName << " where you want the entry selected? (Example: '< 0' without quotes)\n";
 	getline(cin, condition);
 
-	cout << tableSelect(newTable, tableFrom, columnName, condition);
 	parser.evaluateInputVector(parser.readInputLine(tableSelect(newTable, tableFrom, columnName, condition)));
 }
 
@@ -513,7 +503,6 @@ void Application::renamePrompt()
 		newColNames.push_back(input);
 	}
 
-	cout << renameTable(newTable, tableFrom, newColNames);
 	parser.evaluateInputVector(parser.readInputLine(renameTable(newTable, tableFrom, newColNames)));
 }
 
@@ -569,7 +558,6 @@ void Application::projectPrompt()
 		cout << "You must choose at least one column to project.\n";
 	else
 	{
-		cout << tableProjection(newTable, tableFrom, colNames);
 		parser.evaluateInputVector(parser.readInputLine(tableProjection(newTable, tableFrom, colNames)));
 	}
 }
@@ -589,7 +577,6 @@ void Application::writePrompt()
 
 	if (Database::tableExists(tableName) != -1)
 	{
-		cout << writeTable(tableName);
 		parser.evaluateInputVector(parser.readInputLine(writeTable(tableName)));
 	}
 	else
@@ -611,7 +598,6 @@ void Application::openPrompt()
 
 	if (Database::tableExists(tableName) != -1)
 	{
-		cout << openTable(tableName);
 		parser.evaluateInputVector(parser.readInputLine(openTable(tableName)));
 	}
 	else
