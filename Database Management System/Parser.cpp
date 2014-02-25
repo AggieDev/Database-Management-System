@@ -34,6 +34,24 @@ void Parser::readFile(string fileName)
 	}
 }
 
+Table Parser::readquery(vector<string> inputVector)
+{
+	Table query_table;
+	std::vector<string> expr;
+	if (inputVector.at(1) == "<-");
+	{
+		for (int i = 2; i < inputVector.size(); i++)
+		{
+			expr.push_back(inputVector.at(i));
+		}
+		query_table = getTableFromExpression(expr);
+		query_table.setName(inputVector.at(0));
+	}
+	Database::addTable(query_table);
+	return query_table;
+}
+
+
 void Parser::evaluateInputVector(vector<string> inputVector)
 { // conditional statements to match the input line to specific function calls
 	// NOTE: Individual members in this vector are all strings but will be one of -
@@ -49,6 +67,8 @@ void Parser::evaluateInputVector(vector<string> inputVector)
 		// use relation-name to find the table, but the expr will be passed to 
 		// a parsing function that handles how an expression is evaluated
 		//		(can be a selection, projection, union, etc). 
+
+		// readQuery(inputVector);
 		vector<string> expression;
 		for (unsigned int i = 2; i < inputVector.size(); i++)
 		{
@@ -363,9 +383,27 @@ void Parser::evaluateTypeAttributeList(vector<string> input, vector<string>* att
 		throw new exception("Error occurred in evaluateTypeAttributeList\n");
 	}
 }
-void Parser::evaluateSetAttribute(vector<string> input)
+void Parser::evaluateSetAttribute(vector<string> input, vector<string>* AttributeName, vector<string>* entryLiterals)
 {//read the entire vector of input, then sets the entries in the attribute name equal to literal
-
+	AttributeName->clear();
+	entryLiterals->clear();
+	for (unsigned int i = 0; i < input.size(); i++)
+	{
+		 
+		if (input.at(i) == "=")
+		{
+			i++;
+			entryLiterals->push_back(input.at(i));
+		}
+		else // if it is attributecolumn name
+		{
+			AttributeName->push_back(input.at(i));
+		}
+	}
+	if (entryLiterals->size() != AttributeName->size())
+	{
+		throw new exception("Error occurred in evaluateTypeAttributeList\n");
+	}
 }
 void Parser::removeParenthesis(vector<string>* vec)
 { // if first and last elements are parenthesis, remove
@@ -608,7 +646,7 @@ void Parser::ShowCmd(vector<string> input)
 
 }
 
-Table Parser::createCmd(vector<string> input)
+void Parser::createCmd(vector<string> input)
 {// create-cmd ::= CREATE TABLE relation-name(typed-attributed-list) PRIMARY KEY (attributed-list)
    
 	string relationName = input.at(2);	// name of Table in the Database
@@ -642,38 +680,71 @@ Table Parser::createCmd(vector<string> input)
 	
 	Table newTable(relationName, attributeList, attributeType);
 	Database::addTable(newTable);
-	return newTable;
+	
 
 }
-void Parser::updateCmd(vector<string> input)
-{
-    string relationName = input.at(1);	// name of Table in the Database
-	Table* t = Database::getTableByReference(relationName);
-	bool Set = input.at(2) == "SET";
-
-	for (unsigned int i = 2; i < input.size(); i++)
-	{
-		vector<string> setAttribute;
-
-		if (Set)
-		{
-			for (unsigned int i = 3; i < input.size(); i++)
-			{
-				setAttribute.push_back(input.at(i));
-			}
-		}
-		evaluateSetAttribute(setAttribute);
-
-		if (input.at(i) == "WHERE")
-		{
-			vector<string> whereCondition;
-
-			for (unsigned int i = 0; i < input.size() - 1; i++)
-			{
-				whereCondition.push_back(input.at(i));
-			}
-		}
+Table Parser::updateCmd(vector<string> input)
+{// update-cmd ::= UPDATE relation-name SET attribute-name = literal WHERE condition
+	string relationName = input.at(1);	// name of Table in the Database
+	Table t = Database::getTable(relationName);
+	if (t.getName().compare(relationName) != 0)
+	{ // table not found in database
+		throw new exception("Error: could not find table from database in Parser::updateCmd");
 	}
+	if (input.at(0) != "UPDATE" || input.at(2) != "SET" || input.at(4) != "=" || input.at(6) != "WHERE")
+	{ // update-cmd format invalid 
+		throw new exception("Error: input for Parser::updateCmd is not supported");
+	}
+	string attributeName = input.at(3);
+	string newVal = input.at(5);
+	vector<string> condition;
+	for (int i = 7; i < input.size(); i++)
+	{	// populate condition vector
+		condition.push_back(input.at(i));
+	}
+	if (condition.size() != 3)
+	{ // condition format invalid 
+		throw new exception("Error: condition for Parser::updateCmd is not supported");
+	}
+	else
+	{	// Get tables of entries that satisfy and don't satisfy conditions
+		Table original = Database::getTable(relationName);
+		Table satisfiesEntries = evaluateCondition(condition, original);
+		Table unsatisfiedEntries = Database::differenceTable(original, satisfiesEntries);
+
+		
+		int numModified = satisfiesEntries.getEntries().size();
+		int numNotModified = unsatisfiedEntries.getEntries().size();
+		if (numModified + numNotModified != original.getEntries().size())
+		{	// count did not add up properly
+			throw new exception("Error occurred in Parser::updateCmd");
+		}
+		// Table in database that will be updated
+		Table* refTable = Database::getTableByReference(relationName);
+		// clear entries, then add back original, unsatisfied Entries
+		refTable->dropTable();
+		for (int i = 0; i < numNotModified; i++)
+		{
+			Entry e = unsatisfiedEntries.getEntries().at(i);
+			refTable->addEntry(e);
+		}
+		// Next add back the modified, satisfied ones
+		for (int i = 0; i < numModified; i++)
+		{	// update all appropriate entries
+			Entry e = satisfiesEntries.getEntry(i);
+			for (int j = 0; j < e.getFields().size(); j++)
+			{	// find the field that needs modification
+				if (satisfiesEntries.getColNames().at(j).compare(condition.at(0)) == 0)
+				{
+					e.fields.at(j) = newVal;
+				}
+			}
+			refTable->addEntry(e);
+		}
+		return *refTable;
+	}
+	return NULL;
+
 
 }
 bool Parser::isType(string s)

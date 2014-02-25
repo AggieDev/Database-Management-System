@@ -18,7 +18,7 @@ public:
 
 	// read a file containing DML commands
 	void readFile(std::string fileName);
-
+	Table readquery(std::vector<string> inputVec);
 	// use this function with readInputLine's returned vector 
 	// to call the correct database/table functions
 	void evaluateInputVector(std::vector<std::string> inputVector);
@@ -42,8 +42,8 @@ public:
 	bool deleteCmd(std::vector<std::string> input);
 	bool exitCmd(std::vector<std::string> inputLine);
 	void ShowCmd(std::vector<std::string>input);
-	Table createCmd(std::vector<std::string>input);
-	void updateCmd(std::vector<std::string>input);
+	void createCmd(std::vector<std::string>input);
+	Table updateCmd(std::vector<std::string>input);
 
 
 
@@ -61,7 +61,7 @@ public:
 	// read the entire vector of input, then set the attribute names and column types
 	void evaluateTypeAttributeList(std::vector<std::string> input, std::vector<std::string>*attributes, std::vector<char>*types);	
 	//read the entire vector of input, then sets the entries in the attribute name equal to literal
-	void evaluateSetAttribute(std::vector<std::string> input);
+	void evaluateSetAttribute(std::vector<std::string> input, std::vector<std::string>*attributes, std::vector<std::string>*types);
 
 	// read from input, starting at inputIndex, assign it to word,
 	// and return the number of characters read
