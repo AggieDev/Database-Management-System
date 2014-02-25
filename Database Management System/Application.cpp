@@ -12,6 +12,7 @@ Application::~Application()
 
 void Application::launch()
 {
+	parser = Parser();
 	//application main code here
 	//command line application structure:
 	//give user a menu with an option for each of the functions in this class
@@ -141,7 +142,9 @@ void Application::createPrompt()
 		types.push_back("VARCHAR(20)");
 
 	cout << createTable(tableName, columns, types);
-	Database::addTable(Table(tableName, columns));			//delete later, used for testing certain functions
+	parser.evaluateInputVector(parser.readInputLine(createTable(tableName, columns, types)));
+	Database::printTables();
+	//Database::addTable(Table(tableName, columns));			//used for testing certain functions
 }
 
 void Application::insertPrompt()
@@ -172,6 +175,7 @@ void Application::insertPrompt()
 			values.push_back(input);
 		}
 		cout << insertIntoTable(tableName, values);
+		parser.evaluateInputVector(parser.readInputLine(insertIntoTable(tableName, values)));
 	}
 }
 
@@ -188,8 +192,11 @@ void Application::showPrompt()
 			break;
 	}
 
-	if (Database::tableExists(tableName))
+	if (Database::tableExists(tableName) != -1)
+	{
 		cout << showTable(tableName);
+		parser.evaluateInputVector(parser.readInputLine(showTable(tableName)));
+	}
 	else
 		cout << "Table " << tableName << " doesn't exist.\n\n";
 }
@@ -240,6 +247,7 @@ void Application::unionPrompt()
 	}
 
 	cout << unionTable(newTable, firstTable, secondTable);
+	parser.evaluateInputVector(parser.readInputLine(unionTable(newTable, firstTable, secondTable)));
 }
 
 void Application::differencePrompt()
@@ -288,6 +296,7 @@ void Application::differencePrompt()
 	}
 
 	cout << differenceTable(newTable, firstTable, secondTable);
+	parser.evaluateInputVector(parser.readInputLine(differenceTable(newTable, firstTable, secondTable)));
 }
 
 void Application::productPrompt()
@@ -336,6 +345,7 @@ void Application::productPrompt()
 	}
 
 	cout << productTable(newTable, firstTable, secondTable);
+	parser.evaluateInputVector(parser.readInputLine(productTable(newTable, firstTable, secondTable)));
 }
 
 void Application::updatePrompt()
@@ -374,6 +384,7 @@ void Application::updatePrompt()
 		getline(cin, condition);
 
 		cout << updateTable(tableName, columnName, value, condition);
+		parser.evaluateInputVector(parser.readInputLine(updateTable(tableName, columnName, value, condition)));
 	}
 		
 }
@@ -410,6 +421,7 @@ void Application::deletePrompt()
 		getline(cin, condition);
 
 		cout << deleteFromTable(tableName, columnName, condition);
+		parser.evaluateInputVector(parser.readInputLine(deleteFromTable(tableName, columnName, condition)));
 	}
 }
 
@@ -458,6 +470,7 @@ void Application::selectPrompt()
 	getline(cin, condition);
 
 	cout << tableSelect(newTable, tableFrom, columnName, condition);
+	parser.evaluateInputVector(parser.readInputLine(tableSelect(newTable, tableFrom, columnName, condition)));
 }
 
 void Application::renamePrompt()
@@ -502,6 +515,7 @@ void Application::renamePrompt()
 	}
 
 	cout << renameTable(newTable, tableFrom, newColNames);
+	parser.evaluateInputVector(parser.readInputLine(renameTable(newTable, tableFrom, newColNames)));
 }
 
 void Application::projectPrompt()
@@ -555,7 +569,10 @@ void Application::projectPrompt()
 	if (colNames.size() < 1)
 		cout << "You must choose at least one column to project.\n";
 	else
+	{
 		cout << tableProjection(newTable, tableFrom, colNames);
+		parser.evaluateInputVector(parser.readInputLine(tableProjection(newTable, tableFrom, colNames)));
+	}
 }
 
 void Application::writePrompt()
@@ -572,7 +589,10 @@ void Application::writePrompt()
 	}
 
 	if (Database::tableExists(tableName))
+	{
 		cout << writeTable(tableName);
+		parser.evaluateInputVector(parser.readInputLine(writeTable(tableName)));
+	}
 	else
 		cout << "Table " << tableName << " doesn't exist.\n\n";
 }
@@ -591,7 +611,10 @@ void Application::openPrompt()
 	}
 
 	if (Database::tableExists(tableName))
+	{
 		cout << openTable(tableName);
+		parser.evaluateInputVector(parser.readInputLine(openTable(tableName)));
+	}
 	else
 		cout << "Table " << tableName << " doesn't exist.\n\n";
 }

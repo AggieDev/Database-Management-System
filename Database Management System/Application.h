@@ -2,9 +2,12 @@
 #include "Database.h"
 #include "Table.h"
 #include "Entry.h"
+#include "Parser.h"
 
 class Application
-{
+{	
+	Parser parser;
+
 	//keep application functions private, that way all events can happen through
 	//the application class itself and not main 
 	//each of these returns a query to be executed
