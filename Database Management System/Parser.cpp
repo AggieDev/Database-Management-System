@@ -451,15 +451,15 @@ Table Parser::parseExpression(vector <string> expr, string arthOperator)
 	else if (arthOperator == "-")
 		return Database::differenceTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
 	else if (arthOperator == "*")
-<<<<<<< HEAD
-		return Database::product Table(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
-=======
+
+		return Database::productTable(interpretAtomicExpression(beforeOperator), interpretAtomicExpression(afterOperator));
+
 		return Database::productTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
->>>>>>> origin/master
+
 	else if (arthOperator == "JOIN")
-		return Database::naturalJoinTable(evaluateAtomicExpression(beforeOperator), evaluateAtomicExpression(afterOperator));
+		return Database::naturalJoinTable(evaluateAtomicExpression(beforeOperator),evaluateAtomicExpression(afterOperator));
 	
-	throw new exception("Invalid call to parseExpression for union/diff/prod/join");
+	throw new exception("Invalid call to parser Expression for union/diff/prod/join");
 	return NULL;
 }
 
@@ -654,11 +654,7 @@ bool Parser::exitCmd(vector<string> input)
 {
     return false;
 }
-<<<<<<< HEAD
 void Parser::ShowCmd(vector<string> input)
-=======
-bool Parser::showCmd(vector<string> input)
->>>>>>> origin/master
 {
     
     vector<string> atomicExpression(input.begin()+1, input.end());

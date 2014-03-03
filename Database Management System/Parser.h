@@ -31,7 +31,7 @@ public:
 	Table deletion(std::vector<std::string> input);
     Table projection(std::vector<std::string>input);
     //Table rename(std::vector<std::string>input);
-<<<<<<< HEAD
+
     void ShowCmd(std::vector<std::string>input);
     bool CreateCmd(std::vector<std::string>input);
     bool UpdateCmd(std::vector<std::string>input);
@@ -40,11 +40,8 @@ public:
 	// parse the given input and set the Table t appropriately
 	Table interpretAtomicExpression(std::vector<std::string> input);
 	Table parseExpression(std::vector<std::string>, string);
-=======
-	
->>>>>>> origin/master
 
-	// call command function based on user input, return true on success
+    // call command function based on user input, return true on success
 	bool insertCmd(std::vector<std::string> inputLine);
 	bool exitCmd(std::vector<std::string> inputLine);
     bool showCmd(std::vector<std::string>input);
