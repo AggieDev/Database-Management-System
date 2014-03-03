@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int you_suck;
-};
-=======
-=======
->>>>>>> 8d4dd06e48210d806df5627f6a092aef00129707
+
+
 #include <stdio.h>
 #include <exception>
 #include <stdexcept>
@@ -55,7 +50,7 @@ void Table::printTable()
 }
 
 int Table::hasEntry(Entry e)
-{
+{	// returns the index of the valid entry of the table
 	//check each entry
 	for (unsigned int i = 0; i < _entries.size(); i++)
 	{
@@ -69,7 +64,9 @@ int Table::hasEntry(Entry e)
 		}
 		//if this last checked entry is a match, return that the entry exists
 		if (match)
+		{
 			return i;
+		}
 	}
 	return -1;
 }
@@ -169,7 +166,6 @@ bool Table::deleteEntry(string key, int keyCol)
 void Table::rename(vector<string> new_attributes){
 	if (new_attributes.size() == colNames.size()){
 		colNames = new_attributes;
-
 	}
 	else std::cout << "ERROR: Please match the number of attributes.";
 }
@@ -261,39 +257,82 @@ void Table::write_to_file(string relationName)
 	}
 	std::cout << "Writing to file complete!\n";
 }
-
-vector<int> Table::findCondition(vector<string> whereOps)
-{
+bool Table::stringOperatorCompare(string operand1, string op, string operand2)
+{	// perform a comparison with an operator given as a string
+	if (op.compare("==") == 0)
+	{
+		return operand1.compare(operand2) == 0;
+	}
+	else if (op.compare("!=") == 0)
+	{
+		return operand1.compare(operand2) != 0;
+	}
+	else
+	{	// greater/less than operator
+		int val1 = atoi(operand1.c_str());
+		int val2 = atoi(operand2.c_str());
+		if (op.compare(">=") == 0)
+		{
+			return val1 >= val2;
+		}
+		else if (op.compare("<=") == 0)
+		{
+			return val1 <= val2;
+		}
+		else if (op.compare(">") == 0)
+		{
+			return val1 > val2;
+		}
+		else if (op.compare("<") == 0)
+		{
+			return val1 < val2;
+		}
+	}
+	throw new exception("error occurred in Table::stringOperatorCompare while trying to compare two operators");
+	return false;
+}
+vector<int> Table::findCondition(vector<string> condition)
+{	// condition vector of form = {operand1, op, operand2}
+	// return vector of indices of valid entries in this table
 	vector<int> results;
-	string left = whereOps[0];
-	string center = whereOps[1];
-	string right = whereOps[2];
+	string operand1 = condition.at(0);
+	string op = condition.at(1);
+	string operand2 = condition.at(2);
 
-	// whereOps = {"Age",  "<" , "10"}
-	//            {left ,center,right}
+	
+	if (string("==!=<=>=").find(op) == string::npos)
+	{	// if acceptable operator not found
+		throw new exception("invalid operator provided in Table::findCondition");
+	}
 
 	//find the column that corresponds to the 
 	int columnToCheck = -1;
 	for (unsigned int i = 0; i < colNames.size(); i++)
 	{
-		if (colNames[i] == left)
+		if (colNames.at(i).compare(operand1) == 0)
 		{
 			columnToCheck = i;
 			break;
 		}
 	}
 	if (columnToCheck == -1)
-	{
-		string error = "Error: " + left + " is not an Attribute in " + _name;
-		throw error;
-	}
-	if (colNames.size() != colTypes.size())
-	{
-		string error = "We don't have the type for Attribute: " + left;
+	{	// column name not found
+		string error = "Error: " + operand1 + " is not an Attribute in " + _name;
 		throw error;
 	}
 
+	for (unsigned int i = 0; i < _entries.size(); i++)
+	{	// search all entries in this table at given column name
+		string currVal = _entries.at(i).getFields().at(columnToCheck);
+		if (stringOperatorCompare(currVal, op, operand2))
+		{
+			results.push_back(i);
+		}
+	}
 
+	return results;
+	
+	/*
 	int intVal;
 	double doubleVal;
 	char type = colTypes[columnToCheck];
@@ -301,10 +340,10 @@ vector<int> Table::findCondition(vector<string> whereOps)
 	switch (type)
 	{
 	case 'i':
-		intVal = atoi(right.c_str());
+		intVal = atoi(operand2.c_str());
 		isInt = true;
 	case 'f':
-		doubleVal = atof(right.c_str());
+		doubleVal = atof(operand2.c_str());
 		break;
 	default: //probably string
 		break;
@@ -312,43 +351,44 @@ vector<int> Table::findCondition(vector<string> whereOps)
 
 	for (unsigned int i = 0; i < _entries.size(); i++)
 	{
-		string valueToCheck = _entries[i][columnToCheck];
-		if (center == "==")
+		string valueToCheck = _entries.at(i).getFields().at(columnToCheck);
+
+		if (op == "==")
 		{
 			if (isInt && atoi(valueToCheck.c_str()) == intVal)
 				results.push_back(i);
 			else if (!isInt && atof(valueToCheck.c_str()) == doubleVal)
 				results.push_back(i);
 		}
-		else if (center == "<")
+		else if (op == "<")
 		{
 			if (isInt && atoi(valueToCheck.c_str()) < intVal)
 				results.push_back(i);
 			else if (!isInt && atof(valueToCheck.c_str()) < doubleVal)
 				results.push_back(i);
 		}
-        else if (center == "!=")
+        else if (op == "!=")
 		{
 			if (isInt && atoi(valueToCheck.c_str()) != intVal)
 				results.push_back(i);
 			else if (!isInt && atof(valueToCheck.c_str()) != doubleVal)
 				results.push_back(i);
 		}
-		else if (center == ">")
+		else if (op == ">")
 		{
 			if (isInt && atoi(valueToCheck.c_str()) > intVal)
 				results.push_back(i);
 			else if (!isInt && atof(valueToCheck.c_str()) > doubleVal)
 				results.push_back(i);
 		}
-		else if (center == "<=")
+		else if (op == "<=")
 		{
 			if (isInt && atoi(valueToCheck.c_str()) <= intVal)
 				results.push_back(i);
 			else if (!isInt && atof(valueToCheck.c_str()) <= doubleVal)
 				results.push_back(i);
 		}
-		else if (center == ">=")
+		else if (op == ">=")
 		{
 			if (isInt && atoi(valueToCheck.c_str()) >= intVal)
 				results.push_back(i);
@@ -356,9 +396,7 @@ vector<int> Table::findCondition(vector<string> whereOps)
 				results.push_back(i);
 		}
 	}
-
-	return results;
-
+	*/
 }
 
 
